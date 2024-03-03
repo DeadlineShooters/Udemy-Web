@@ -1,3 +1,4 @@
+/* Change user name into avatar */
 export const  getColor=()=> {
     var color = '#2D2F31';
     return color;
@@ -40,3 +41,4 @@ export const createImageFromInitials = (size, name, color) => {
 
     return canvas.toDataURL()
 };
+/* end */

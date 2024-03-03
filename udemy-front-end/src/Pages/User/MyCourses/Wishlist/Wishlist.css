@@ -1,0 +1,8 @@
+.upper {
+    background-color: #151b32; /* Deep Blue */
+    color: #fff; /* White text */
+}
+.lower {
+    background-color: #fff; /* White */
+    padding: 20px;
+}
