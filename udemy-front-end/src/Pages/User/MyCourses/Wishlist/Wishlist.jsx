@@ -6,8 +6,8 @@ const Wishlist = () => {
   return (
     <div>
     <div className="upper">
-        <h1 class="text-5xl font-bold pl-96 pt-10 pb-10">My learning</h1>
-        <div className='flex items-center pl-96'>
+        <h1 class="title text-5xl font-bold pt-10 pb-10">My learning</h1>
+        <div className='filter flex items-center pl-96'>
           <button class="text-white hover:bg-violet-950 border-b-8 border-slate-900 font-bold py-2 rounded text-lg">
             <Link to="/home/my-courses/learning">All courses</Link>
           </button>
@@ -20,7 +20,7 @@ const Wishlist = () => {
         </div>
     </div>
     <div className="lower">
-      <form class="items-end w-1/4 mr-72 ml-auto">
+      <form class="searchbar items-end w-1/4 mr-72 ml-auto">
         <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
         <div class="relative">
           <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">

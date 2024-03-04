@@ -6,6 +6,7 @@ import Archived from './Pages/User/MyCourses/Archived/Archived.jsx';
 import PublicProfile from "./Pages/User/ManageAccount/publicProfile.jsx";
 import EditProfile from "./Pages/User/ManageAccount/editProfile.jsx";
 import AccountSettings from "./Pages/User/ManageAccount/accountSettings.jsx";
+import CloseAccount from './Pages/User/ManageAccount/closeAccount.jsx';
 import Register from "./Pages/User/Authentication/Register.jsx";
 import Login from "./Pages/User/Authentication/Login.jsx";
 import {createBrowserRouter, RouterProvider, Routes, Route, Outlet} from 'react-router-dom'
@@ -73,6 +74,10 @@ const router = createBrowserRouter([
       {  
         path: "account-settings",
         element: <AccountSettings/>
+      },
+      {  
+        path: "close-account",
+        element: <CloseAccount/>
       },
     ]
   },
