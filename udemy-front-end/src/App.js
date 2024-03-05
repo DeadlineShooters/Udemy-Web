@@ -11,6 +11,7 @@ import Register from "./Pages/User/Authentication/Register.jsx";
 import Login from "./Pages/User/Authentication/Login.jsx";
 import {createBrowserRouter, RouterProvider, Routes, Route, Outlet} from 'react-router-dom'
 import './App.css';
+import NotFound from './Components/404/404.jsx';
 
 const Layout = () => {
   return(
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       path: "/",
         element: <Home/>
       },
+      {
+        path: "*",
+        element: <NotFound/>
+      }
     ]
   },
   {
@@ -42,19 +47,19 @@ const router = createBrowserRouter([
     element: <Login/>,
   },
   {
-    path: "/home/my-courses",
+    path: "/home",
     element: <Layout/>,
     children: [
       {  
-        path: "learning",
+        path: "my-courses/learning",
         element: <MyLearning/>
       },
       {  
-        path: "wishlist",
+        path: "my-courses/wishlist",
         element: <Wishlist/>
       },
       {  
-        path: "archived",
+        path: "my-courses/archived",
         element: <Archived/>
       },
     ]

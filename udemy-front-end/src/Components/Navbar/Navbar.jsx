@@ -39,8 +39,8 @@ const Navbar = () => {
         { isLogged ? 
           <div className='flex items-center'>
             <ul>
-              <li>Teaching on Udemy</li>
-              <li>My learning</li>
+              <li class='hover:text-purple-700'>Teaching on Udemy</li>
+              <li class='hover:text-purple-700'><Link to="/home/my-courses/learning">My learning</Link></li>
             </ul>
             <img src={heart} alt='Wishlist' className='wishlist mx-4'></img>
             <img src={cart} alt='Cart' className='cart mx-4'></img>

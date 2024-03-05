@@ -21,21 +21,6 @@ const MyLearning = () => {
     img: course_placeholder3,
     instructor: "Onee Academy",
     progress: 0,
-  }, {
-    title: "Software design for beginners (2024)",
-    img: course_placeholder1,
-    instructor: "FIT HCMUS",
-    progress: 1/8,
-  }, {
-    title: "Introduction to Python (newest version, 2024)",
-    img: course_placeholder2,
-    instructor: "Tomato Group",
-    progress: 1/7,
-  }, {
-    title: "Data visualization with Kibana",
-    img: course_placeholder3,
-    instructor: "Onee Academy",
-    progress: 0,
   },]
   return (
     <div>
