@@ -17,6 +17,12 @@
 }
 @media (min-width: 1024px) {
     .lg\:pb-100 {
-        padding-bottom: 30rem; 
+        padding-bottom: 40rem; 
     }
+}
+
+.imgContainer {
+    width: '150px';
+    height: '150px';
+    overflow: 'hidden';
 }

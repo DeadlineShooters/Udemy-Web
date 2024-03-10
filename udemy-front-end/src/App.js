@@ -1,4 +1,5 @@
-import Navbar from './Components/Navbar/Navbar';
+import Navbar from './Components/Navbar/Navbar.jsx';
+import CourseNavbar from "./Components/CourseNavBar/CourseNavBar.jsx"
 import Home from './Pages/Home/Home.jsx';
 import MyLearning from "./Pages/User/MyCourses/Learning/myLearning.jsx";
 import Wishlist from "./Pages/User/MyCourses/Wishlist/Wishlist.jsx";
@@ -23,6 +24,16 @@ const Layout = () => {
   )
 }
 
+const CourseLayout = () => {
+  return(
+    <>
+      <CourseNavbar/>
+      <Outlet/>
+      {/* <Footer/>*/}
+    </>
+  )
+}
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -35,16 +46,16 @@ const router = createBrowserRouter([
       {
         path: "*",
         element: <NotFound/>
-      }
+      },
+      {
+        path: "/register",
+        element: <Register/>,
+      },
+      {
+        path: "/login",
+        element: <Login/>,
+      },
     ]
-  },
-  {
-    path: "/register",
-    element: <Register/>,
-  },
-  {
-    path: "/login",
-    element: <Login/>,
   },
   {
     path: "/home",

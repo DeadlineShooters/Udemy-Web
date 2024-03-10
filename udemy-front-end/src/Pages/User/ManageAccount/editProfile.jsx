@@ -1,6 +1,6 @@
 import React from 'react';
 import {getColor,createImageFromInitials} from '../../../Components/Utils/Utils.js';
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import './editProfile.css';
 
 const EditProfile = () => {
@@ -16,7 +16,6 @@ const EditProfile = () => {
     }
   };
   let fullname = user.firstName + " " + user.lastName;
-  //Handle retrieve user data later
   return (
     <div class="template flex flex-row pt-8">
       <div class="flex flex-col border border-r-0 border-slate-500" style={{height: "40rem"}}>

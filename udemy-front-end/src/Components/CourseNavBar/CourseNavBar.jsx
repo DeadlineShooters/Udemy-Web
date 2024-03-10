@@ -2,14 +2,14 @@ import React, {useState} from 'react'
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { Link, useLocation } from "react-router-dom";
-import './Navbar.css'
+import './CourseNavBar.css'
 import logo from '../../Assets/Udemy_logo.png'
 import heart from "../../Assets/heart.png"
 import cart from "../../Assets/cart.png"
 import {getColor,createImageFromInitials} from '../Utils/Utils.js'
 
 
-const Navbar = () => {
+const CourseNavbar = () => {
   let username = "Nguyen Minh Thong"; //Handle retrieve user data later
   const [isLogged, setLoggout] = useState(true); //Handle log in later
   function classNames(...classes) {
@@ -137,4 +137,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default CourseNavbar
