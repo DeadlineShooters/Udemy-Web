@@ -10,9 +10,11 @@ import AccountSettings from "./Pages/User/ManageAccount/accountSettings.jsx";
 import CloseAccount from './Pages/User/ManageAccount/closeAccount.jsx';
 import Register from "./Pages/User/Authentication/Register.jsx";
 import Login from "./Pages/User/Authentication/Login.jsx";
+import CourseContent from './Pages/Course/Content/Content.jsx';
+import NotFound from './Components/404/404.jsx';
+
 import {createBrowserRouter, RouterProvider, Routes, Route, Outlet} from 'react-router-dom'
 import './App.css';
-import NotFound from './Components/404/404.jsx';
 
 const Layout = () => {
   return(
@@ -95,6 +97,16 @@ const router = createBrowserRouter([
         path: "close-account",
         element: <CloseAccount/>
       },
+    ]
+  },
+  {
+    path: "/course/course-name",
+    element: <CourseLayout/>,
+    children: [
+      {
+        path: "learn/video-id",
+        element: <CourseContent/>
+      }
     ]
   },
 ]);

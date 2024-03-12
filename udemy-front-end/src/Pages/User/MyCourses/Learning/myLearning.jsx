@@ -72,7 +72,9 @@ const MyLearning = () => {
                         <img class='object-fit h-80 w-full lg:h-48 lg:w-full' src={course.img} alt='course placeholder' />
                       </div>
                       <div class='rounded-xl overflow-hidden absolute top-0 left-0 opacity-0 hover:opacity-100'>
-                        <img class='object-fit h-80 w-full lg:h-48 lg:w-full' src={course_overlay} alt='course placeholder' />
+                        <a href='/course/course-name/learn/video-id'>
+                          <img class='object-fit h-80 w-full lg:h-48 lg:w-full' src={course_overlay} alt='course placeholder' />
+                        </a>
                       </div>
                       <div class='rounded-md absolute top-0 right-0 m-2 w-12 h-12'>
                         <Menu as="div" className="relative ml-4">

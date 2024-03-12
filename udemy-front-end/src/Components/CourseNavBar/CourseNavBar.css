@@ -1,42 +1,43 @@
-.navbar {
+.courseNavBar {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #ffff;
-    padding: 10px 5%;
+    background: #212121;
+    padding: 0px 5%;
 }
 
 img {
     cursor: pointer;
 }
 
-.navbar .logo {
+.courseNavBar .logo {
     width: 100px;
 }
 
-.navbar .avatar {
+.courseNavBar .avatar {
     width: 40px;
     border-radius: 100px;
 }
 
-.navbar .wishlist {
+.courseNavBar .wishlist {
     width: 30px;
     height: 30px;
 }
 
-.navbar .cart {
+.courseNavBar .cart {
     width: 30px;
     height: 30px;
 }
 
-.navbar form {
+.courseNavBar form {
     width: 40vw;
 }
 
 ul li {
     display: inline-block;
-    margin: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
     cursor: pointer;
     font-size: 16px;
 }
@@ -49,4 +50,10 @@ ul li {
     border-bottom: 1px solid #D9D9D9;
     box-shadow: 0 10px 10px -10px #7a7a7a;
     margin: -50px auto 0px; 
+}
+
+@media (max-width: 1024px) {
+    .rightBar {
+        display: none;
+    }
 }
