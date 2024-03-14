@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { Link, useLocation } from "react-router-dom";
@@ -11,9 +11,12 @@ import {getColor,createImageFromInitials} from '../Utils/Utils.js'
 
 const Navbar = () => {
   let username = "Nguyen Minh Thong"; //Handle retrieve user data later
-  let isLogged = true; //Handle log in later
+  const [isLogged, setLoggout] = useState(true); //Handle log in later
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
+  }
+  const logout = () => {
+    setLoggout(!isLogged);
   }
   return (
     <div className='header'>
@@ -31,16 +34,16 @@ const Navbar = () => {
                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                       </svg>
                   </div>
-                  <input type="search" id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for anything..." required />
-                  <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+                  <input type="search" id="default-search" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for anything..." required />
+                  <button type="submit" class="text-white absolute end-2 bottom-1.5 bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-0.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
               </div>
           </form>
         </div>
         { isLogged ? 
           <div className='flex items-center'>
             <ul>
-              <li>Teaching on Udemy</li>
-              <li>My learning</li>
+              <li class='hover:text-purple-700'>Teaching on Udemy</li>
+              <li class='hover:text-purple-700'><Link to="/home/my-courses/learning">My learning</Link></li>
             </ul>
             <img src={heart} alt='Wishlist' className='wishlist mx-4'></img>
             <img src={cart} alt='Cart' className='cart mx-4'></img>
@@ -99,9 +102,9 @@ const Navbar = () => {
                     <hr/>
                     <Menu.Item>
                       {({ active }) => (
-                        <a href="/logout" className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
+                        <button onClick={logout} className={classNames(active ? 'bg-gray-100 w-full text-left' : '', 'block px-4 py-2 text-sm text-gray-700')}>
                           Logout
-                        </a>
+                        </button>
                       )}
                     </Menu.Item>
                     <hr/>
@@ -118,11 +121,11 @@ const Navbar = () => {
             </Menu>
           </div> : 
           <div className='flex items-center'>
-            <button class="bg-white hover:bg-gray-200 text-black font-bold py-2 px-4 border-2 border-gray-900 rounded mx-2">
-              Login
+            <button class="bg-white hover:bg-gray-200 text-black font-bold py-1 px-4 border-2 border-gray-900 rounded mx-2">
+              <Link to="/login">Login</Link>
             </button>
-            <button class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 border-2 border-gray-900 rounded">
-              Sign up
+            <button class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-1 px-4 border-2 border-gray-900 rounded">
+              <Link to="/register">Sign up</Link>
             </button>
           </div>
         }
