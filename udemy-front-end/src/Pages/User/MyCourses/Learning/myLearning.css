@@ -4,6 +4,25 @@
 }
 .lower {
     background-color: #fff; /* White */
-    padding: 20px;
     right: 1;
+}
+.upper .title {
+    padding-left: 21%;
+}
+.upper .filter {
+    padding-left: 21%;
+}
+.lower .searchbar {
+    margin-right: 20%;
+}
+@media (min-width: 1024px) {
+    .lg\:pb-100 {
+        padding-bottom: 40rem; 
+    }
+}
+
+.imgContainer {
+    width: '150px';
+    height: '150px';
+    overflow: 'hidden';
 }
