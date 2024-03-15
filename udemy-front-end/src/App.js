@@ -14,6 +14,7 @@ import ManageCourses from './Pages/Instructor/ManageCourses/ManageCourses.jsx';
 import Statistics from './Pages/Instructor/Statistics/Statistics.jsx';
 import CourseContent from './Pages/Course/Content/Content.jsx';
 import NotFound from './Components/404/404.jsx';
+import Sidebar from './Components/Sidebar/sidebar.jsx';
 
 import { createBrowserRouter, RouterProvider, Routes, Route, Outlet } from 'react-router-dom';
 import './App.css';
@@ -113,7 +114,7 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/instructor',
-		element: <Layout />,
+		element: <Sidebar />,
 		children: [
 			{
 				path: 'courses',

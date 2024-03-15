@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import Sidebar from '../../../Components/Sidebar/sidebar.jsx';
 
 const Statistics = () => {
-  return (
-    <div>Statistics</div>
-  )
-}
+	return (
+		<div>
+			
+		</div>
+	);
+};
 
-export default Statistics
+export default Statistics;
