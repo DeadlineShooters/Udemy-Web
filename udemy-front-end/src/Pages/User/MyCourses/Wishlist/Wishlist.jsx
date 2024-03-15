@@ -19,7 +19,7 @@ const Wishlist = () => {
 					</button>
 				</div>
 			</div>
-			<div className='lower container mx-auto flex flex-col'>
+			<div className='lower cardContainer mx-auto flex flex-col'>
 				<form class='items-end lg:w-1/4 md:w-1/3 w-full ml-auto pb-8 px-2'>
 					<label for='default-search' class='mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white'>
 						Search

@@ -114,7 +114,7 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/instructor',
-		element: <Sidebar />,
+		// element: <Sidebar />,
 		children: [
 			{
 				path: 'courses',

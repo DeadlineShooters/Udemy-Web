@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import './sidebar.css';
 
 const Sidebar = () => {
+	const location = useLocation();
 	const [isOpen, setIsOpen] = useState(false);
 	const sidebarRef = useRef(null);
-	const [selectedItem, setSelectedItem] = useState(null);
+	const [selectedItem, setSelectedItem] = useState(location.pathname.split('/')[2]);
 
 	useEffect(() => {
 		const handleClickOutside = (event) => {
@@ -38,7 +40,7 @@ const Sidebar = () => {
 	const handleItemClick = (item) => {
 		setSelectedItem(item);
 		setIsExpanded(false);
-	}
+	};
 
 	return (
 		<>
@@ -69,7 +71,7 @@ const Sidebar = () => {
 						<button class='flex items-center text-gray-900 rounded-lg text-white group' onClick={() => handleItemClick('courses')}>
 							<img src='https://svff.info/wp-content/uploads/2018/12/udemy-1-logo-png-transparent.png' class='w-16 p-3' alt='Flowbite Logo' />
 							<span
-								className={`self-center text-2xl font-semibold whitespace-nowrap text-white ms-2 text-[#715c52] ${
+								className={`self-center text-2xl font-semibold whitespace-nowrap  ms-2 text-[#715c52] ${
 									isExpanded || isOpen ? 'fadeIn' : 'fadeOut'
 								}`}
 							>
@@ -79,7 +81,7 @@ const Sidebar = () => {
 					</div>
 					<ul class='space-y-2 font-medium'>
 						<li className={`sidebar-item relative hover:bg-[#3e4143] w-full m-0 py-2 px-3 ${selectedItem === 'courses' ? 'selected' : ''}`}>
-							<button className='flex items-center p-2 text-gray-900 rounded-lg text-white' onClick={() => handleItemClick('courses')}>
+							<button className='flex items-center p-2 text-gray-900 rounded-lg text-white w-full' onClick={() => handleItemClick('courses')}>
 								<svg
 									className='flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75'
 									aria-hidden='true'
@@ -113,7 +115,7 @@ const Sidebar = () => {
 							</button>
 						</li>
 						<li className={`sidebar-item relative hover:bg-[#3e4143] w-full m-0 py-2 px-3 ${selectedItem === 'statistics' ? 'selected' : ''}`}>
-							<button class='flex items-center p-2 text-gray-900 rounded-lg text-white group' onClick={() => handleItemClick('statistics')}>
+							<button class='flex items-center p-2 text-gray-900 rounded-lg text-white w-full group' onClick={() => handleItemClick('statistics')}>
 								<svg
 									class='flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 text-white'
 									aria-hidden='true'
@@ -133,7 +135,7 @@ const Sidebar = () => {
 							</button>
 						</li>
 						<li className={`sidebar-item relative hover:bg-[#3e4143] w-full m-0 py-2 px-3 ${selectedItem === 'qa' ? 'selected' : ''}`}>
-							<button className='flex items-center p-2 text-gray-900 rounded-lg text-white ' onClick={() => handleItemClick('qa')}>
+							<button className='flex items-center p-2 text-gray-900 rounded-lg text-white w-full ' onClick={() => handleItemClick('qa')}>
 								<svg
 									class='flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 text-white '
 									aria-hidden='true'
@@ -147,7 +149,7 @@ const Sidebar = () => {
 							</button>
 						</li>
 						<li className={`sidebar-item relative hover:bg-[#3e4143] w-full m-0 py-2 px-3 ${selectedItem === 'feedback' ? 'selected' : ''}`}>
-							<button className='flex items-center p-2 text-gray-900 rounded-lg text-white' onClick={() => handleItemClick('feedback')}>
+							<button className='flex items-center p-2 text-gray-900 rounded-lg text-white w-full' onClick={() => handleItemClick('feedback')}>
 								<svg
 									class='flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 text-white dark:text-gray-400 '
 									aria-hidden='true'
