@@ -48,7 +48,7 @@ const Sidebar = () => {
 				onClick={(event) => toggleSidebar(event)}
 				aria-controls='logo-sidebar'
 				type='button'
-				className='inline-flex items-center p-2 mt-2 ms-8 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600'
+				className='inline-flex items-center p-2 mt-2 ms-8 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600'
 			>
 				<span className='sr-only'>Toggle sidebar</span>
 				<svg className='w-6 h-6' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
@@ -62,7 +62,7 @@ const Sidebar = () => {
 
 			<div
 				ref={sidebarRef}
-				className={`fixed top-0 left-0 z-40 h-screen bg-[#2d2f31] transition-all duration-300 overflow-hidden ${isExpanded || isOpen ? 'w-72' : 'w-0 sm:w-16'}`}
+				className={`fixed top-0 left-0 z-40 h-screen bg-[#2d2f31] transition-all duration-300 overflow-hidden ${isExpanded || isOpen ? 'w-72' : 'w-0 md:w-16'}`}
 				onMouseEnter={handleMouseEnter}
 				onMouseLeave={handleMouseLeave}
 			>
