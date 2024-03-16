@@ -1,0 +1,35 @@
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes fadeOut {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+.fadeIn {
+	animation: fadeIn 0.5s ease forwards;
+}
+
+.fadeOut {
+	animation: fadeOut 0.5s ease forwards;
+}
+
+.sidebar-item.selected::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 4px; /* Width of the indicator */
+	height: 100%; /* Height of the indicator */
+	background-color: #eb524f; /* Color of the indicator */
+}

@@ -42,7 +42,7 @@ const Navbar = () => {
         { isLogged ? 
           <div className='flex items-center'>
             <ul>
-              <li class='hover:text-purple-700'>Teaching on Udemy</li>
+			<li class='hover:text-purple-700'><Link to="/instructor">Instructor</Link></li>
               <li class='hover:text-purple-700'><Link to="/home/my-courses/learning">My learning</Link></li>
             </ul>
             <img src={heart} alt='Wishlist' className='wishlist mx-4'></img>
@@ -137,4 +137,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default Navbar;
