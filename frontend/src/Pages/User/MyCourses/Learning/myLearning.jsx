@@ -12,24 +12,38 @@ import share from "../../../../Assets/share.png";
 import archive from "../../../../Assets/archive.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import EditRatingButton from "../../../../Components/Feedback/EditRatingButton";
 
 const MyLearning = () => {
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
 
+  const review = {
+    rating: 4,
+    feedback: "Very thorough course with many quizzes for you to test your knowledge",
+  };
   const courses = [
     {
       title: "Software design for beginners (2024)",
       img: course_placeholder1,
       instructor: "FIT HCMUS",
       progress: 1 / 8,
+      avgRating: 5,
     },
     {
       title: "Introduction to Python (newest version, 2024)",
       img: course_placeholder2,
       instructor: "Tomato Group",
       progress: 1 / 7,
+      avgRating: 5,
+    },
+    {
+      title: "Data visualization with Kibana",
+      img: course_placeholder3,
+      instructor: "Onee Academy",
+      progress: 0,
+      avgRating: 5,
     },
     {
       title: "Data visualization with Kibana",
@@ -83,7 +97,7 @@ const MyLearning = () => {
         </form>
         <div class="flex justify-center min-h-screen mx-auto mt-5">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:mx-72 lg:mt-0 lg:pb-100">
-            {courses.map((course) => (
+            {courses.map((course, index) => (
               <div class="card flex flex-col h-full">
                 <div class="rounded-xl shadow-lg flex-grow">
                   <div class="p-3 flex flex-col h-full justify-between">
@@ -151,7 +165,10 @@ const MyLearning = () => {
                       <div class="w-full bg-gray-200 rounded-full h-2 mt-3 dark:bg-gray-700">
                         <div class="bg-blue-600 h-2 rounded-full" style={{ width: course.progress * 100 + "%" }}></div>
                       </div>
-                      <p class="text-slate-500 text-base mt-3">{course.progress.toPrecision(4) * 100}% Complete</p>
+                      <div className="flex flex-row items-start justify-between mt-3">
+                        <p class="text-slate-500  text-sm">{course.progress.toPrecision(4) * 100}% Complete</p>
+                        {index !== 3 ? <EditRatingButton review={review} /> : <EditRatingButton />}
+                      </div>
                     </div>
                   </div>
                 </div>
