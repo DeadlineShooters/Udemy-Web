@@ -6,3 +6,12 @@
     background-color: #fff; /* White */
     padding: 20px;
 }
+.upper .title {
+    padding-left: 21%;
+}
+.upper .filter {
+    padding-left: 21%;
+}
+.lower .searchbar {
+    margin-right: 20%;
+}
