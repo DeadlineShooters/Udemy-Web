@@ -63,7 +63,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <ul>
               <li class="hover:text-purple-700">
-                <Link to="/instructor">Instructor</Link>
+                <Link to="/instructor/courses">Instructor</Link>
               </li>
               <li class="hover:text-purple-700">
                 <Link to="/home/my-courses/learning">My learning</Link>

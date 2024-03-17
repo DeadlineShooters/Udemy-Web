@@ -22,7 +22,10 @@ import "./fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,
 import { createBrowserRouter, RouterProvider, Routes, Route, Outlet } from "react-router-dom";
 import "./App.css";
 import Reviews from "./Pages/Instructor/Reviews.jsx";
+import CourseLandingPage from "./Pages/Instructor/ManageCourses/CourseLandingPage.jsx";
 import CourseDetail from "./Pages/User/CourseLandingPage/CourseDetail.jsx";
+import ManageCourseLayout from "./Components/CourseManagement/ManageCourseLayout.jsx";
+import Curriculum from "./Pages/Instructor/ManageCourses/Curriculum.jsx";
 
 const Layout = () => {
   return (
@@ -46,11 +49,11 @@ const CourseLayout = () => {
 
 const CourseDashboardLayout = () => {
   return (
-    <>
+    <div className="flex flex-row">
       <Sidebar />
       <Outlet />
       {/* <Footer/>*/}
-    </>
+    </div>
   );
 };
 
@@ -74,6 +77,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />,
+      },
+      {
+        path: "/course/:courseId",
+        element: <CourseDetail />,
       },
     ],
   },
@@ -150,12 +157,16 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/course/:courseId",
-    element: <CourseDetail />,
+    path: "/instructor/course/:courseId/manage",
+    element: <ManageCourseLayout />,
     children: [
       {
-        path: "learn/:videoId",
-        element: <CourseContent />,
+        path: "curriculum",
+        element: <Curriculum />,
+      },
+      {
+        path: "basics",
+        element: <CourseLandingPage />,
       },
     ],
   },
