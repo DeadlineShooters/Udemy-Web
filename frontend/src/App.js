@@ -39,6 +39,16 @@ const CourseLayout = () => {
   );
 };
 
+const CourseDashboardLayout = () => {
+  return (
+    <>
+      <Sidebar />
+      <Outlet />
+      {/* <Footer/>*/}
+    </>
+  );
+};
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -114,7 +124,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/instructor",
-    // element: <Sidebar />,
+    element: <CourseDashboardLayout />,
     children: [
       {
         path: "courses",
@@ -125,12 +135,12 @@ const router = createBrowserRouter([
         element: <Statistics />,
       },
       // {
-      // 	path: 'qa',
-      // 	element: <QA />,
+      //   path: "qa",
+      //   element: <QA />,
       // },
       // {
-      // 	path: 'feedback',
-      // 	element: <Feedback />,
+      //   path: "reviews",
+      //   element: < />,
       // },
     ],
   },
