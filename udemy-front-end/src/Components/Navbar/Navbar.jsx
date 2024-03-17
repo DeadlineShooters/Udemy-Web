@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { Link, useLocation } from "react-router-dom";
@@ -8,12 +8,13 @@ import heart from "../../Assets/heart.png"
 import cart from "../../Assets/cart.png"
 import {getColor,createImageFromInitials} from '../Utils/Utils.js'
 import { useAuth } from '../../AuthContextProvider.jsx';
+import { IconMenu2 } from '@tabler/icons-react';
+import { IconChevronLeft } from '@tabler/icons-react';
 
 const Navbar = () => {
   const user = useAuth();
   console.log(user);
   const isLogged = user.userData !== null;
-  console.log(isLogged);
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
@@ -21,15 +22,25 @@ const Navbar = () => {
     localStorage.clear();
     window.open("http://localhost:5000/auth/logout", "_self");
   };
+  const [isTurnOnSideBar, setTurnOnSideBar] = useState(false);
+  const sideBarToggle = () => {
+    setTurnOnSideBar(!isTurnOnSideBar);
+    console.log(isTurnOnSideBar);
+  }
   return (
     <div className='header'>
-      <div className='navbar'>
-        <div className='flex items-center'>
-          <Link to="/"><img src={logo} alt='' className='logo'></img></Link>
-          <ul className="mx-5">
+      <div className='navbar justify-between max-md:justify-center'>
+        <div className='flex items-center max-md:w-full'>
+          <button type="button" className="md:hidden z-9999" onClick={sideBarToggle}>
+            <IconMenu2 stroke={2} />
+          </button>
+          <div className="max-md:m-auto">
+            <Link to="/"><img src={logo} alt='' className='logo'></img></Link>
+          </div>
+          <ul className="mx-5 max-md:hidden">
               <li>Categories</li>
           </ul>
-          <form>
+          <form className="max-md:hidden">
               <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
               <div className="relative">
                   <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -46,12 +57,12 @@ const Navbar = () => {
           (
           <div className={`flex items-center`}>
             <ul>
-              <li className='hover:text-purple-700 max-lg:hidden'>Teach on Udemy</li>
-              <li className='hover:text-purple-700'><Link to="/home/my-courses/learning">My learning</Link></li>
+              <li className='hover:text-purple-700 hide-teach-udemy'>Teach on Udemy</li>
+              <li className='hover:text-purple-700 hide-my-learning'><Link to="/home/my-courses/learning">My learning</Link></li>
             </ul>
-            <img src={heart} alt='Wishlist' className='wishlist mx-4'></img>
-            <img src={cart} alt='Cart' className='cart mx-4'></img>
-            <Menu as="div" className="relative ml-4">
+            <img src={heart} alt='Wishlist' className='wishlist mx-4 max-md:hidden'></img>
+            <img src={cart} alt='Cart' className='cart mx-4 max-md:hidden'></img>
+            <Menu as="div" className="relative ml-4 max-md:hidden">
               <div>
                 <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:outline-none focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                   <img id="preview" src={createImageFromInitials(40, user ? user.userData.name.familyName + user.userData.name.givenName : "Default name", getColor())} alt="profile-pic" className="avatar"/>
@@ -127,17 +138,79 @@ const Navbar = () => {
           ) 
           : 
           (
-            <div className={`flex items-center`}>
-              <button className={`bg-white hover:bg-gray-200 text-black font-bold py-1 px-4 border-2 border-gray-900 rounded mx-2`}>
+            <div className={`flex items-center max-md:hidden`}>
+              <button className={`bg-white hover:bg-gray-200 text-black font-bold py-1 px-4 max-lg:px-2 border-2 border-gray-900 rounded mx-2`}>
                 <Link to="/login">Login</Link>
               </button>
-              <button className={`bg-gray-800 hover:bg-gray-700 text-white font-bold py-1 px-4 border-2 border-gray-900 rounded`}>
+              <button className={`bg-gray-800 hover:bg-gray-700 text-white font-bold py-1 px-4 border-2 max-lg:px-1 border-gray-900 rounded`}>
                 <Link to="/register">Sign up</Link>
               </button>
             </div>
           )
         }
       </div>
+      {isLogged === true ?
+        <div className={`sidebar md:hidden ${isTurnOnSideBar ? "open" : "" } border-r-2 shadow-xl`}>
+          <div className='flex flex-row items-center bg-slate-50 py-2'>
+            <div className="flex rounded-full text-sm focus:ring-2 focus:outline-none focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 ml-5">
+              <img id="preview" src={createImageFromInitials(80, user ? user.userData.name.familyName + user.userData.name.givenName : "Default name", getColor())} alt="profile-pic" className="avatar"/>
+            </div>
+            <div className='flex flex-col ml-5'>
+              <p className='font-bold'>Hi, {user.userData.name.familyName + " " + user.userData.name.givenName} </p>
+              <p className=''>Welcome back</p>
+            </div>
+          </div>
+          <hr/>
+          <div className='ml-5 py-3'>
+            <p className='font-bold text-violet-600'>Teach on Udemy</p>
+          </div>
+          <hr/>
+          <div className='ml-5 py-3'>
+            <Link to="/home/my-courses/learning"><p className='font-bold mb-3'>My learning</p></Link>
+            <Link to="/home/my-courses/wishlist"><p className='font-bold mb-3'>Wishlist</p></Link>
+          </div>
+          <hr/>
+          <div className='ml-5 py-3'>
+            <p className='font-bold mb-3'>Account</p>
+            <Link to="/user/edit-profile"><p className='mb-3'>Edit profile</p></Link>
+            <Link to="/user/account-settings"><p className='mb-3'>Account settings</p></Link>
+          </div>
+          <hr/>
+          <div className='ml-5 py-3'>
+            <p className='font-bold mb-3'>Logout</p>
+          </div>
+          <hr/>
+          <div className='ml-5 py-3'>
+            <p className='font-bold mb-3'>More about Udemy</p>
+            <Link to="/about-udemy"><p className='mb-3'>About us</p></Link>
+            <Link to="/help"><p className='mb-3'>Help</p></Link>
+          </div>
+          <hr/>
+          <button type="button" className='w-20 h-10 bg-slate-700 rounded-full flex items-center ml-5 mt-10 z-9999' onClick={() => setTurnOnSideBar()}>
+            <IconChevronLeft stroke={2} className='flex justify-center w-full' color='white' />
+          </button>
+        </div> 
+        : 
+        (
+          <div className={`sidebar md:hidden ${isTurnOnSideBar ? "open" : "" } border-r-2 shadow-xl`}>
+            <div className='ml-5 py-3'>
+              <Link to="/login"><p className='font-bold mb-3'>Login</p></Link>
+              <Link to="/register"><p className='font-bold mb-3'>Sign up</p></Link>
+            </div>
+            <hr/>
+            <div className='ml-5 py-3'>
+              <p className='font-bold mb-3'>More about Udemy</p>
+              <Link to="/about-udemy"><p className='mb-3'>About us</p></Link>
+              <Link to="/help"><p className='mb-3'>Help</p></Link>
+            </div>
+            <hr/>
+            <button type="button" className='w-20 h-10 bg-slate-700 rounded-full flex items-center ml-5 mt-10 z-9999' onClick={() => setTurnOnSideBar()}>
+              <IconChevronLeft stroke={2} className='flex justify-center w-full' color='white' />
+            </button>
+          </div>
+        )
+      }
+        
       <div className='divider'>
         <hr/>
       </div>

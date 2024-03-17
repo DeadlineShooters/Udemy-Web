@@ -35,15 +35,15 @@ const MyLearning = () => {
   return (
     <div>
       <div className="upper">
-          <h1 className="title text-5xl font-bold pt-10 pb-10">My learning</h1>
+          <h1 className="title text-5xl max-sm:text-4xl font-bold pt-10 pb-10">My learning</h1>
           <div className='filter flex items-center'>
-            <button class="text-white hover:bg-violet-950 border-b-8 font-bold py-2 rounded text-lg">
+            <button class="text-white border-b-8 font-bold py-2 rounded text-lg">
               <Link to="/home/my-courses/learning">All courses</Link>
             </button>
-            <button class="text-white hover:bg-violet-950 border-b-8 border-slate-900 font-bold py-2 rounded text-lg mx-8">
+            <button class="text-whit lg:border-b-8 border-slate-900 font-bold py-2 rounded text-lg mx-8">
               <Link to="/home/my-courses/wishlist">Wishlist</Link>
             </button>
-            <button class="text-white hover:bg-violet-950 border-b-8 border-slate-900 font-bold py-2 rounded text-lg">
+            <button class="text-white lg:border-b-8 border-slate-900 font-bold py-2 rounded text-lg">
               <Link to="/home/my-courses/archived">Archived</Link>
             </button>
           </div>
@@ -62,14 +62,14 @@ const MyLearning = () => {
           </div>
         </form>
         <div class='flex justify-center min-h-screen mx-auto mt-5'>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:mx-72 lg:mt-0 lg:pb-100">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {courses.map((course)=> (
               <div class='card flex flex-col h-full'>
                 <div class='rounded-xl shadow-lg flex-grow'>
                   <div class='p-3 flex flex-col h-full justify-between'>
                     <div class='rounded-xl overflow-hidden justify-between relative'>
                       <div class='rounded-xl overflow-hidden'>
-                        <img class='object-fit h-80 w-full lg:h-48 lg:w-full' src={course.img} alt='course placeholder' />
+                        <img class='object-fit h-80 w-auto lg:h-48 lg:w-auto' src={course.img} alt='course placeholder' />
                       </div>
                       <div class='rounded-xl overflow-hidden absolute top-0 left-0 opacity-0 hover:opacity-100'>
                         <a href='/course/course-name/learn/video-id'>

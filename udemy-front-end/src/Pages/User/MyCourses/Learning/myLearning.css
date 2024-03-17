@@ -1,6 +1,9 @@
 .upper {
     background-color: #151b32; /* Deep Blue */
     color: #fff; /* White text */
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
 }
 .lower {
     background-color: #fff; /* White */
