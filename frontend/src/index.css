@@ -12,3 +12,9 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
+
+@font-face {
+  font-family: "RobotoFlex";
+  src: local("RobotoFlex"),
+    url("./fonts/RobotoFlex-VariableFont_GRAD\,XOPQ\,XTRA\,YOPQ\,YTAS\,YTDE\,YTFI\,YTLC\,YTUC\,opsz\,slnt\,wdth\,wght.ttf") format("truetype");
+}

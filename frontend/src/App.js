@@ -16,9 +16,13 @@ import CourseContent from "./Pages/Course/Content/Content.jsx";
 import NotFound from "./Components/404/404.jsx";
 import Sidebar from "./Components/Sidebar/sidebar.jsx";
 
+// import fonts
+import "./fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf";
+
 import { createBrowserRouter, RouterProvider, Routes, Route, Outlet } from "react-router-dom";
 import "./App.css";
 import Reviews from "./Pages/Instructor/Reviews.jsx";
+import CourseDetail from "./Pages/User/CourseLandingPage/CourseDetail.jsx";
 
 const Layout = () => {
   return (
@@ -114,11 +118,11 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/course/course-name",
+    path: "/course/:courseId/learn",
     element: <CourseLayout />,
     children: [
       {
-        path: "learn/video-id",
+        path: "video-id",
         element: <CourseContent />,
       },
     ],
@@ -142,6 +146,16 @@ const router = createBrowserRouter([
       {
         path: "reviews",
         element: <Reviews />,
+      },
+    ],
+  },
+  {
+    path: "/course/:courseId",
+    element: <CourseDetail />,
+    children: [
+      {
+        path: "learn/:videoId",
+        element: <CourseContent />,
       },
     ],
   },
