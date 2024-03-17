@@ -5,8 +5,10 @@ import "./passport.js";
 import authRoute from "./routes/authRoute.js";
 import passport from "passport";
 import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
 
-const mongoURI = "mongodb+srv://tomato09:u9QmHK8hdYT9LKB6@cluster0.vd8vtog.mongodb.net/udemy-tomato09?retryWrites=true&w=majority&appName=Cluster0"
+const mongoURI = process.env.MONGODB_URI;
 try {
     await mongoose.connect(mongoURI);
     console.log("Connected to the database");
@@ -14,7 +16,7 @@ try {
     console.log("Could not connect to the database", error);
 }
 
-const app = express()
+const app = express();
 app.use(express.json());
 
 app.use(cookieSession({

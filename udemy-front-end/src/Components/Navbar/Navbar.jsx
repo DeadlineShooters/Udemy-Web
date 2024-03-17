@@ -9,7 +9,6 @@ import cart from "../../Assets/cart.png"
 import {getColor,createImageFromInitials} from '../Utils/Utils.js'
 import { useAuth } from '../../AuthContextProvider.jsx';
 
-
 const Navbar = () => {
   const user = useAuth();
   console.log(user);
@@ -47,7 +46,7 @@ const Navbar = () => {
           (
           <div className={`flex items-center`}>
             <ul>
-              <li className='hover:text-purple-700'>Teaching on Udemy</li>
+              <li className='hover:text-purple-700 max-lg:hidden'>Teach on Udemy</li>
               <li className='hover:text-purple-700'><Link to="/home/my-courses/learning">My learning</Link></li>
             </ul>
             <img src={heart} alt='Wishlist' className='wishlist mx-4'></img>
