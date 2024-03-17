@@ -136,7 +136,7 @@ const Sidebar = () => {
             <li className={`sidebar-item relative hover:bg-[#3e4143] w-full m-0 py-2 px-3 ${selectedItem === "qa" ? "selected" : ""}`}>
               <button className="flex items-center p-2 text-gray-900 rounded-lg text-white w-full " onClick={() => handleItemClick("qa")}>
                 <svg
-                  class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 text-white "
+                  class="flex-shrink-0 w-6 h-6 transition duration-75 text-white "
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -148,9 +148,9 @@ const Sidebar = () => {
               </button>
             </li>
             <li className={`sidebar-item relative hover:bg-[#3e4143] w-full m-0 py-2 px-3 ${selectedItem === "feedback" ? "selected" : ""}`}>
-              <button className="flex items-center p-2 text-gray-900 rounded-lg text-white w-full" onClick={() => handleItemClick("feedback")}>
+              <button className="flex items-center p-2 text-gray-900 rounded-lg text-white w-full" onClick={() => handleItemClick("reviews")}>
                 <svg
-                  class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 text-white dark:text-gray-400 "
+                  class="flex-shrink-0 w-6 h-6 transition duration-75 text-white  "
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"

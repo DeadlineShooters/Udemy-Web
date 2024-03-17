@@ -18,6 +18,7 @@ import Sidebar from "./Components/Sidebar/sidebar.jsx";
 
 import { createBrowserRouter, RouterProvider, Routes, Route, Outlet } from "react-router-dom";
 import "./App.css";
+import Reviews from "./Pages/Instructor/Reviews.jsx";
 
 const Layout = () => {
   return (
@@ -138,10 +139,10 @@ const router = createBrowserRouter([
       //   path: "qa",
       //   element: <QA />,
       // },
-      // {
-      //   path: "reviews",
-      //   element: < />,
-      // },
+      {
+        path: "reviews",
+        element: <Reviews />,
+      },
     ],
   },
 ]);

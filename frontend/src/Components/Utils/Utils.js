@@ -7,17 +7,17 @@ export const getColor = () => {
 const getInitials = (name) => {
   let initials;
   const nameSplit = name.split(" ");
-  const nameLength = nameSplit.length;
-  if (nameLength > 1) {
-    initials = nameSplit[0].substring(0, 1) + nameSplit[nameLength - 1].substring(0, 1);
-  } else if (nameLength === 1) {
-    initials = nameSplit[0].substring(0, 1);
-  } else return;
+  // const nameLength = nameSplit.length;
+  // if (nameLength > 1) {
+  initials = nameSplit[0].substring(0, 1) + nameSplit[1].substring(0, 1);
+  // } else if (nameLength === 1) {
+  //   initials = nameSplit[0].substring(0, 1);
+  // } else return;
 
   return initials.toUpperCase();
 };
 
-export const createImageFromInitials = (size, name, color) => {
+export const createImageFromInitials = (size, name, color = "#2D2F31") => {
   if (name == null) return;
   name = getInitials(name);
 
