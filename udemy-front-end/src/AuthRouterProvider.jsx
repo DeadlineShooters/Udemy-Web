@@ -11,6 +11,7 @@ import AccountSettings from "./Pages/User/ManageAccount/accountSettings.jsx";
 import CloseAccount from './Pages/User/ManageAccount/closeAccount.jsx';
 import Register from "./Pages/User/Authentication/Register.jsx";
 import Login from "./Pages/User/Authentication/Login.jsx";
+import HandlePopUpLogin from "./Pages/User/Authentication/HandlePopUp.jsx";
 import CourseContent from './Pages/Course/Content/Content.jsx';
 import NotFound from './Components/404/404.jsx';
 
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
           path: "/login",
           element: <Login/>,
         },
+        {
+          path: "/login/success",
+          element: <HandlePopUpLogin/>,
+        }
       ]
     },
     {
