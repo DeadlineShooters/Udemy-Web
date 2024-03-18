@@ -26,7 +26,8 @@ const Navbar = () => {
   const sideBarToggle = () => {
     setTurnOnSideBar(!isTurnOnSideBar);
     console.log(isTurnOnSideBar);
-  }
+  };
+  const userName = "Nguyen Minh Thong";
   return (
     <div className='header'>
       <div className='navbar justify-between max-md:justify-center'>
@@ -65,7 +66,7 @@ const Navbar = () => {
             <Menu as="div" className="relative ml-4 max-md:hidden">
               <div>
                 <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:outline-none focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                  <img id="preview" src={createImageFromInitials(40, user ? user.userData.name.familyName + user.userData.name.givenName : "Default name", getColor())} alt="profile-pic" className="avatar"/>
+                  <img id="preview" src={createImageFromInitials(40, userName, getColor())} alt="profile-pic" className="avatar"/>
                 </Menu.Button>
               </div>
                 <Transition
@@ -153,10 +154,10 @@ const Navbar = () => {
         <div className={`sidebar md:hidden ${isTurnOnSideBar ? "open" : "" } border-r-2 shadow-xl`}>
           <div className='flex flex-row items-center bg-slate-50 py-2'>
             <div className="flex rounded-full text-sm focus:ring-2 focus:outline-none focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 ml-5">
-              <img id="preview" src={createImageFromInitials(80, user ? user.userData.name.familyName + user.userData.name.givenName : "Default name", getColor())} alt="profile-pic" className="avatar"/>
+              <img id="preview" src={createImageFromInitials(80, userName, getColor())} alt="profile-pic" className="avatar"/>
             </div>
             <div className='flex flex-col ml-5'>
-              <p className='font-bold'>Hi, {user.userData.name.familyName + " " + user.userData.name.givenName} </p>
+              <p className='font-bold'>Hi, {userName} </p>
               <p className=''>Welcome back</p>
             </div>
           </div>

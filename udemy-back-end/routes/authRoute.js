@@ -1,6 +1,7 @@
 import express from "express";
 import passport from "passport";
 import * as authController from "../controllers/user/authController.js";
+import user from "../models/user.js";
 
 const router = express.Router();
 
@@ -12,7 +13,20 @@ router.get("/login/google/failed", (req, res) => {
         message: "failure",
     })
 })
-router.get("/login/google/success", (req, res) => {
+router.get("/login/google/success", async (req, res) => {
+    if (req.user) {
+        const findEmail = req.user.emails[0].value;
+        const userExistWithEmail = await user.findOne({email: findEmail});
+        if (userExistWithEmail)
+        {
+            res.status(200).json({ success: true, message: "successful", user: req.user })
+        } else {
+            res.status(401).json({ success: false, message: "failure"})
+        }
+    }
+})
+
+router.get("/signin/success", (req, res) => {
     if (req.user) {
         res.status(200).json({
             success: true,
@@ -22,16 +36,18 @@ router.get("/login/google/success", (req, res) => {
         })
     }
 })
+
 router.get("/logout", (req, res) => {
     req.logout();
     res.redirect(CLIENT_URL);
 })
 router.get("/google", passport.authenticate("google", {scope: ["profile", "email"]}));
 router.get("/google/callback", passport.authenticate("google", {
-    successRedirect: CLIENT_URL,
+    successRedirect: "http://localhost:3000/login/success",
     failureRedirect: "/login/google/failed",
 }))
 
 router.post("/signup", authController.signup);
+router.post("/signin", authController.signin);
 
 export default router;

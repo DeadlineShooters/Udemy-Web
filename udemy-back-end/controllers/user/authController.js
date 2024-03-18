@@ -28,3 +28,21 @@ export const signup = async (req, res) => {
         res.status(500).json({ messages: "Registration failed" });
     }
 }
+
+export const signin = async (req, res) => {{
+    try {
+        const {email, password} = req.body;
+        const existingUserWithEmail = await user.findOne({email});
+        if (existingUserWithEmail) {
+            const isMatchPassword = bcrypt.compare(password, existingUserWithEmail.hashedPassword);
+            if (isMatchPassword) {
+                return res.status(200).json({success: true, existingUserWithEmail});
+            } else {
+                return res.status(400).send("User logins unsuccessfully");
+            }
+        }
+    } catch (err) {
+        console.log("Login error:", err);
+        res.status(500).json({ messages: "Login  failed" });
+    }
+}}
