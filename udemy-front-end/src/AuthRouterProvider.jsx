@@ -1,4 +1,4 @@
-import { RouterProvider, Outlet, createBrowserRouter, useNavigate } from "react-router-dom";
+import { RouterProvider, Outlet, createBrowserRouter } from "react-router-dom";
 import Navbar from './Components/Navbar/Navbar.jsx';
 import CourseNavbar from "./Components/CourseNavBar/CourseNavBar.jsx"
 import Home from './Pages/Home/Home.jsx';
@@ -11,7 +11,7 @@ import AccountSettings from "./Pages/User/ManageAccount/accountSettings.jsx";
 import CloseAccount from './Pages/User/ManageAccount/closeAccount.jsx';
 import Register from "./Pages/User/Authentication/Register.jsx";
 import Login from "./Pages/User/Authentication/Login.jsx";
-import HandlePopUpLogin from "./Pages/User/Authentication/HandlePopUp.jsx";
+import HandlePopUpLogin from "./Pages/User/Authentication/HandlePopUpLogin.jsx";
 import CourseContent from './Pages/Course/Content/Content.jsx';
 import NotFound from './Components/404/404.jsx';
 
@@ -57,8 +57,8 @@ const router = createBrowserRouter([
           element: <Login/>,
         },
         {
-          path: "/login/success",
-          element: <HandlePopUpLogin/>,
+          path: "/login/handle-message",
+          element: <HandlePopUpLogin/>
         }
       ]
     },

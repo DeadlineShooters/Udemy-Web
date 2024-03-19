@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import google_icon from "../../../Assets/google.png";
 import facebook_icon from "../../../Assets/facebook.png";
 import { Link, useNavigate} from "react-router-dom";
@@ -7,7 +7,8 @@ import { useAuth } from '../../../AuthContextProvider';
 
 const Login = () => {
   const [isChecked, setChecked] = useState(true);
-  const {setUser, isLogged, setIsLogged} = useAuth();
+  const {setUser, setIsLogged} = useAuth();
+  const [isLoginFailed, setLoginFailed] = useState(false);
   let features = 'menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=no,height=600,width=400';
   const googleAuth = () => {
     const popup = window.open("http://localhost:5000/auth/google", "_blank", features);
@@ -17,11 +18,41 @@ const Login = () => {
         popup.close();
         window.location.href = "http://localhost:3000/home";
       }
+      if (event.data === "Failed") {
+        popup.close();
+        setLoginFailed(true);
+      }
     });
   }
+  const facebookAuth = () => {
+    const popup = window.open("http://localhost:5000/auth/facebook", "_blank", features);
+    popup.postMessage("message", "http://localhost:3000/login");
+    window.addEventListener("message", (event) => {
+      if (event.data === "Exit") {
+        popup.close();
+        window.location.href = "http://localhost:3000/home";
+      }
+      if (event.data === "Failed") {
+        popup.close();
+        setLoginFailed(true);
+      }
+    });
+  }
+  const SendMessage = () => {
+    window.opener.postMessage("Exit", "http://localhost:3000/login");
+  }
+  useEffect(() => {
+    const closePopUp = () => {
+      if (!window.opener) {
+        window.close();
+      } else {
+        SendMessage();
+      }
+    }
+    closePopUp();
+  }, []);
   const [email, setEmail] = useState("");
   const [password, setPassWord] = useState("");
-
   const navigate = useNavigate();
   const handleCheckboxChange = () => {
     setChecked(!isChecked);
@@ -47,13 +78,20 @@ const Login = () => {
   }
   return (
     <div className='flex flex-col w-full items-center pt-20 font-bold text-2xl'>
+      {isLoginFailed === true ? (
+        <div className='px-5 py-2 mb-5 bg-red-300'>
+          <p className='text-lg'>Your google email does not exist. Please retry!</p>
+        </div>
+      ) : (
+        ""
+      )}
       <p>Login to Your Udemy Account</p>
       <form className='flex flex-col w-full items-center' onSubmit={submit}>
         <div className='flex flex-row items-center border border-slate-800 py-2 px-2 w-96 mt-4 text-lg hover:bg-gray-100 cursor-pointer' onClick={googleAuth}>
           <img src={google_icon} className='px-3' alt="google_icon"/>
           <p>Continue with Google</p>
         </div>
-        <div className='flex flex-row items-center border border-slate-800 py-2 px-2 w-96 mt-2 text-lg hover:bg-gray-100 cursor-pointer'>
+        <div className='flex flex-row items-center border border-slate-800 py-2 px-2 w-96 mt-2 text-lg hover:bg-gray-100 cursor-pointer' onClick={facebookAuth}>
           <img src={facebook_icon} className='px-3' alt="fb_icon"/>
           <p>Continue with Facebook</p>
         </div>
