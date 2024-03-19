@@ -21,7 +21,7 @@ export const signup = async (req, res) => {
             newUser.hashedPassword = hash;
             
             await newUser.save();
-            return res.status(200).send({ success: true, message: "Account created successfully" });
+            return res.status(200).send({ success: true, message: "Account created successfully", userData: newUser });
         }
     } catch (err) {
         console.log("Registration error:", err);
@@ -32,13 +32,13 @@ export const signup = async (req, res) => {
 export const signin = async (req, res) => {{
     try {
         const {email, password} = req.body;
-        const existingUserWithEmail = await user.findOne({email});
-        if (existingUserWithEmail) {
-            const isMatchPassword = bcrypt.compare(password, existingUserWithEmail.hashedPassword);
+        const userData = await user.findOne({email});
+        if (userData) {
+            const isMatchPassword = await bcrypt.compare(password, userData.hashedPassword);
             if (isMatchPassword) {
-                return res.status(200).json({success: true, existingUserWithEmail});
+                return res.status(200).json({success: true, userData});
             } else {
-                return res.status(400).send("User logins unsuccessfully");
+                return res.status(400).json({success: false});
             }
         }
     } catch (err) {

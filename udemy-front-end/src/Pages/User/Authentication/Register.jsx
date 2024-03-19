@@ -3,12 +3,15 @@ import { Link, useNavigate } from "react-router-dom";
 import eyeOpen from "../../../Assets/eye.png";
 import eyeClose from "../../../Assets/eye_close.png";
 import axios from "axios";
+import { useAuth } from '../../../AuthContextProvider';
 
 const Register = () => {
+  const {setUser, setIsLogged} = useAuth();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassWord] = useState("");
-  const [isChecked, setChecked] = useState(true);
+  const [isChecked, setChecked] = useState(false);
+  const [isRegisterFailed, setRegisterFailed] = useState(false);
   const handleCheckboxChange = () => {
     setChecked(!isChecked);
   };
@@ -23,16 +26,29 @@ const Register = () => {
       const response = await axios.post("http://localhost:5000/auth/signup", {
         fullName, email, password
       })
+      console.log(response);
       if (response.status === 200) {
+        const {userData} = await response.data;
+        setUser(userData);
+        setIsLogged(true);
+        localStorage.setItem('user', JSON.stringify(userData));
         navigate("/home", {replace: true});
       }
     } catch (err)
     {
+      setRegisterFailed(true);
       console.log(err);
     }
   }
   return (
     <div className='flex flex-col w-full items-center pt-20 font-bold text-2xl'>
+      {isRegisterFailed === true ? (
+        <div className='px-5 py-2 mb-5 bg-red-300'>
+          <p className='text-base'>Your email has been existed. Try with another!</p>
+        </div>
+      ) : (
+        ""
+      )}
       <p>Register Udemy account & Learn</p>
       <form onSubmit={submit}>
         <div className="relative z-0 w-96 mt-6 group">

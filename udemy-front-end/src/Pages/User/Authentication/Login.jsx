@@ -9,6 +9,7 @@ const Login = () => {
   const [isChecked, setChecked] = useState(true);
   const {setUser, setIsLogged} = useAuth();
   const [isLoginFailed, setLoginFailed] = useState(false);
+  const [isLoginGoogleFailed, setLoginGoogleFailed] = useState(false);
   let features = 'menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=no,height=600,width=400';
   const googleAuth = () => {
     const popup = window.open("http://localhost:5000/auth/google", "_blank", features);
@@ -20,7 +21,7 @@ const Login = () => {
       }
       if (event.data === "Failed") {
         popup.close();
-        setLoginFailed(true);
+        setLoginGoogleFailed(true);
       }
     });
   }
@@ -34,7 +35,7 @@ const Login = () => {
       }
       if (event.data === "Failed") {
         popup.close();
-        setLoginFailed(true);
+        setLoginGoogleFailed(true);
       }
     });
   }
@@ -63,24 +64,32 @@ const Login = () => {
       const response = await axios.post("http://localhost:5000/auth/signin", {
         email, password
       })
+      console.log(response.data);
       if (response.status === 200) {
-        const {existingUserWithEmail } = await response.data;
-        console.log(existingUserWithEmail);
-        setUser(existingUserWithEmail);
+        const {userData } = await response.data;
+        setUser(userData);
         setIsLogged(true);
-        localStorage.setItem('user', JSON.stringify(existingUserWithEmail));
+        localStorage.setItem('user', JSON.stringify(userData));
         navigate("/home", {replace: true});
       }
     } catch (err)
     {
+      setLoginFailed(true);
       console.log(err);
     }
   }
   return (
     <div className='flex flex-col w-full items-center pt-20 font-bold text-2xl'>
+      {isLoginGoogleFailed === true ? (
+        <div className='px-5 py-2 mb-5 bg-red-300'>
+          <p className='text-base'>Registered email must match Gmail. Try again!</p>
+        </div>
+      ) : (
+        ""
+      )}
       {isLoginFailed === true ? (
         <div className='px-5 py-2 mb-5 bg-red-300'>
-          <p className='text-lg'>Your google email does not exist. Please retry!</p>
+          <p className='text-base'>Your email or password is incorrect. Try again!</p>
         </div>
       ) : (
         ""
