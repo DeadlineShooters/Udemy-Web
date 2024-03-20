@@ -12,6 +12,7 @@ import Register from "./Pages/User/Authentication/Register.jsx";
 import Login from "./Pages/User/Authentication/Login.jsx";
 import CourseContent from './Pages/Course/Content/Content.jsx';
 import NotFound from './Components/404/404.jsx';
+import InstructorProfile from './Pages/Lecturer/InstructorProfile/InstructorProfile.jsx';
 
 import {createBrowserRouter, RouterProvider, Routes, Route, Outlet} from 'react-router-dom'
 import './App.css';
@@ -96,6 +97,10 @@ const router = createBrowserRouter([
       {  
         path: "close-account",
         element: <CloseAccount/>
+      },
+      {  
+        path: "instructor-profile",
+        element: <InstructorProfile/>
       },
     ]
   },
