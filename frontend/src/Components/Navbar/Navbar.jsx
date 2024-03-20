@@ -387,7 +387,7 @@ const Navbar = () => {
 									<div className='sticky bottom-0 w-full bg-white shadow-[0_-2px_4px_rgba(0,0,0,.08),0_-4px_12px_rgba(0,0,0,.08)] p-4'>
 										<div class='flex gap-2 items-center mb-2'>
 											<span class='font-bold text-gray-900 text-xl'>
-												<span>Total: </span> 
+												<span>Total: </span>
 												<span class='underline'>đ</span>
 												{courses.reduce((acc, course) => acc + course.discountedPrice, 0).toLocaleString()}
 											</span>

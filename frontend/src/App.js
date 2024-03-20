@@ -16,6 +16,7 @@ import CourseContent from './Pages/Course/Content/Content.jsx';
 import NotFound from './Components/404/404.jsx';
 import Sidebar from './Components/Sidebar/sidebar.jsx';
 import CoursesByCategory from './Pages/Discover/CoursesByCategory/coursesByCategory.jsx';
+import Cart from './Pages/Cart/cart.jsx';
 
 import { createBrowserRouter, RouterProvider, Routes, Route, Outlet } from 'react-router-dom';
 import './App.css';
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
 			{
 				path: '/login',
 				element: <Login />,
+			},
+			{
+				path: '/cart',
+				element: <Cart />,
 			},
 		],
 	},
