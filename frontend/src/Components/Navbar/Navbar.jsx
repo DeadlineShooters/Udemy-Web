@@ -144,19 +144,90 @@ const subCategories = [
 	],
 ];
 
+const courses = [
+	{
+		name: 'Docker & Kubernetes: The Practical Guide [2024 Edition]',
+		headline: 'Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up!',
+		instructor: 'Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller',
+		rating: 4.7,
+		ratingCnt: 25485,
+		hours: 23.5,
+		lectures: 262,
+		discountedPrice: 349000,
+		originalPrice: 2199000,
+		image: 'https://img-b.udemycdn.com/course/240x135/3490000_d298_2.jpg',
+	},
+	{
+		name: 'Docker & Kubernetes: The Practical Guide [2024 Edition]',
+		headline: 'Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up!',
+		instructor: 'Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller',
+		rating: 4.7,
+		ratingCnt: 25485,
+		hours: 23.5,
+		lectures: 262,
+		discountedPrice: 349000,
+		originalPrice: 2199000,
+		image: 'https://img-b.udemycdn.com/course/240x135/3490000_d298_2.jpg',
+	},
+	{
+		name: 'Docker & Kubernetes: The Practical Guide [2024 Edition]',
+		headline: 'Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up!',
+		instructor: 'Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller',
+		rating: 4.7,
+		ratingCnt: 25485,
+		hours: 23.5,
+		lectures: 262,
+		discountedPrice: 349000,
+		originalPrice: 2199000,
+		image: 'https://img-b.udemycdn.com/course/240x135/3490000_d298_2.jpg',
+	},
+	{
+		name: 'Docker & Kubernetes: The Practical Guide [2024 Edition]',
+		headline: 'Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up!',
+		instructor: 'Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller',
+		rating: 4.7,
+		ratingCnt: 25485,
+		hours: 23.5,
+		lectures: 262,
+		discountedPrice: 349000,
+		originalPrice: 2199000,
+		image: 'https://img-b.udemycdn.com/course/240x135/3490000_d298_2.jpg',
+	},
+	{
+		name: 'Docker & Kubernetes: The Practical Guide [2024 Edition]',
+		headline: 'Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up!',
+		instructor: 'Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller',
+		rating: 4.7,
+		ratingCnt: 25485,
+		hours: 23.5,
+		lectures: 262,
+		discountedPrice: 349000,
+		originalPrice: 2199000,
+		image: 'https://img-b.udemycdn.com/course/240x135/3490000_d298_2.jpg',
+	},
+];
+
 const Navbar = () => {
 	let username = 'Nguyen Minh Thong'; //Handle retrieve user data later
 	const [isLogged, setLoggout] = useState(true); //Handle log in later
 	function classNames(...classes) {
 		return classes.filter(Boolean).join(' ');
 	}
+
+	const [isWishlistDropdownOpen, setWishlistDropdownOpen] = useState(false);
+	const toggleWishlistDropdown = () => {
+		setWishlistDropdownOpen(!isWishlistDropdownOpen);
+	};
+
+	const [isCartDropdownOpen, setCartDropdownOpen] = useState(false);
+	const toggleCartDropdown = () => {
+		setCartDropdownOpen(!isCartDropdownOpen);
+	};
+
 	const logout = () => {
 		setLoggout(!isLogged);
 	};
 
-	const [openMenus, setOpenMenus] = useState(new Array(categories.length).fill(false));
-
-	const [openMenu, setOpenMenu] = useState(false);
 	return (
 		<div className='header'>
 			<div className='navbar'>
@@ -180,7 +251,9 @@ const Navbar = () => {
 										</MenuHandler>
 										<MenuList className='min-h-[40rem] w-64 top-16'>
 											{subCategories[ind].map((subCategory) => (
-												<MenuItem><div className='text-gray-900 hover:text-[#5624d0] w-full py-1'>{subCategory}</div></MenuItem>
+												<MenuItem>
+													<div className='text-gray-900 hover:text-[#5624d0] w-full py-1'>{subCategory}</div>
+												</MenuItem>
 											))}
 										</MenuList>
 									</MenuMT>
@@ -229,15 +302,105 @@ const Navbar = () => {
 				{isLogged ? (
 					<div className='flex items-center'>
 						<ul>
-							<li class='hover:text-purple-700'>
+							<li class='hover:text-purple-700 my-2'>
 								<Link to='/instructor'>Instructor</Link>
 							</li>
-							<li class='hover:text-purple-700'>
+							<li class='hover:text-purple-700 my-2'>
 								<Link to='/home/my-courses/learning'>My learning</Link>
 							</li>
 						</ul>
-						<img src={heart} alt='Wishlist' className='wishlist mx-4'></img>
-						<img src={cart} alt='Cart' className='cart mx-4'></img>
+						<div className='relative' onMouseEnter={toggleWishlistDropdown} onMouseLeave={toggleWishlistDropdown}>
+							<button id='dropdownSearchButton' className='flex items-center py-4 my-2' type='button'>
+								<img src={heart} alt='Wishlist' className='wishlist mx-4'></img>
+							</button>
+							{isWishlistDropdownOpen && (
+								<div
+									id='dropdownSearch'
+									className='z-10 absolute top-[calc(100%-1rem)] mt-2 right-0 bg-white shadow-[0_0_0_1px_#d1d7dc,0_2px_4px_rgba(0,0,0,.08),0_4px_12px_rgba(0,0,0,.08)] w-80'
+								>
+									<ul class='divide-y divide-gray-300 max-h-[32rem] pb-3 overflow-y-auto text-sm text-gray-700' aria-labelledby='dropdownSearchButton'>
+										{courses.map((course) => (
+											<button class='flex flex-col items-center p-4' onClick={() => {}}>
+												<div className='flex items-center'>
+													<div class='flex-shrink-0'>
+														<img class='object-cover object-center w-16 h-16' src={course.image} alt='' />
+													</div>
+													<div class='ps-3 flex flex-col gap-0.5'>
+														<div class='text-gray-900 font-bold text-sm text-left line-clamp-2'>{course.name}</div>
+														<div class='text-gray-900 text-xs text-left line-clamp-1'>{course.instructor}</div>
+														<div class='flex gap-2'>
+															<span class='font-bold text-gray-900 '>
+																<span class='underline'>đ</span>
+																{course.discountedPrice.toLocaleString()}
+															</span>
+															<span class='text-gray-700 line-through'>
+																<span class='underline'>đ</span>
+																{course.originalPrice.toLocaleString()}
+															</span>
+														</div>
+													</div>
+												</div>
+												<button className='border w-full p-2 border-gray-600 mt-4 font-bold text-gray-800 hover:bg-gray-200'>Add to card</button>
+											</button>
+										))}
+									</ul>
+									<div className='sticky bottom-0 w-full bg-white shadow-[0_-2px_4px_rgba(0,0,0,.08),0_-4px_12px_rgba(0,0,0,.08)] py-4'>
+										<button className='font-bold bg-gray-900 text-white w-11/12 mx-auto flex justify-center p-3'>Go to wishlist</button>
+									</div>
+								</div>
+							)}
+						</div>
+						<div className='relative' onMouseEnter={toggleCartDropdown} onMouseLeave={toggleCartDropdown}>
+							<button id='dropdownSearchButton' className='flex items-center py-4 my-2' type='button'>
+								<img src={cart} alt='Cart' className='cart mx-4'></img>
+							</button>
+							{isCartDropdownOpen && (
+								<div
+									id='dropdownSearch'
+									className='z-10 absolute top-[calc(100%-1rem)] mt-2 right-0 bg-white shadow-[0_0_0_1px_#d1d7dc,0_2px_4px_rgba(0,0,0,.08),0_4px_12px_rgba(0,0,0,.08)] w-80'
+								>
+									<ul class='divide-y divide-gray-300 max-h-[32rem] pb-3 overflow-y-auto text-sm text-gray-700' aria-labelledby='dropdownSearchButton'>
+										{courses.map((course) => (
+											<button class='flex flex-col items-center p-4' onClick={() => {}}>
+												<div className='flex items-center'>
+													<div class='flex-shrink-0'>
+														<img class='object-cover object-center w-16 h-16' src={course.image} alt='' />
+													</div>
+													<div class='ps-3 flex flex-col gap-0.5'>
+														<div class='text-gray-900 font-bold text-sm text-left line-clamp-2'>{course.name}</div>
+														<div class='text-gray-900 text-xs text-left line-clamp-1'>{course.instructor}</div>
+														<div class='flex gap-2'>
+															<span class='font-bold text-gray-900 '>
+																<span class='underline'>đ</span>
+																{course.discountedPrice.toLocaleString()}
+															</span>
+															<span class='text-gray-700 line-through'>
+																<span class='underline'>đ</span>
+																{course.originalPrice.toLocaleString()}
+															</span>
+														</div>
+													</div>
+												</div>
+											</button>
+										))}
+									</ul>
+									<div className='sticky bottom-0 w-full bg-white shadow-[0_-2px_4px_rgba(0,0,0,.08),0_-4px_12px_rgba(0,0,0,.08)] p-4'>
+										<div class='flex gap-2 items-center mb-2'>
+											<span class='font-bold text-gray-900 text-xl'>
+												<span>Total: </span> 
+												<span class='underline'>đ</span>
+												{courses.reduce((acc, course) => acc + course.discountedPrice, 0).toLocaleString()}
+											</span>
+											<span class='text-gray-700 line-through'>
+												<span class='underline'>đ</span>
+												{courses.reduce((acc, course) => acc + course.originalPrice, 0).toLocaleString()}
+											</span>
+										</div>
+										<button className='font-bold bg-gray-900 text-white w-full mx-auto flex justify-center p-3'>Go to cart</button>
+									</div>
+								</div>
+							)}
+						</div>
 						<Menu as='div' className='relative ml-4'>
 							<div>
 								<Menu.Button className='relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:outline-none focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800'>

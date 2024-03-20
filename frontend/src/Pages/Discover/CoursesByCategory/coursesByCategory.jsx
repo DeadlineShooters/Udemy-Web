@@ -411,7 +411,7 @@ const CoursesByCategory = () => {
 							</Accordion>
 						))}
 					</div>
-					<div className='sticky bottom-0 w-full bg-white shadow-inner py-4'>
+					<div className='sticky bottom-0 w-full bg-white shadow-[0_-2px_4px_rgba(0,0,0,.08),0_-4px_12px_rgba(0,0,0,.08)] py-4'>
 						<button className='bg-gray-900 text-white w-11/12 mx-auto flex justify-center p-2'>Done</button>
 					</div>
 				</div>
