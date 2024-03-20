@@ -1,6 +1,6 @@
 import Navbar from './Components/Navbar/Navbar.jsx';
 import CourseNavbar from './Components/CourseNavBar/CourseNavBar.jsx';
-import Home from './Pages/Home/Home.jsx';
+import Home from './Pages/Discover/Home/Home.jsx';
 import MyLearning from './Pages/User/MyCourses/Learning/myLearning.jsx';
 import Wishlist from './Pages/User/MyCourses/Wishlist/Wishlist.jsx';
 import Archived from './Pages/User/MyCourses/Archived/Archived.jsx';
@@ -15,6 +15,7 @@ import Statistics from './Pages/Instructor/Statistics/Statistics.jsx';
 import CourseContent from './Pages/Course/Content/Content.jsx';
 import NotFound from './Components/404/404.jsx';
 import Sidebar from './Components/Sidebar/sidebar.jsx';
+import CoursesByCategory from './Pages/Discover/CoursesByCategory/coursesByCategory.jsx';
 
 import { createBrowserRouter, RouterProvider, Routes, Route, Outlet } from 'react-router-dom';
 import './App.css';
@@ -77,6 +78,16 @@ const router = createBrowserRouter([
 			{
 				path: 'my-courses/archived',
 				element: <Archived />,
+			},
+		],
+	},
+	{
+		path: '/courses',
+		element: <Layout />,
+		children: [
+			{
+				path: 'category-name',
+				element: <CoursesByCategory />,
 			},
 		],
 	},

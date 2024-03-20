@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import { Card, CardHeader, CardBody, Typography, Button } from '@material-tailwind/react';
 import './Home.css';
 
 const responsive = {
@@ -169,6 +168,28 @@ const subCategories = [
 const Home = () => {
 	const [categoryInd, setCategoryInd] = useState(null);
 	const refContainer = useRef();
+	const [containerWidth, setContainerWidth] = useState(0);
+
+	useEffect(() => {
+		setContainerWidth(refContainer.current.offsetWidth);
+
+		const handleResize = () => {
+			setContainerWidth(refContainer.current.offsetWidth);
+		};
+
+		window.addEventListener('resize', handleResize);
+
+		// Cleanup function to remove the event listener
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
+
+	useEffect(() => {
+		console.log(containerWidth);
+		if (refContainer.current) {
+			setContainerWidth(refContainer.current.offsetWidth);
+			document.documentElement.style.setProperty('--containerWidth', `${containerWidth}px`);
+		}
+	}, [containerWidth]);
 
 	return (
 		<>
@@ -224,11 +245,7 @@ const Home = () => {
 						<span className='font-bold text-2xl text-gray-800 block mb-4'>
 							Top courses in <span className='text-[#5624d0] underline'>{category}</span>
 						</span>
-						<Carousel
-							containerClass=''
-							itemClass='m-2 2xl:w-[calc((1340px-4rem-5rem)/5)] xl:w-[calc((100vw-5rem-5rem)/5)] lg:w-[calc((100vw-5rem-4rem)/4)] md:w-[calc((100vw-5rem-3rem)/3)] sm:w-[calc((100vw-5rem-2rem)/2)] w-[calc((100vw-5rem-1rem))]'
-							responsive={responsive}
-						>
+						<Carousel containerClass='' itemClass='m-2 itemClassHome' responsive={responsive}>
 							{categories.map((category) => (
 								<div class=''>
 									<img class='' src='https://img-c.udemycdn.com/course/480x270/3490000_d298_2.jpg' alt='' />
