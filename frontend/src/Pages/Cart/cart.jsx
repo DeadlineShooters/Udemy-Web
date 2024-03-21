@@ -207,7 +207,7 @@ const Cart = () => {
 			<div className='flex justify-center'>
 				<div ref={refContainer} className='w-full max-w-[1340px] px-12 pt-12'>
 					<div className='font-bold text-4xl mb-4'>Shopping Cart</div>
-					<div className='flex'>
+					<div className='flex flex-col-reverse md:flex-row'>
 						<div className='grow'>
 							{courses.length > 0 ? (
 								<div className='w-full'>
@@ -316,7 +316,7 @@ const Cart = () => {
 									</ul>
 								</div>
 							) : null}
-                            {courses.length > 0 ? (
+							{courses.length > 0 ? (
 								<div className='w-full'>
 									<div className='font-bold mb-2 mt-8'>Recently wishlisted</div>
 									<ul className='divide-y divide-gray-300 border-t border-gray-300'>
@@ -369,9 +369,9 @@ const Cart = () => {
 								</div>
 							) : null}
 						</div>
-						<div className='flex flex-col grow min-w-80 ml-12'>
-							<span>Total: </span>
-							<span class='font-bold text-gray-900 text-xl'>
+						<div className='flex flex-col grow min-w-72 xl:ml-12 lg:ml-8 md:ml-4 gap-0.5'>
+							<span className='font-bold text-gray-600 mb-2'>Total: </span>
+							<span class='font-bold text-gray-900 text-4xl'>
 								<span class='underline'>đ</span>
 								{courses.reduce((acc, course) => acc + course.discountedPrice, 0).toLocaleString()}
 							</span>
@@ -379,59 +379,23 @@ const Cart = () => {
 								<span class='underline'>đ</span>
 								{courses.reduce((acc, course) => acc + course.originalPrice, 0).toLocaleString()}
 							</span>
-							<span>
+							<span className='mb-2.5 text-gray-900'>
 								{Math.round(
 									(courses.reduce((acc, course) => acc + course.discountedPrice, 0) / courses.reduce((acc, course) => acc + course.originalPrice, 0)) *
 										100
 								)}
 								% off
 							</span>
-							<button className='w-full bg-[#a435f0] text-white p-3 font-bold'>Checkout</button>
+							<button className='w-full bg-[#a435f0] text-white p-3 font-bold mb-4'>Checkout</button>
+							<div className='w-full border-t border-gray-300 py-2 font-bold text-gray-800'>Promotions</div>
+							<form action='' className='flex text-sm items-center'>
+								<input className='border border-gray-700 px-4 py-2 w-full box-border outline-none' placeholder='Enter Coupon' />
+								<button className='bg-[#a435f0] text-white px-4 py-2 border border-[#a435f0] font-bold'>Apply</button>
+							</form>
 						</div>
 					</div>
 				</div>
 			</div>
-			<Drawer open={openFilterBarSm} onClose={toggleDrawer} direction='right' className='w-72' style={{ zIndex: 9999999 }}>
-				<div className='relative h-full overflow-y-scroll'>
-					<div className='p-4 min-h-screen'>
-						{filterFields.map((field, ind) => (
-							<Accordion open={openFilters[ind]} icon={<ArrowIcon open={openFilters[ind]} />}>
-								<AccordionHeader onClick={() => handleOpenFilters(ind)}>{field}</AccordionHeader>
-								<AccordionBody>
-									{filterOptions[ind].map((option) => (
-										<List className='p-0'>
-											<ListItem className='p-0'>
-												<label className='flex w-full cursor-pointer items-center p-2 m-0'>
-													<ListItemPrefix className='mr-3'>
-														<Checkbox
-															ripple={false}
-															className='hover:before:opacity-0'
-															containerProps={{
-																className: 'p-0',
-															}}
-														/>
-													</ListItemPrefix>
-													<Typography color='blue-gray' className='font-medium'>
-														<div className={`flex ${ind === 0 ? 'gap-2' : ''}`}>
-															<div className='flex gap-0.5'>{ind === 0 && RenderStars({ rating: option })}</div>
-															<span className='text-sm'>
-																{option} {ind === 0 && ' & up'}
-															</span>
-														</div>
-													</Typography>
-												</label>
-											</ListItem>
-										</List>
-									))}
-								</AccordionBody>
-							</Accordion>
-						))}
-					</div>
-					<div className='sticky bottom-0 w-full bg-white shadow-[0_-2px_4px_rgba(0,0,0,.08),0_-4px_12px_rgba(0,0,0,.08)] py-4'>
-						<button className='bg-gray-900 text-white w-11/12 mx-auto flex justify-center p-2'>Done</button>
-					</div>
-				</div>
-			</Drawer>
 		</>
 	);
 };
