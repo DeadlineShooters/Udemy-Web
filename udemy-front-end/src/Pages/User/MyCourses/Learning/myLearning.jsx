@@ -34,13 +34,13 @@ const MyLearning = () => {
   }, ]
   return (
     <div>
-      <div className="upper">
+      <div className="upper-mylearning">
           <h1 className="title text-5xl max-sm:text-4xl font-bold pt-10 pb-10">My learning</h1>
           <div className='filter flex items-center'>
-            <button className="text-white border-b-8 font-bold py-2 rounded text-lg">
+            <button className="text-white border-b-8 font-bold py-2 rounded text-lg max-sm:text-base">
               <Link to="/home/my-courses/learning">All courses</Link>
             </button>
-            <button className="text-whit lg:border-b-8 border-slate-900 font-bold py-2 rounded text-lg mx-8">
+            <button className="text-white lg:border-b-8 border-slate-900 font-bold py-2 rounded text-lg mx-8">
               <Link to="/home/my-courses/wishlist">Wishlist</Link>
             </button>
             <button className="text-white lg:border-b-8 border-slate-900 font-bold py-2 rounded text-lg">
@@ -49,7 +49,7 @@ const MyLearning = () => {
           </div>
       </div>
       <div className="lower">
-        <form className="searchbar items-end w-1/4 ml-auto">
+        <form className="searchbar items-end w-80 ml-auto">
           <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
           <div className="relative">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">

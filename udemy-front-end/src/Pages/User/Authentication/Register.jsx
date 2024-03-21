@@ -8,6 +8,8 @@ import { useAuth } from '../../../AuthContextProvider';
 const Register = () => {
   const {setUser, setIsLogged} = useAuth();
   const [fullName, setFullName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassWord] = useState("");
   const [isChecked, setChecked] = useState(false);
@@ -23,8 +25,11 @@ const Register = () => {
   const submit = async (e) => {
     e.preventDefault();
     try {
+      const firstName = fullName.split(" ").slice(0, -1).join(" ");
+      const lastName = fullName.split(" ").slice(-1).join(" ");
+      console.log("First name: ", firstName);
       const response = await axios.post("http://localhost:5000/auth/signup", {
-        fullName, email, password
+        firstName, lastName, email, password
       })
       console.log(response);
       if (response.status === 200) {

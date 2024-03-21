@@ -2,8 +2,11 @@ import React from 'react';
 import {getColor,createImageFromInitials} from '../../../Components/Utils/Utils.js';
 import { Link } from "react-router-dom";
 import './editProfile.css';
+import { useAuth } from '../../../AuthContextProvider.jsx';
 
 const EditProfile = () => {
+  const {userData} = useAuth();
+  console.log("Edit profile", userData);
   const user = {
     firstName: "Nguyen Minh",
     lastName: "Thong",
@@ -15,7 +18,7 @@ const EditProfile = () => {
       link: "",
     }
   };
-  let fullname = user.firstName + " " + user.lastName;
+  let fullname = userData.firstName + " " + userData.lastName;
   return (
     <div className="template flex flex-row pt-8">
       <div className="flex flex-col border border-r-0 border-slate-500" style={{height: "40rem"}}>
@@ -24,7 +27,7 @@ const EditProfile = () => {
             <img id="preview" src={createImageFromInitials(160, fullname, getColor())} alt="profile-pic" className="avatar"/>
           </div>
           <p className="text-xl mt-3 font-bold text-center">{fullname}</p>
-          <p className="text-lg italic text-center text-gray-500">{user.heading}</p>
+          <p className="text-lg italic text-center text-gray-500">{userData.heading}</p>
         </div>
         <div className="pl-10 py-2 border border-l-0 border-r-0 border-slate-500 bg-sky-950 text-white font-bold">
           <Link to="/user/edit-profile">User profile</Link>
@@ -45,25 +48,25 @@ const EditProfile = () => {
           <div className='flex flex-col'>
             <p className='font-bold px-12 pt-2'>Basics:</p>
             <form className='w-full px-12 pt-2'>
-              <input type="text" id="small-input" className="block w-full p-2 text-gray-900 border border-gray-500 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" defaultValue={user.firstName}/>
+              <input type="text" id="small-input" className="block w-full p-2 text-gray-900 border border-gray-500 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" defaultValue={userData.firstName}/>
             </form>
             <form className='w-full px-12 pt-2'>
-              <input type="text" id="small-input" className="block w-full p-2 text-gray-900 border border-gray-500 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" defaultValue={user.lastName}/>
+              <input type="text" id="small-input" className="block w-full p-2 text-gray-900 border border-gray-500 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" defaultValue={userData.lastName}/>
             </form>
             <form className='w-full px-12 pt-2'>
-              <input type="text" id="small-input" className="block w-full p-2 text-gray-900 border border-gray-500 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" defaultValue={user.heading}/>
+              <input type="text" id="small-input" className="block w-full p-2 text-gray-900 border border-gray-500 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" defaultValue={userData.heading}/>
             </form>
           </div>
           <div className='flex flex-col'>
             <p className='font-bold px-12 pt-2'>Description:</p>
             <form className="px-12 pt-2">
-              <textarea id="message" rows="4" className="block p-1 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-500 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" defaultValue={user.description}/>
+              <textarea id="message" rows="4" className="block p-1 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-500 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" defaultValue={userData.description}/>
             </form>
           </div>
           <div className='flex flex-col'>
             <p className='font-bold px-12 pt-2'>Links:</p>
             <form className='w-full px-12 pt-2'>
-              <input type="text" id="small-input" className="block w-full p-2 text-gray-900 border border-gray-500 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder='Website (http(s)://..)' defaultValue={user.website.link}/>
+              <input type="text" id="small-input" className="block w-full p-2 text-gray-900 border border-gray-500 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder='Website (http(s)://..)' defaultValue={userData?.socialLinks?.web}/>
             </form>
             <form className='w-full px-12 pt-2'>
               <div className="flex">

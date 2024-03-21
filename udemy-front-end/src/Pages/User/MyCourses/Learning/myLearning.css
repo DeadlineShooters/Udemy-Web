@@ -1,21 +1,34 @@
-.upper {
+.upper-mylearning {
     background-color: #151b32; /* Deep Blue */
     color: #fff; /* White text */
     width: 100%;
     min-width: 100%;
     max-width: 100%;
 }
-.lower {
+.lower-mylearning {
     background-color: #fff; /* White */
     right: 1;
 }
-.upper .title {
+.upper-mylearning .title {
     padding-left: 21%;
 }
-.upper .filter {
+.upper-mylearning .filter {
     padding-left: 21%;
 }
-.lower .searchbar {
+
+@media (max-width: 320px) {
+    .upper-mylearning .title {
+        padding-left: 5%;
+    }
+    .upper-mylearning .filter {
+        padding-left: 5%;
+    }
+    .searchbar {
+        margin-right: 0%;
+        width: 100%;
+    }
+}
+.lower-mylearning .searchbar {
     margin-right: 20%;
 }
 @media (min-width: 1024px) {

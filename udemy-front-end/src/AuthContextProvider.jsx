@@ -43,7 +43,7 @@ const AuthContextProvider = ({ children }) => {
     }, [setUser, setIsLogged]);
     const userData = JSON.parse(localStorage.getItem('user'));
     return (
-        <AuthContext.Provider value={{ user, setUser, userData, isLogged, setIsLogged }}>
+        <AuthContext.Provider value={{ user, userData, isLogged, setUser, setIsLogged }}>
             {children}
         </AuthContext.Provider>
     );

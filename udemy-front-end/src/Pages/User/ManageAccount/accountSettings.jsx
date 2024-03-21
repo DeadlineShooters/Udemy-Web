@@ -41,7 +41,7 @@ const AccountSettings = () => {
       <div className="flex flex-col border border-slate-500 w-1/2" style={{height: "40rem"}}>
         <div className="border border-l-0 border-r-0 border-t-0 border-slate-500 text-center p-3">
           <p className='font-bold text-2xl'>Account settings</p>
-          <p className='text-base mt-2'>Edit your account settings and change your password here</p>
+          <p className='text-base mt-2 lg:text-sm'>Edit your account settings and change your password here</p>
         </div>
         <div className="flex flex-col border border-x-0 border-t-0 border-slate-500">
           <p className='font-bold px-12 pt-5'>Email:</p>
@@ -65,10 +65,10 @@ const AccountSettings = () => {
         <div className='flex flex-col'>
           <p className='font-bold px-12 pt-2'>Change password:</p>
           <form className='w-full px-12 pt-2'>
-            <input type="password" id="small-input" className="block w-full p-2 text-gray-900 border border-gray-500 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder='Enter new password'/>
+            <input type="password" id="new-password" className="block w-full p-2 text-gray-900 border border-gray-500 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder='Enter new password'/>
           </form>
           <form className='w-full px-12 pt-2'>
-            <input type="password" id="small-input" className="block w-full p-2 text-gray-900 border border-gray-500 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder='Re-type new password'/>
+            <input type="password" id="re-enter-password" className="block w-full p-2 text-gray-900 border border-gray-500 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder='Re-type new password'/>
           </form>
         </div>
         <div className='pl-12 pt-5'>
