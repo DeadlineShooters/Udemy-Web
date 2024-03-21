@@ -10,28 +10,48 @@ import course_overlay from "../../../../Assets/CourseOverlay.png";
 import more_actions from "../../../../Assets/more_actions.png";
 import share from "../../../../Assets/share.png";
 import archive from "../../../../Assets/archive.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import EditRatingButton from "../../../../Components/Feedback/EditRatingButton";
 
 const MyLearning = () => {
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
-
-  const courses = [{
-    title: "Software design for beginners (2024)",
-    img: course_placeholder1,
-    instructor: "FIT HCMUS",
-    progress: 1/8,
-  }, {
-    title: "Introduction to Python (newest version, 2024)",
-    img: course_placeholder2,
-    instructor: "Tomato Group",
-    progress: 1/7,
-  }, {
-    title: "Data visualization with Kibana",
-    img: course_placeholder3,
-    instructor: "Onee Academy",
-    progress: 0,
-  }, ]
+  const review = {
+    rating: 4,
+    feedback: "Very thorough course with many quizzes for you to test your knowledge",
+  };
+  const courses = [
+    {
+      title: "Software design for beginners (2024)",
+      img: course_placeholder1,
+      instructor: "FIT HCMUS",
+      progress: 1 / 8,
+      avgRating: 5,
+    },
+    {
+      title: "Introduction to Python (newest version, 2024)",
+      img: course_placeholder2,
+      instructor: "Tomato Group",
+      progress: 1 / 7,
+      avgRating: 5,
+    },
+    {
+      title: "Data visualization with Kibana",
+      img: course_placeholder3,
+      instructor: "Onee Academy",
+      progress: 0,
+      avgRating: 5,
+    },
+    {
+      title: "Data visualization with Kibana",
+      img: course_placeholder3,
+      instructor: "Onee Academy",
+      progress: 0,
+      avgRating: 0,
+    },
+  ];
   return (
     <div>
       <div className="upper-mylearning">
@@ -123,14 +143,17 @@ const MyLearning = () => {
                         </Transition>
                       </Menu>
                     </div>
-                    <p className='text-lg md:text-lg font-bold mt-2'>{course.title}</p>
+                    <p className='text-lg md:text-lg font-bold'>{course.title}</p>
                   </div>
                   <div>
                     <p className='text-slate-500 text-base mt-3'>{course.instructor}</p>
                     <div className="w-full bg-gray-200 rounded-full h-2 mt-3 dark:bg-gray-700">
                       <div className="bg-blue-600 h-2 rounded-full" style={{width: (course.progress * 100) + "%"}}></div>
                     </div>
-                    <p className='text-slate-500 text-base mt-3'>{(course.progress.toPrecision(4) * 100)}% Complete</p>
+                      <div className="flex flex-row items-start justify-between mt-3">
+                      <p className='text-slate-500  text-sm'>{(course.progress.toPrecision(4) * 100)}% Complete</p>
+                        {index !== 3 ? <EditRatingButton review={review} /> : <EditRatingButton />}
+                      </div>
                   </div>
                 </div>
               </div>
