@@ -375,7 +375,7 @@ const CoursesByCategory = () => {
 					</div>
 				</div>
 			</div>
-			<Drawer open={openFilterBarSm} onClose={toggleDrawer} direction='right' className='w-72' style={{ zIndex: 9999999 }}>
+			<Drawer open={openFilterBarSm} onClose={toggleDrawer} direction='right' className='w-72 z-9999'>
 				<div className='relative h-full overflow-y-scroll'>
 					<div className='p-4 min-h-screen'>
 						{filterFields.map((field, ind) => (

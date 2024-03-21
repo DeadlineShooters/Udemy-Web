@@ -1,17 +1,12 @@
-import React from 'react'
-import Sidebar from '../../../Components/Sidebar/sidebar'
+import React from "react";
+import DashboardHeaderTitle from "../../../Components/DashboardHeaderTitle";
 
 const ManageCourses = () => {
   return (
-    <>
-    <Sidebar />
-			<div className='flex'>
-				<div className='md:w-16 h-screen'></div>
-				<div className='container mx-auto p-6 py-12 lg:px-12'>
-          </div>
-          </div>
-          </>
-  )
-}
+    <DashboardHeaderTitle title={"Courses"}>
+      <a href="/instructor/course/123/manage/curriculum">Edit course</a>
+    </DashboardHeaderTitle>
+  );
+};
 
-export default ManageCourses
+export default ManageCourses;

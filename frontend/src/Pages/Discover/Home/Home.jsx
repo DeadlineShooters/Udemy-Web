@@ -215,7 +215,7 @@ const Home = () => {
 					))}
 				</ul>
 				<ul
-					class='w-full z-40 absolute bg-[#2d2f31] text-white md:flex justify-center shadow-md flex-wrap max-h-12 overflow-hidden'
+					class='w-full z-9999 absolute bg-[#2d2f31] text-white md:flex justify-center shadow-md flex-wrap max-h-12 overflow-hidden'
 					onMouseEnter={() => {
 						setCategoryInd(categoryInd);
 					}}

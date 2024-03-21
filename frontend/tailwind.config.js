@@ -5,6 +5,9 @@ module.exports = withMT({
 	content: ['./src/**/*.{js,jsx,ts,tsx}'],
 	theme: {
 		extend: {
+			colors: {
+				'course-title-bg-grey': '#2e2f31',
+			},
 			fontFamily: {
 				cabin: ['Cabin', 'sans-serif'],
 			},
@@ -13,8 +16,9 @@ module.exports = withMT({
 			center: true,
 		},
 		zIndex: {
-			'9999999': '9999999',
-		  }
+			9999: '9999',
+			99999: '99999',
+		},
 	},
 	plugins: [
 		require('@tailwindcss/line-clamp'),

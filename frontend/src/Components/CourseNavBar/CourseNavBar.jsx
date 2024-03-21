@@ -22,7 +22,7 @@ const CourseNavbar = () => {
         <div class='leftBar flex items-center'>
           <Link to="/"><img src={logo} alt='' class='logo'></img></Link>
           <ul class="mx-5 text-white">
-              <li class="text-lg hover:text-gray-300">{courseName}</li>
+              <a href='/course/:courseId' ><li class="text-lg hover:text-gray-300">{courseName}</li></a>
           </ul>
         </div>
         <div className='rightBar flex items-center'>
