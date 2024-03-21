@@ -1,12 +1,17 @@
-import React from 'react'
-import './Home.css'
+import React from "react";
+import "./Home.css";
+import { Link } from "react-router-dom";
 
 const Home = () => {
-  return (
-    <div className='container'>
-      This is home page
-    </div>
-  )
-}
+  const id = "the-complete-web-development-bootcamp";
 
-export default Home
+  return (
+    <div className="container">
+      This is home page
+      <br />
+      <Link to={`/course/${id}`}>Course details</Link>
+    </div>
+  );
+};
+
+export default Home;

@@ -1,0 +1,14 @@
+.rating-button {
+  padding: 8px;
+  margin: 5px 3px;
+
+  border: 1px solid #dcdcdc;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 110px;
+}
+
+#average-text {
+  font-family: "RobotoFlex";
+  font-weight: 600;
+}
