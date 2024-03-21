@@ -1,4 +1,4 @@
-import { RouterProvider, Outlet, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, Outlet, createBrowserRouter, useLocation } from "react-router-dom";
 import Navbar from './Components/Navbar/Navbar.jsx';
 import CourseNavbar from "./Components/CourseNavBar/CourseNavBar.jsx"
 import Home from './Pages/Home/Home.jsx';
@@ -22,9 +22,10 @@ import CourseLandingPage from "./Pages/Instructor/ManageCourses/CourseLandingPag
 import Reviews from "./Pages/Instructor/Reviews.jsx";
 import ManageCourseLayout from "./Components/CourseManagement/ManageCourseLayout.jsx";
 import Curriculum from "./Pages/Instructor/ManageCourses/Curriculum.jsx";
-
+import ProtectedRoutes from "./Components/Utils/AuthSecure.jsx";
 // import fonts
 import "./fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf";
+import { useAuth } from "./AuthContextProvider.jsx";
 
 const Layout = () => {
   return(
@@ -85,40 +86,47 @@ const router = createBrowserRouter([
   },
   {
     path: "/home",
-    element: <Layout/>,
-    children: [
-    {  
-      path: "my-courses/learning",
-      element: <MyLearning/>
-    },
-    {  
-      path: "my-courses/wishlist",
-      element: <Wishlist/>
-    },
-    {  
-      path: "my-courses/archived",
-      element: <Archived/>
+    element: <ProtectedRoutes/>,
+    children: [{
+      path: "",
+      element: <Layout/>,
+      children: [
+      {
+        path: "my-courses/learning",
+        element: <MyLearning/>
+      },
+      {
+        path: "my-courses/wishlist",
+        element: <Wishlist/>
+      },
+      {  
+        path: "my-courses/archived",
+        element: <Archived/>
+      }]
     }]
   },
   {
     path: "/user",
-    element: <Layout/>,
-    children: [
-    {  
-      path: "public-profile",
-      element: <PublicProfile/>
-    },
-    {  
-      path: "edit-profile",
-      element: <EditProfile/>
-    },
-    {  
-      path: "account-settings",
-      element: <AccountSettings/>
-    },
-    {  
-      path: "close-account",
-      element: <CloseAccount/>
+    element: <ProtectedRoutes/>,
+    children: [{
+      path: "",
+      element: <Layout/>,
+      children: [{  
+        path: "public-profile",
+        element: <PublicProfile/>
+      },
+      {  
+        path: "edit-profile",
+        element: <EditProfile/>
+      },
+      {  
+        path: "account-settings",
+        element: <AccountSettings/>
+      },
+      {  
+        path: "close-account",
+        element: <CloseAccount/>
+      }]
     }]
   },
   {
@@ -129,49 +137,62 @@ const router = createBrowserRouter([
       path: "",
       element: <CourseDetail/>
     }],
-  }, {
+  }, 
+  {
     path: "/course/:courseId/learn/:videoId",
-    element: <CourseLayout/>,
+    element: <ProtectedRoutes/>,
     children: [{
       path: "",
-      element: <CourseContent/>
+      element: <CourseLayout/>,
+      children: [{
+        path: "",
+        element: <CourseContent/>
+      }]
     }]
   },
   {
     path: "/instructor",
-    element: <CourseDashboardLayout />,
-    children: [
-      {
-        path: "courses",
-        element: <ManageCourses />,
-      },
-      {
-        path: "statistics",
-        element: <Statistics />,
-      },
-      // {
-      //   path: "qa",
-      //   element: <QA />,
-      // },
-      {
-        path: "reviews",
-        element: <Reviews />,
-      },
-    ],
+    element: <ProtectedRoutes/>,
+    children: [{
+      path: "",
+      element: <CourseDashboardLayout />,
+      children: [
+        {
+          path: "courses",
+          element: <ManageCourses />,
+        },
+        {
+          path: "statistics",
+          element: <Statistics />,
+        },
+        // {
+        //   path: "qa",
+        //   element: <QA />,
+        // },
+        {
+          path: "reviews",
+          element: <Reviews />,
+        },
+      ],
+    }]
   },
   {
     path: "/instructor/course/:courseId/manage",
-    element: <ManageCourseLayout />,
-    children: [
-      {
-        path: "curriculum",
-        element: <Curriculum />,
-      },
-      {
-        path: "basics",
-        element: <CourseLandingPage />,
-      },
-    ],
+    element: <ProtectedRoutes/>,
+    children: [{
+      path: "",
+      element: <ManageCourseLayout />,
+      children: [
+        {
+          path: "curriculum",
+          element: <Curriculum />,
+        },
+        {
+          path: "basics",
+          element: <CourseLandingPage />,
+        },
+      ],
+    }]
   },
 ]);
 
