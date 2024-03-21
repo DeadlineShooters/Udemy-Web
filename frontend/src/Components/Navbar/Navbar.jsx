@@ -61,7 +61,7 @@ const Navbar = () => {
               {user.instructor !== null ? 
               (
                 <li class="hover:text-purple-700">
-                  <Link to="/instructor">Instructor</Link>
+                  <Link to="/instructor/courses">Instructor</Link>
                 </li>
               ) : (
                 <li className='hover:text-purple-700 hide-teach-udemy'>

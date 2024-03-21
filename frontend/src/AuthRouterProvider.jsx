@@ -18,7 +18,10 @@ import CourseDetail from "./Pages/User/CourseLandingPage/CourseDetail.jsx";
 import ManageCourses from "./Pages/Instructor/ManageCourses/ManageCourses.jsx";
 import Statistics from "./Pages/Instructor/Statistics/Statistics.jsx";
 import Sidebar from "./Components/Sidebar/sidebar.jsx";
+import CourseLandingPage from "./Pages/Instructor/ManageCourses/CourseLandingPage.jsx";
 import Reviews from "./Pages/Instructor/Reviews.jsx";
+import ManageCourseLayout from "./Components/CourseManagement/ManageCourseLayout.jsx";
+import Curriculum from "./Pages/Instructor/ManageCourses/Curriculum.jsx";
 
 // import fonts
 import "./fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf";
@@ -153,6 +156,20 @@ const router = createBrowserRouter([
       {
         path: "reviews",
         element: <Reviews />,
+      },
+    ],
+  },
+  {
+    path: "/instructor/course/:courseId/manage",
+    element: <ManageCourseLayout />,
+    children: [
+      {
+        path: "curriculum",
+        element: <Curriculum />,
+      },
+      {
+        path: "basics",
+        element: <CourseLandingPage />,
       },
     ],
   },
