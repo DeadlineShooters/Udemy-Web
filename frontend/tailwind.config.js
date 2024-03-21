@@ -1,3 +1,4 @@
+const plugin = require("tailwindcss/plugin");
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
@@ -7,6 +8,26 @@ module.exports = {
         "course-title-bg-grey": "#2e2f31",
       },
     },
+    container: {
+      center: true,
+    },
   },
-  plugins: [],
+  plugins: [
+    require("@tailwindcss/line-clamp"),
+    plugin(function ({ addComponents }) {
+      const cardContainer = {
+        ".cardContainer": {
+          width: "100%",
+          marginLeft: "auto",
+          marginRight: "auto",
+          "@screen sm": { maxWidth: "730px" },
+          "@screen md": { maxWidth: "770px" },
+          "@screen lg": { maxWidth: "1024px" },
+          "@screen xl": { maxWidth: "1024px" },
+          "@screen 2xl": { maxWidth: "1024px" },
+        },
+      };
+      addComponents(cardContainer);
+    }),
+  ],
 };

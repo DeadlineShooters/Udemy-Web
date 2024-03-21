@@ -1,5 +1,5 @@
-import React from 'react';
-import {getColor,createImageFromInitials} from '../../../Components/Utils/Utils.js';
+import React from "react";
+import { getColor, createImageFromInitials } from "../../../Components/Utils/Utils.js";
 import { Link } from "react-router-dom";
 import './editProfile.css';
 import { useAuth } from '../../../AuthContextProvider.jsx';
@@ -16,7 +16,7 @@ const EditProfile = () => {
       fb: "",
       yb: "",
       link: "",
-    }
+    },
   };
   let fullname = userData.firstName + " " + userData.lastName;
   return (
@@ -91,7 +91,7 @@ const EditProfile = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default EditProfile;

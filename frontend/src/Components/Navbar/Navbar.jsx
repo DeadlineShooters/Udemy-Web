@@ -16,7 +16,7 @@ const Navbar = () => {
   console.log(user);
   const isLogged = user.userData !== null;
   function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
+    return classes.filter(Boolean).join(" ");
   }
   const logout = () => {
     localStorage.clear();
@@ -58,6 +58,12 @@ const Navbar = () => {
           (
           <div className={`flex items-center`}>
             <ul>
+              <li class="hover:text-purple-700">
+                <Link to="/instructor">Instructor</Link>
+              </li>
+              <li class="hover:text-purple-700">
+                <Link to="/home/my-courses/learning">My learning</Link>
+              </li>
               <li className='hover:text-purple-700 hide-teach-udemy'>Teach on Udemy</li>
               <li className='hover:text-purple-700 hide-my-learning'><Link to="/home/my-courses/learning">My learning</Link></li>
             </ul>
@@ -69,70 +75,70 @@ const Navbar = () => {
                   <img id="preview" src={createImageFromInitials(40, userName, getColor())} alt="profile-pic" className="avatar"/>
                 </Menu.Button>
               </div>
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
-                >
-                  <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <Menu.Item>
-                      {({ active }) => (
-                        <a href="/user/public-profile" className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
-                          My public profile
-                        </a>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <a href="/home/my-courses/learning" className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
-                          My learning
-                        </a>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <a href="/home/my-courses/wishlist" className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
-                          Wishlist
-                        </a>
-                      )}
-                    </Menu.Item>
-                    <hr/>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <a href="/user/edit-profile" className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
-                          Edit profile
-                        </a>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <a href="/user/account-settings" className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
-                          Account settings
-                        </a>
-                      )}
-                    </Menu.Item>
-                    <hr/>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <button onClick={logout} className={classNames(active ? 'bg-gray-100 w-full text-left' : '', 'block px-4 py-2 text-sm text-gray-700')}>
-                          Logout
-                        </button>
-                      )}
-                    </Menu.Item>
-                    <hr/>
-                    <div className='flex flex-row justify-between'>
-                      <a href="/about-us" className={classNames('px-4 py-2 text-xs text-gray-600')}>
-                        About Udemy
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+              >
+                <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <Menu.Item>
+                    {({ active }) => (
+                      <a href="/user/public-profile" className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
+                        My public profile
                       </a>
-                      <a href="/help" className={classNames('px-4 py-2 text-xs text-gray-600')}>
-                        Help
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <a href="/home/my-courses/learning" className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
+                        My learning
                       </a>
-                    </div>
-                  </Menu.Items>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <a href="/home/my-courses/wishlist" className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
+                        Wishlist
+                      </a>
+                    )}
+                  </Menu.Item>
+                  <hr />
+                  <Menu.Item>
+                    {({ active }) => (
+                      <a href="/user/edit-profile" className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
+                        Edit profile
+                      </a>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <a href="/user/account-settings" className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
+                        Account settings
+                      </a>
+                    )}
+                  </Menu.Item>
+                  <hr />
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button onClick={logout} className={classNames(active ? "bg-gray-100 w-full text-left" : "", "block px-4 py-2 text-sm text-gray-700")}>
+                        Logout
+                      </button>
+                    )}
+                  </Menu.Item>
+                  <hr />
+                  <div className="flex flex-row justify-between">
+                    <a href="/about-us" className={classNames("px-4 py-2 text-xs text-gray-600")}>
+                      About Udemy
+                    </a>
+                    <a href="/help" className={classNames("px-4 py-2 text-xs text-gray-600")}>
+                      Help
+                    </a>
+                  </div>
+                </Menu.Items>
               </Transition>
             </Menu>
           </div> 
@@ -216,7 +222,7 @@ const Navbar = () => {
         <hr/>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
