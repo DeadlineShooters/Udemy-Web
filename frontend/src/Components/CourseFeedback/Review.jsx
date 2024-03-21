@@ -3,6 +3,7 @@ import { createImageFromInitials } from "../Utils/Utils";
 import StarRatings from "../StarRatings";
 import { useState } from "react";
 import InstructorResponse from "./InstructorResponse";
+import ButtonDefault from "./ButtonDefault";
 
 const instructor = {
   firstName: "Nozo",
@@ -27,6 +28,8 @@ const Review = ({ review }) => {
     setShowResponseInput(false);
   };
 
+  const handleSaveClick = () => {};
+
   return (
     <div className="flex p-4 bg-white shadow rounded-lg items-start justify-between mb-2 ">
       <div className="flex w-4/6 mr-10">
@@ -40,19 +43,9 @@ const Review = ({ review }) => {
           <div className="mb-2">{review.feedback}</div>
           <div>
             {review.instructorResponse ? (
-              <button
-                onClick={handleSeeResponseClick}
-                className="duration-300 ease-in-out hover:text-purple-600 active:bg-gray-200 p-2 active:text-purple-800 text-gray-500 text-sm font-bold text-start"
-              >
-                {showResponse ? "HIDE RESPONSE" : "SEE RESPONSE"}
-              </button>
+              <ButtonDefault handleClick={handleSeeResponseClick} text={showResponse ? "HIDE RESPONSE" : "SEE RESPONSE"} />
             ) : (
-              <button
-                onClick={handleRespondClick}
-                className="duration-300 ease-in-out hover:text-purple-600 active:bg-gray-200 p-2 active:text-purple-800 text-gray-500 text-sm font-bold text-start"
-              >
-                RESPOND
-              </button>
+              <ButtonDefault handleClick={handleRespondClick} text={"RESPOND"} />
             )}
           </div>
 
@@ -75,9 +68,7 @@ const Review = ({ review }) => {
                     >
                       CANCEL
                     </button>
-                    <button className="duration-300 ease-in-out hover:text-purple-600 active:bg-gray-200 p-2 active:text-purple-800 text-gray-500 text-sm font-bold text-start">
-                      SAVE
-                    </button>
+                    <ButtonDefault handleClick={handleSaveClick} text={showResponse ? "HIDE RESPONSE" : "SEE RESPONSE"} />
                   </div>
                 </div>
               </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import StarRatings from "../StarRatings";
 
 const CourseReview = ({ review }) => {
   return (
@@ -23,11 +24,7 @@ const CourseReview = ({ review }) => {
 
         <div className="flex flex-col">
           <span className="text-black text-md font-bold">{review.firstName + " " + review.lastName[0]}</span>
-          <div className="flex">
-            {[...Array(review.rating)].map((_, i) => (
-              <FontAwesomeIcon key={i} icon={faStar} className="text-yellow-500" />
-            ))}
-          </div>
+          <StarRatings rating={review.rating} />
         </div>
 
         <h3 className="text-lg font-bold">{review.courseName}</h3>
