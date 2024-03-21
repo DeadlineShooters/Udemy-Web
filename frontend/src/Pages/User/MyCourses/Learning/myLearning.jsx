@@ -71,11 +71,11 @@ const MyLearning = () => {
                       <img className="thumbnail" src={course.img} alt='course placeholder' />
                     </div>
                     <div className='rounded-xl overflow-hidden absolute top-0 left-0 opacity-0 hover:opacity-100'>
-                      <a href='/course/course-name/learn/video-id'>
+                      <a href='/course/:courseId/learn/:videoId'>
                         <img className='thumbnail-shadow' src={course_overlay} alt='course placeholder' />
                       </a>
                     </div>
-                    <div className='rounded-md absolute top-0 right-0 mt-6 mr-2 w-12 h-12'>
+                    <div className='rounded-md absolute top-0 right-0 mt-6 mr-2 w-12 h-12 z-9999'>
                       <Menu as="div" className="relative ml-4">
                         <div>
                           <Menu.Button className="relative flex rounded-full bg-white-800 text-sm focus:ring-2">
