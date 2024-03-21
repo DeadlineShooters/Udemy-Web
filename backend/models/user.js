@@ -5,9 +5,11 @@ const userSchema = new mongoose.Schema({
     lastName: { type: String, require: true },
     email: { type: String, require: true },
     hashedPassword: { type: String, require: true },
-    header: {type: String},
-    bio: {type: String},
+    header: { type: String },
+    bio: { type: String },
+    socialLinks: { web: {type: String, default: ""}, youtube: {type: String, default: ""}, facebook: {type: String, default: ""}},
     courseList: { type: Array },
+    archivedCourse:  { type: Array },
     wishList: { type: Array },
     favoritesCourse: { type: Array },
     instructor: { type: Schema.Types.ObjectId, ref: "Instructor" }

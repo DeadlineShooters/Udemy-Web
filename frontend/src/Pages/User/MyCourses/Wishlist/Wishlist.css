@@ -1,15 +1,15 @@
-.upper {
+.upper-wishlist {
   background-color: #151b32; /* Deep Blue */
   color: #fff; /* White text */
 }
-.lower {
+.lower-wishlist {
   background-color: #fff; /* White */
   padding: 20px;
 }
-.upper .title {
+.upper-wishlist .title {
   padding-left: 21%;
 }
-.upper .filter {
+.upper-wishlist .filter {
   padding-left: 21%;
 }
 .lower .searchbar {
