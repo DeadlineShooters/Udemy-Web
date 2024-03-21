@@ -2,7 +2,7 @@ import express from "express";
 import cookieSession from "cookie-session";
 import mongoose from "mongoose";
 import "./passport.js";
-import authRoute from "./routes/authRoute.js";
+import authRoute from "./routes/user/authRoute.js";
 import passport from "passport";
 import cors from "cors";
 import dotenv from "dotenv";

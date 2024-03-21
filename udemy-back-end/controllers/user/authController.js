@@ -6,7 +6,7 @@ const saltRounds = 10;
 export const signup = async (req, res) => {
     try {
         console.log("Tai khoan user:", req.body);
-        const {fullName, email, password} = req.body;
+        const {firstName, lastName, email, password} = req.body;
         const existingUser = await user.findOne({email});
         if (existingUser) {
             console.log("Found existing user with email:", email);
@@ -16,7 +16,8 @@ export const signup = async (req, res) => {
             const hash = bcrypt.hashSync(password, salt);
 
             const newUser = new user();
-            newUser.lastName = fullName;
+            newUser.firstName = firstName;
+            newUser.lastName = lastName;
             newUser.email = email;
             newUser.hashedPassword = hash;
             

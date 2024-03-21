@@ -1,7 +1,7 @@
 import express from "express";
 import passport from "passport";
-import * as authController from "../controllers/user/authController.js";
-import user from "../models/user.js";
+import * as authController from "../../controllers/user/authController.js";
+import user from "../../models/user.js";
 
 const router = express.Router();
 
