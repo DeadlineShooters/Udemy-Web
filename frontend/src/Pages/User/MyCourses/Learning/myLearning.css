@@ -16,21 +16,16 @@
     padding-left: 21%;
 }
 
-@media (max-width: 320px) {
+@media (max-width: 768px) {
     .upper-mylearning .title {
         padding-left: 5%;
     }
     .upper-mylearning .filter {
         padding-left: 5%;
     }
-    .searchbar {
-        margin-right: 0%;
-        width: 100%;
-    }
 }
-.lower-mylearning .searchbar {
-    margin-right: 20%;
-}
+
+
 @media (min-width: 1024px) {
     .lg\:pb-100 {
         padding-bottom: 40rem; 

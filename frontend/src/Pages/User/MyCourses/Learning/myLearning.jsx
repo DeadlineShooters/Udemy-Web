@@ -48,10 +48,17 @@ const MyLearning = () => {
             </button>
           </div>
       </div>
-      <div className="lower">
-        <form className="searchbar items-end w-80 ml-auto">
+      <div className="lower-mylearning">
+        <form className="searchbar flex flex-row max-sm:flex-col justify-end items-end my-3 mx-5">
           <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-          <div className="relative">
+          <div className="flex flex-col filter-container mr-8 max-sm:mr-0 max-sm:mb-3">
+            <span>Filter by</span>
+            <select className="p-2 text-md hover:bg-gray-200 border border-gray-400 rounded-lg">
+              <option value="all">All Courses</option>
+              <option value="favorites">Favorites</option>
+            </select>
+          </div>
+          <div className="relative w-80 max-sm:w-72">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
               <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
