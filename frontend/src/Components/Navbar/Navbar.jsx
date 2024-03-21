@@ -240,12 +240,12 @@ const Navbar = () => {
 							<MenuHandler>
 								<span className='cursor-pointer'>Categories</span>
 							</MenuHandler>
-							<MenuList className='min-h-[40rem] w-64 top-16'>
+							<MenuList className='min-h-[40rem] w-64 top-16 z-9999999'>
 								{categories.map((category, ind) => (
 									<MenuMT placement='right-start' allowHover offset={12}>
 										<MenuHandler className='flex items-center justify-between'>
 											<MenuItem>
-												<div className='text-gray-900 hover:text-[#5624d0] w-full py-1'>{category}</div>
+												<a href='/courses/category-name' className='text-gray-900 hover:text-[#5624d0] w-full py-1' >{category}</a>
 												<ChevronRightIcon strokeWidth={2.5} className={`h-3.5 w-3.5 `} />
 											</MenuItem>
 										</MenuHandler>
@@ -316,7 +316,7 @@ const Navbar = () => {
 							{isWishlistDropdownOpen && (
 								<div
 									id='dropdownSearch'
-									className='z-10 absolute top-[calc(100%-1rem)] mt-2 right-0 bg-white shadow-[0_0_0_1px_#d1d7dc,0_2px_4px_rgba(0,0,0,.08),0_4px_12px_rgba(0,0,0,.08)] w-80'
+									className='z-9999999 absolute top-[calc(100%-1rem)] mt-2 right-0 bg-white shadow-[0_0_0_1px_#d1d7dc,0_2px_4px_rgba(0,0,0,.08),0_4px_12px_rgba(0,0,0,.08)] w-80'
 								>
 									<ul class='divide-y divide-gray-300 max-h-[32rem] pb-3 overflow-y-auto text-sm text-gray-700' aria-labelledby='dropdownSearchButton'>
 										{courses.map((course) => (
@@ -345,7 +345,7 @@ const Navbar = () => {
 										))}
 									</ul>
 									<div className='sticky bottom-0 w-full bg-white shadow-[0_-2px_4px_rgba(0,0,0,.08),0_-4px_12px_rgba(0,0,0,.08)] py-4'>
-										<button className='font-bold bg-gray-900 text-white w-11/12 mx-auto flex justify-center p-3'>Go to wishlist</button>
+										<a href='/home/my-courses/wishlist' className='font-bold bg-gray-900 text-white w-11/12 mx-auto flex justify-center p-3'>Go to wishlist</a>
 									</div>
 								</div>
 							)}
@@ -357,7 +357,7 @@ const Navbar = () => {
 							{isCartDropdownOpen && (
 								<div
 									id='dropdownSearch'
-									className='z-10 absolute top-[calc(100%-1rem)] mt-2 right-0 bg-white shadow-[0_0_0_1px_#d1d7dc,0_2px_4px_rgba(0,0,0,.08),0_4px_12px_rgba(0,0,0,.08)] w-80'
+									className='z-9999999  absolute top-[calc(100%-1rem)] mt-2 right-0 bg-white shadow-[0_0_0_1px_#d1d7dc,0_2px_4px_rgba(0,0,0,.08),0_4px_12px_rgba(0,0,0,.08)] w-80'
 								>
 									<ul class='divide-y divide-gray-300 max-h-[32rem] pb-3 overflow-y-auto text-sm text-gray-700' aria-labelledby='dropdownSearchButton'>
 										{courses.map((course) => (
@@ -396,7 +396,7 @@ const Navbar = () => {
 												{courses.reduce((acc, course) => acc + course.originalPrice, 0).toLocaleString()}
 											</span>
 										</div>
-										<button className='font-bold bg-gray-900 text-white w-full mx-auto flex justify-center p-3'>Go to cart</button>
+										<a href='/cart' className='font-bold bg-gray-900 text-white w-full mx-auto flex justify-center p-3'>Go to cart</a>
 									</div>
 								</div>
 							)}

@@ -12,6 +12,9 @@ module.exports = withMT({
 		container: {
 			center: true,
 		},
+		zIndex: {
+			'9999999': '9999999',
+		  }
 	},
 	plugins: [
 		require('@tailwindcss/line-clamp'),

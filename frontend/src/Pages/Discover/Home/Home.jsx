@@ -193,22 +193,25 @@ const Home = () => {
 
 	return (
 		<>
-			<div className='relative'>
+			<div
+				className='relative'
+				onMouseLeave={() => {
+					setCategoryInd(null);
+				}}
+			>
 				<ul class='md:flex justify-center shadow-md flex-wrap max-h-12 overflow-hidden hidden'>
 					{categories.map((category, ind) => (
-						<li
+						<a
+							href='/courses/category-name'
 							className='group relative m-0 py-3 px-4'
 							key={category.id}
 							onMouseEnter={() => {
 								setCategoryInd(ind);
 							}}
-							onMouseLeave={() => {
-								setCategoryInd(null);
-							}}
 						>
 							{category}
-							<div className='absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-8 border-solid border-transparent border-b-[#2d2f31] group-hover:block hidden'></div>
-						</li>
+							<div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-8 border-solid border-transparent border-b-[#2d2f31] ${categoryInd != null && categoryInd === ind ? 'block' : 'hidden'} `}></div>
+						</a>
 					))}
 				</ul>
 				<ul
@@ -216,15 +219,12 @@ const Home = () => {
 					onMouseEnter={() => {
 						setCategoryInd(categoryInd);
 					}}
-					onMouseLeave={() => {
-						setCategoryInd(null);
-					}}
 				>
 					{categoryInd !== null &&
 						subCategories[categoryInd].slice(0, 6).map((subCategory) => (
-							<li className='m-0 py-3 px-4' key={subCategory.id}>
+							<a href='/courses/category-name' className='m-0 py-3 px-4' key={subCategory.id}>
 								{subCategory}
-							</li>
+							</a>
 						))}
 				</ul>
 			</div>
@@ -243,7 +243,7 @@ const Home = () => {
 				{categories.map((category) => (
 					<div className='mb-12'>
 						<span className='font-bold text-2xl text-gray-800 block mb-4'>
-							Top courses in <span className='text-[#5624d0] underline'>{category}</span>
+							Top courses in <a href='courses/category-name' className='text-[#5624d0] underline'>{category}</a>
 						</span>
 						<Carousel containerClass='' itemClass='m-2 itemClassHome' responsive={responsive}>
 							{categories.map((category) => (
