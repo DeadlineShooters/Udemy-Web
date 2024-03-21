@@ -10,14 +10,18 @@ import AccountSettings from "./Pages/User/ManageAccount/accountSettings.jsx";
 import CloseAccount from "./Pages/User/ManageAccount/closeAccount.jsx";
 import Register from "./Pages/User/Authentication/Register.jsx";
 import Login from "./Pages/User/Authentication/Login.jsx";
+import ManageCourses from "./Pages/Instructor/ManageCourses/ManageCourses.jsx";
+import Statistics from "./Pages/Instructor/Statistics/Statistics.jsx";
 import CourseContent from "./Pages/Course/Content/Content.jsx";
 import NotFound from "./Components/404/404.jsx";
+import Sidebar from "./Components/Sidebar/sidebar.jsx";
 
 // import fonts
 import "./fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf";
 
 import { createBrowserRouter, RouterProvider, Routes, Route, Outlet } from "react-router-dom";
 import "./App.css";
+import Reviews from "./Pages/Instructor/Reviews.jsx";
 import CourseDetail from "./Pages/User/CourseLandingPage/CourseDetail.jsx";
 
 const Layout = () => {
@@ -30,15 +34,25 @@ const Layout = () => {
   );
 };
 
-// const CourseLayout = () => {
-//   return (
-//     <>
-//       <CourseNavbar />
-//       <Outlet />
-//       {/* <Footer/>*/}
-//     </>
-//   );
-// };
+const CourseLayout = () => {
+  return (
+    <>
+      <CourseNavbar />
+      <Outlet />
+      {/* <Footer/>*/}
+    </>
+  );
+};
+
+const CourseDashboardLayout = () => {
+  return (
+    <>
+      <Sidebar />
+      <Outlet />
+      {/* <Footer/>*/}
+    </>
+  );
+};
 
 const router = createBrowserRouter([
   {
@@ -100,6 +114,38 @@ const router = createBrowserRouter([
       {
         path: "close-account",
         element: <CloseAccount />,
+      },
+    ],
+  },
+  {
+    path: "/course/:courseId/learn",
+    element: <CourseLayout />,
+    children: [
+      {
+        path: "video-id",
+        element: <CourseContent />,
+      },
+    ],
+  },
+  {
+    path: "/instructor",
+    element: <CourseDashboardLayout />,
+    children: [
+      {
+        path: "courses",
+        element: <ManageCourses />,
+      },
+      {
+        path: "statistics",
+        element: <Statistics />,
+      },
+      // {
+      //   path: "qa",
+      //   element: <QA />,
+      // },
+      {
+        path: "reviews",
+        element: <Reviews />,
       },
     ],
   },
