@@ -58,13 +58,16 @@ const Navbar = () => {
           (
           <div className={`flex items-center`}>
             <ul>
-              <li class="hover:text-purple-700">
-                <Link to="/instructor">Instructor</Link>
-              </li>
-              <li class="hover:text-purple-700">
-                <Link to="/home/my-courses/learning">My learning</Link>
-              </li>
-              <li className='hover:text-purple-700 hide-teach-udemy'>Teach on Udemy</li>
+              {user.instructor !== null ? 
+              (
+                <li class="hover:text-purple-700">
+                  <Link to="/instructor">Instructor</Link>
+                </li>
+              ) : (
+                <li className='hover:text-purple-700 hide-teach-udemy'>
+                Teach on Udemy
+                  </li>
+              )}
               <li className='hover:text-purple-700 hide-my-learning'><Link to="/home/my-courses/learning">My learning</Link></li>
             </ul>
             <img src={heart} alt='Wishlist' className='wishlist mx-4 max-md:hidden'></img>

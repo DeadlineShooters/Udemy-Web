@@ -5,9 +5,9 @@ import "./Wishlist.css";
 const Wishlist = () => {
   return (
     <div>
-      <div className="upper">
-        <h1 class="text-5xl font-bold pl-96 pt-10 pb-10">My learning</h1>
-        <div className="flex items-center pl-96">
+      <div className="upper-wishlist">
+        <h1 class="title text-5xl font-bold pl-96 pt-10 pb-10">My learning</h1>
+        <div className="filter flex items-center pl-96">
           <button class="text-white hover:bg-violet-950 border-b-8 border-slate-900 font-bold py-2 rounded text-lg">
             <Link to="/home/my-courses/learning">All courses</Link>
           </button>
@@ -19,7 +19,7 @@ const Wishlist = () => {
           </button>
         </div>
       </div>
-      <div className="lower cardContainer mx-auto flex flex-col">
+      <div className="lower-wishlist cardContainer mx-auto flex flex-col">
         <form class="items-end lg:w-1/4 md:w-1/3 w-full ml-auto pb-8 px-2">
           <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
             Search

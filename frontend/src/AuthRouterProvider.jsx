@@ -15,6 +15,10 @@ import HandlePopUpLogin from "./Pages/User/Authentication/HandlePopUpLogin.jsx";
 import CourseContent from './Pages/Course/Content/Content.jsx';
 import NotFound from './Components/404/404.jsx';
 import CourseDetail from "./Pages/User/CourseLandingPage/CourseDetail.jsx";
+import ManageCourses from "./Pages/Instructor/ManageCourses/ManageCourses.jsx";
+import Statistics from "./Pages/Instructor/Statistics/Statistics.jsx";
+import Sidebar from "./Components/Sidebar/sidebar.jsx";
+import Reviews from "./Pages/Instructor/Reviews.jsx";
 
 // import fonts
 import "./fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf";
@@ -38,6 +42,16 @@ const CourseLayout = () => {
         </>
     )
 }
+
+const CourseDashboardLayout = () => {
+  return (
+    <>
+      <Sidebar />
+      <Outlet />
+      {/* <Footer/>*/}
+    </>
+  );
+};
 
 const router = createBrowserRouter([
   {
@@ -119,7 +133,29 @@ const router = createBrowserRouter([
       path: "",
       element: <CourseContent/>
     }]
-  } 
+  },
+  {
+    path: "/instructor",
+    element: <CourseDashboardLayout />,
+    children: [
+      {
+        path: "courses",
+        element: <ManageCourses />,
+      },
+      {
+        path: "statistics",
+        element: <Statistics />,
+      },
+      // {
+      //   path: "qa",
+      //   element: <QA />,
+      // },
+      {
+        path: "reviews",
+        element: <Reviews />,
+      },
+    ],
+  },
 ]);
 
 export function AppRouterProvider() {
