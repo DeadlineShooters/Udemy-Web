@@ -239,17 +239,17 @@ const Navbar = () => {
 	};
 	return (
 		<div className='header'>
-			<div className='navbar justify-between max-md:justify-center'>
-				<div className='flex items-center max-md:w-full'>
-					<button type='button' className='md:hidden z-9999' onClick={sideBarToggle}>
+			<div className='navbar justify-between'>
+				<div className='flex items-center'>
+					<button type='button' className='md:hidden' onClick={sideBarToggle}>
 						<IconMenu2 stroke={2} />
 					</button>
-					<div className='max-md:m-auto'>
+					<div className='logo-udemy'>
 						<Link to='/'>
 							<img src={logo} alt='' className='logo'></img>
 						</Link>
 					</div>
-					<ul class='mx-5 relative'>
+					<ul class='category mx-5 relative'>
 						<MenuMT allowHover>
 							<MenuHandler>
 								<div className='cursor-pointer py-4'>Categories</div>
@@ -277,7 +277,7 @@ const Navbar = () => {
 							</MenuList>
 						</MenuMT>
 					</ul>
-					<form className='max-md:hidden'>
+					<form>
 						<label htmlFor='default-search' className='mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white'>
 							Search
 						</label>
@@ -319,7 +319,7 @@ const Navbar = () => {
 					<div className={`flex items-center`}>
 						<ul>
 							{user.instructor !== null ? (
-								<li class='hover:text-purple-700'>
+								<li class='hover:text-purple-700 hide-teach-udemy'>
 									<Link to='/instructor/courses'>Instructor</Link>
 								</li>
 							) : (
@@ -425,7 +425,7 @@ const Navbar = () => {
 								</div>
 							)}
 						</div>
-						<Menu as='div' className='relative ml-4 max-md:hidden'>
+						<Menu as='div' className='user relative ml-4'>
 							<div>
 								<Menu.Button className='relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:outline-none focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800'>
 									<img id='preview' src={createImageFromInitials(40, userName, getColor())} alt='profile-pic' className='avatar' />

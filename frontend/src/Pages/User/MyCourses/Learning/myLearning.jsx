@@ -60,32 +60,32 @@ const MyLearning = () => {
             <button className="text-white border-b-8 font-bold py-2 rounded text-lg max-sm:text-base">
               <Link to="/home/my-courses/learning">All courses</Link>
             </button>
-            <button className="text-white lg:border-b-8 hover:bg-violet-950 border-slate-900 font-bold py-2 rounded text-lg mx-8">
+            <button className="text-white lg:border-b-8 hover:bg-violet-950 font-bold py-2 rounded text-lg mx-8" style={{"border-color": "#151b32"}}>
               <Link to="/home/my-courses/wishlist">Wishlist</Link>
             </button>
-            <button className="text-white lg:border-b-8 hover:bg-violet-950 border-slate-900 font-bold py-2 rounded text-lg">
+            <button className="text-white lg:border-b-8 hover:bg-violet-950 border-slate-900 font-bold py-2 rounded text-lg" style={{"border-color": "#151b32"}}>
               <Link to="/home/my-courses/archived">Archived</Link>
             </button>
           </div>
       </div>
       <div className="lower-mylearning">
-        <form className="searchbar flex flex-row max-sm:flex-col justify-end items-end my-3 mx-5">
+        <form className="searchbar flex flex-row justify-end items-end my-3 mx-5">
           <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-          <div className="flex flex-col filter-container mr-8 max-sm:mr-0 max-sm:mb-3">
+          <div className="filter flex flex-col filter-container mr-8">
             <span>Filter by</span>
             <select className="p-2 text-md hover:bg-gray-200 border border-gray-400 rounded-lg">
               <option value="all">All Courses</option>
               <option value="favorites">Favorites</option>
             </select>
           </div>
-          <div className="relative w-80 max-sm:w-72">
+          <div className="formsearch relative w-80">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
               <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
               </svg>
             </div>
             <input type="search" id="default-search" className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search my course..." required />
-            <button type="submit" className="text-white absolute end-1 bottom-1 bg-violet-950 hover:bg-violet-900 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-2 py-1 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+            <button type="submit" className="text-white absolute end-1 bottom-1 bg-purple-900 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-2 py-1 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
           </div>
         </form>
         <div className='flex flex-wrap justify-center m-auto w-full mt-5'>
