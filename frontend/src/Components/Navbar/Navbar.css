@@ -3,7 +3,7 @@
     display: flex;
     align-items: center;
     background: #ffff;
-    padding: 10px 5%;
+    padding: 0px 5%;
 }
 
 .sidebar-layout {
@@ -19,7 +19,15 @@
     position: fixed;
     left: 0;
     top: 0;
-    @apply fixed top-0 left-0 h-full bg-white z-50 transition-transform duration-300 ease-in-out; /* Base styles */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: white;
+    z-index: 50;
+    transition-property: transform;
+    transition-duration: 300ms;
+    transition-timing-function: ease-in-out;
     transform: translateX(-300px); /* Initially hidden outside the screen */
 }
 
@@ -78,7 +86,7 @@ ul li {
     height: 50px;
     margin-top: 0;
     border-bottom: 1px solid #D9D9D9;
-    box-shadow: 0 10px 10px -10px #7a7a7a;
+    /* box-shadow: 0 10px 10px -10px #7a7a7a; */
     margin: auto 0px; 
 }
 
