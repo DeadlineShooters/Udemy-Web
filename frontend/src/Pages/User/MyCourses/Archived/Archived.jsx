@@ -8,10 +8,10 @@ const Archived = () => {
       <div className="upper-archived">
           <h1 class="title text-5xl font-bold pt-10 pb-10">My learning</h1>
           <div className='filter flex items-center'>
-            <button class="text-white hover:bg-violet-950 border-b-8 border-slate-900 font-bold py-2 rounded text-lg">
+            <button class="text-white hover:bg-violet-950 border-b-8 border-slate-900 font-bold py-2 rounded text-lg" style={{"border-color": "#151b32"}}>
               <Link to="/home/my-courses/learning">All courses</Link>
             </button>
-            <button class="text-white hover:bg-violet-950 border-b-8 border-slate-900 font-bold py-2 rounded text-lg mx-8">
+            <button class="text-white hover:bg-violet-950 border-b-8 border-slate-900 font-bold py-2 rounded text-lg mx-8" style={{"border-color": "#151b32"}}>
               <Link to="/home/my-courses/wishlist">Wishlist</Link>
             </button>
             <button class="text-white hover:bg-violet-950 border-b-8 font-bold py-2 rounded text-lg">

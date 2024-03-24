@@ -6,15 +6,15 @@ const Wishlist = () => {
   return (
     <div>
       <div className="upper-wishlist">
-        <h1 class="title text-5xl font-bold pl-96 pt-10 pb-10">My learning</h1>
-        <div className="filter flex items-center pl-96">
-          <button class="text-white hover:bg-violet-950 border-b-8 border-slate-900 font-bold py-2 rounded text-lg">
+        <h1 class="title text-5xl font-bold pt-10 pb-10">My learning</h1>
+        <div className="filter flex items-center">
+          <button class="text-white hover:bg-violet-950 border-b-8 border-slate-900 font-bold py-2 rounded text-lg" style={{"border-color": "#151b32"}}>
             <Link to="/home/my-courses/learning">All courses</Link>
           </button>
           <button className="text-white hover:bg-violet-950 border-b-8 font-bold py-2 rounded text-lg mx-8">
             <Link to="/home/my-courses/wishlist">Wishlist</Link>
           </button>
-          <button className="text-white hover:bg-violet-950 border-b-8 border-slate-900 font-bold py-2 rounded text-lg">
+          <button className="text-white hover:bg-violet-950 border-b-8 border-slate-900 font-bold py-2 rounded text-lg" style={{"border-color": "#151b32"}}>
             <Link to="/home/my-courses/archived">Archived</Link>
           </button>
         </div>
@@ -34,7 +34,7 @@ const Wishlist = () => {
             />
             <button
               type="submit"
-              class="text-white absolute end-1 bg-violet-950 hover:bg-violet-900 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-2 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              class="text-white absolute end-1 bg-purple-900 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-2 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               <svg class="w-4 h-4 text-white dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
