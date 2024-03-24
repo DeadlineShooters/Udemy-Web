@@ -1,4 +1,4 @@
-import { RouterProvider, Outlet, createBrowserRouter } from 'react-router-dom';
+import { RouterProvider, Outlet, createBrowserRouter, useLocation } from "react-router-dom";
 import Navbar from './Components/Navbar/Navbar.jsx';
 import CourseNavbar from './Components/CourseNavBar/CourseNavBar.jsx';
 import Home from './Pages/Discover/Home/Home.jsx';
@@ -24,9 +24,10 @@ import ManageCourseLayout from './Components/CourseManagement/ManageCourseLayout
 import Curriculum from './Pages/Instructor/ManageCourses/Curriculum.jsx';
 import Cart from './Pages/Cart/cart.jsx';
 import CoursesByCategory from './Pages/Discover/CoursesByCategory/coursesByCategory.jsx';
-
+import ProtectedRoutes from "./Components/Utils/AuthSecure.jsx";
 // import fonts
-import './fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf';
+import "./fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf";
+import { useAuth } from "./AuthContextProvider.jsx";
 
 const Layout = () => {
 	return (
@@ -91,21 +92,25 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/home',
-		element: <Layout />,
-		children: [
-			{
-				path: 'my-courses/learning',
-				element: <MyLearning />,
-			},
-			{
-				path: 'my-courses/wishlist',
-				element: <Wishlist />,
-			},
-			{
-				path: 'my-courses/archived',
-				element: <Archived />,
-			},
-		],
+		element: <ProtectedRoutes />,
+		children: [{
+			path: '',
+			element: <Layout />,
+			children: [
+				{
+					path: 'my-courses/learning',
+					element: <MyLearning />,
+				},
+				{
+					path: 'my-courses/wishlist',
+					element: <Wishlist />,
+				},
+				{
+					path: 'my-courses/archived',
+					element: <Archived />,
+				},
+			],
+		}]
 	},
 	{
 		path: '/courses',
@@ -119,9 +124,11 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/user',
-		element: <Layout />,
-		children: [
-			{
+		element: <ProtectedRoutes />,
+		children: [{
+			path: '',
+			element: <Layout />,
+			children: [{
 				path: 'public-profile',
 				element: <PublicProfile />,
 			},
@@ -136,8 +143,8 @@ const router = createBrowserRouter([
 			{
 				path: 'close-account',
 				element: <CloseAccount />,
-			},
-		],
+			}]
+		}],
 	},
 	{
 		path: '/course/:courseId',
@@ -161,39 +168,47 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/instructor',
-		element: <CourseDashboardLayout />,
-		children: [
-			{
-				path: 'courses',
-				element: <ManageCourses />,
-			},
-			{
-				path: 'statistics',
-				element: <Statistics />,
-			},
-			// {
-			//   path: "qa",
-			//   element: <QA />,
-			// },
-			{
-				path: 'reviews',
-				element: <Reviews />,
-			},
-		],
+		element: <ProtectedRoutes />,
+		children: [{
+			path: '',
+			element: <CourseDashboardLayout />,
+			children: [
+				{
+					path: 'courses',
+					element: <ManageCourses />,
+				},
+				{
+					path: 'statistics',
+					element: <Statistics />,
+				},
+				// {
+				//   path: "qa",
+				//   element: <QA />,
+				// },
+				{
+					path: 'reviews',
+					element: <Reviews />,
+				},
+			]
+		}],
 	},
 	{
 		path: '/instructor/course/:courseId/manage',
-		element: <ManageCourseLayout />,
-		children: [
-			{
-				path: 'curriculum',
-				element: <Curriculum />,
-			},
-			{
-				path: 'basics',
-				element: <CourseLandingPage />,
-			},
-		],
+		element: <ProtectedRoutes />,
+		children: [{
+			path: '',
+			element: <ManageCourseLayout />,
+			children: [
+				{
+					path: 'curriculum',
+					element: <Curriculum />,
+				},
+				{
+					path: 'basics',
+					element: <CourseLandingPage />,
+				},
+			],
+		}]
 	},
 ]);
 
