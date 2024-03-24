@@ -1,4 +1,4 @@
-import { RouterProvider, Outlet, createBrowserRouter } from 'react-router-dom';
+import { RouterProvider, Outlet, createBrowserRouter, useLocation } from "react-router-dom";
 import Navbar from './Components/Navbar/Navbar.jsx';
 import CourseNavbar from './Components/CourseNavBar/CourseNavBar.jsx';
 import Home from './Pages/Discover/Home/Home.jsx';
@@ -24,9 +24,10 @@ import ManageCourseLayout from './Components/CourseManagement/ManageCourseLayout
 import Curriculum from './Pages/Instructor/ManageCourses/Curriculum.jsx';
 import Cart from './Pages/Cart/cart.jsx';
 import CoursesByCategory from './Pages/Discover/CoursesByCategory/coursesByCategory.jsx';
-
+import ProtectedRoutes from "./Components/Utils/AuthSecure.jsx";
 // import fonts
-import './fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf';
+import "./fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf";
+import { useAuth } from "./AuthContextProvider.jsx";
 
 const Layout = () => {
 	return (
