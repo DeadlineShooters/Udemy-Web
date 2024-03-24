@@ -20,7 +20,7 @@ const CloseAccount = () => {
   let fullname = user.firstName + " " + user.lastName;
   return (
     <div className="template flex flex-row pt-8">
-      <div className="flex flex-col border border-r-0 border-slate-500" style={{height: "40rem"}}>
+      <div className="flex flex-col border border-r-0 border-black" style={{height: "40rem"}}>
         <div className='p-10'>
           <div className="flex rounded-full justify-center">
             <img id="preview" src={createImageFromInitials(160, fullname, getColor())} alt="profile-pic" className="avatar"/>
@@ -28,18 +28,18 @@ const CloseAccount = () => {
           <p className="text-xl mt-3 font-bold text-center">{fullname}</p>
           <p className="text-lg italic text-center text-gray-500">{user.heading}</p>
         </div>
-        <div className="pl-10 py-2 border border-l-0 border-r-0 border-slate-500 ">
+        <div className="pl-10 py-2 border border-l-0 border-r-0 border-black ">
           <Link to="/user/edit-profile">User profile</Link>
         </div>
-        <div className="pl-10 py-2 border border-l-0 border-r-0 border-t-0 border-slate-500">
+        <div className="pl-10 py-2 border border-l-0 border-r-0 border-t-0 border-black">
           <Link to="/user/account-settings">Account settings</Link>
         </div>
-        <div className="pl-10 py-2 border border-l-0 border-r-0 border-slate-500 bg-sky-950 text-white font-bold">
+        <div className="pl-10 py-2 border border-l-0 border-r-0 border-black bg-purple-900 text-white font-bold">
           <Link to="/user/close-account">Close account</Link>
         </div>
       </div>
-      <div className="flex flex-col border border-slate-500 w-1/2" style={{height: "40rem"}}>
-        <div className="border border-l-0 border-r-0 border-t-0 border-slate-500 text-center p-3">
+      <div className="flex flex-col border border-black w-1/2" style={{height: "40rem"}}>
+        <div className="border border-l-0 border-r-0 border-t-0 border-black text-center p-3">
           <p className='font-bold text-2xl'>Account settings</p>
           <p className='text-base mt-2'>Edit your account settings and change your password here</p>
         </div>
@@ -52,7 +52,7 @@ const CloseAccount = () => {
           </div>
         </div>
         <div className='pl-12'>
-          <button type="button" className="text-white bg-sky-950 hover:bg-sky-900 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Close account</button>
+          <button type="button" className="text-white bg-purple-900 hover:bg-purple-900 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Close account</button>
         </div>
       </div>
     </div>

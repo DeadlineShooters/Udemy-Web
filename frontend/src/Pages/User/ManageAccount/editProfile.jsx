@@ -21,7 +21,7 @@ const EditProfile = () => {
   let fullname = userData.firstName + " " + userData.lastName;
   return (
     <div className="template flex flex-row pt-8">
-      <div className="flex flex-col border border-r-0 border-slate-500" style={{height: "40rem"}}>
+      <div className="flex flex-col border border-r-0 border-black" style={{height: "40rem"}}>
         <div className='p-10'>
           <div className="flex rounded-full justify-center">
             <img id="preview" src={createImageFromInitials(160, fullname, getColor())} alt="profile-pic" className="avatar"/>
@@ -29,18 +29,18 @@ const EditProfile = () => {
           <p className="text-xl mt-3 font-bold text-center">{fullname}</p>
           <p className="text-lg italic text-center text-gray-500">{userData.heading}</p>
         </div>
-        <div className="pl-10 py-2 border border-l-0 border-r-0 border-slate-500 bg-sky-950 text-white font-bold">
+        <div className="pl-10 py-2 border border-l-0 border-r-0 border-black bg-purple-900 text-white font-bold">
           <Link to="/user/edit-profile">User profile</Link>
         </div>
-        <div className="pl-10 py-2 border border-l-0 border-r-0 border-t-0 border-slate-500">
+        <div className="pl-10 py-2 border border-l-0 border-r-0 border-t-0 border-black">
           <Link to="/user/account-settings">Account settings</Link>
         </div>
-        <div className="pl-10 py-2 border border-l-0 border-r-0 border-t-0 border-slate-500">
+        <div className="pl-10 py-2 border border-l-0 border-r-0 border-t-0 border-black">
           <Link to="/user/close-account">Close account</Link>
         </div>
       </div>
-      <div className="flex flex-col border border-slate-500 w-1/2" style={{height: "40rem"}}>
-        <div className="border border-l-0 border-r-0 border-t-0 border-slate-500 text-center p-3">
+      <div className="flex flex-col border border-black w-1/2" style={{height: "40rem"}}>
+        <div className="border border-l-0 border-r-0 border-t-0 border-black text-center p-3">
           <p className='font-bold text-2xl'>Edit profile</p>
           <p className='text-base mt-2'>Add more information about yourself</p>
         </div>
