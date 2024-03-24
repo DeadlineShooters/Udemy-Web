@@ -65,7 +65,7 @@ const Sidebar = () => {
 
       <div
         ref={sidebarRef}
-        className={`fixed top-0 left-0 z-40 h-screen bg-[#2d2f31] transition-all duration-300 overflow-hidden ${isExpanded || isOpen ? "w-72" : "w-0 md:w-16"}`}
+        className={`fixed top-0 left-0 z-9999 h-screen bg-[#2d2f31] transition-all duration-300 overflow-hidden ${isExpanded || isOpen ? "w-72" : "w-0 md:w-16"}`}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >

@@ -248,7 +248,7 @@ const Home = () => {
 						<Carousel containerClass='' itemClass='m-2 itemClassHome' responsive={responsive}>
 							{categories.map((category) => (
 								<div class=''>
-									<img class='' src='https://img-c.udemycdn.com/course/480x270/3490000_d298_2.jpg' alt='' />
+									<a href='/course/:courseId'><img class='' src='https://img-c.udemycdn.com/course/480x270/3490000_d298_2.jpg' alt='' /></a>
 									<div class='flex flex-col gap-1 pt-1.5'>
 										<h3 class='font-bold text-gray-900 line-clamp-2 leading-tight'>Docker & Kubernetes: The Practical Guide [2024 Edition]</h3>
 										<p class='text-xs truncate text-gray-500'>Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller</p>

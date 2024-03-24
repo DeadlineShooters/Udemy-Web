@@ -57,19 +57,19 @@ const MyLearning = () => {
       <div className="upper-mylearning">
           <h1 className="title text-5xl max-sm:text-4xl font-bold pt-10 pb-10">My learning</h1>
           <div className='filter flex items-center'>
-            <button className="text-white border-b-8 font-bold py-2 rounded text-lg max-sm:text-base">
+            <button className="text-white border-b-8 hover:bg-purple-900 font-bold py-2 rounded text-lg max-sm:text-base">
               <Link to="/home/my-courses/learning">All courses</Link>
             </button>
-            <button className="text-white lg:border-b-8 hover:bg-violet-950 font-bold py-2 rounded text-lg mx-8" style={{"border-color": "#151b32"}}>
+            <button className="text-white lg:border-b-8 hover:bg-purple-900 border-[#151b32] font-bold py-2 rounded text-lg mx-8">
               <Link to="/home/my-courses/wishlist">Wishlist</Link>
             </button>
-            <button className="text-white lg:border-b-8 hover:bg-violet-950 border-slate-900 font-bold py-2 rounded text-lg" style={{"border-color": "#151b32"}}>
+            <button className="text-white lg:border-b-8 hover:bg-purple-900 border-[#151b32] font-bold py-2 rounded text-lg">
               <Link to="/home/my-courses/archived">Archived</Link>
             </button>
           </div>
       </div>
       <div className="lower-mylearning">
-        <form className="searchbar flex flex-row justify-end items-end my-3 mx-5">
+        <form className="searchbar flex flex-row justify-center items-end mt-3 mx-5">
           <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
           <div className="filter flex flex-col filter-container mr-8">
             <span>Filter by</span>
@@ -88,7 +88,7 @@ const MyLearning = () => {
             <button type="submit" className="text-white absolute end-1 bottom-1 bg-purple-900 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-2 py-1 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
           </div>
         </form>
-        <div className='flex flex-wrap justify-center m-auto w-full mt-5'>
+        <div className='flex flex-wrap justify-center m-auto w-full'>
           {courses.map((course, index)=> (
             <div key={index} className='card flex flex-col'>
               <div className='rounded-xl shadow-lg flex-grow'>
@@ -102,7 +102,7 @@ const MyLearning = () => {
                         <img className='thumbnail-shadow' src={course_overlay} alt='course placeholder' />
                       </a>
                     </div>
-                    <div className='rounded-md absolute top-0 right-0 mt-6 mr-2 w-12 h-12 z-9999'>
+                    <div className='rounded-md absolute top-0 right-0 mt-6 mr-2 w-12 h-12'>
                       <Menu as="div" className="relative ml-4">
                         <div>
                           <Menu.Button className="relative flex rounded-full bg-white-800 text-sm focus:ring-2">
