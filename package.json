@@ -1,4 +1,11 @@
 {
+  "scripts": {
+    "start": "node backend/index.js",
+    "server": "nodemon backend/index.js",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
