@@ -15,7 +15,7 @@ import HandlePopUpLogin from "./Pages/User/Authentication/HandlePopUpLogin.jsx";
 import CourseContent from './Pages/Course/Content/Content.jsx';
 import NotFound from './Components/404/404.jsx';
 import CourseDetail from "./Pages/User/CourseLandingPage/CourseDetail.jsx";
-import ManageCourses from "./Pages/Instructor/ManageCourses/ManageCourses.jsx";
+import CourseDashBoard from "./Pages/Instructor/ManageCourses/CourseDashboard.jsx";
 import Statistics from "./Pages/Instructor/Statistics/Statistics.jsx";
 import Sidebar from "./Components/Sidebar/sidebar.jsx";
 import CourseLandingPage from "./Pages/Instructor/ManageCourses/CourseLandingPage.jsx";
@@ -149,7 +149,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "courses",
-        element: <ManageCourses />,
+        element: <CourseDashBoard />,
       },
       {
         path: "statistics",
