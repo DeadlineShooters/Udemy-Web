@@ -1,11 +1,38 @@
 import React from "react";
 import DashboardHeaderTitle from "../../../Components/DashboardHeaderTitle";
 import CreateCourseCard from "../../../Components/CourseDashboard/CreateCourseCard";
+import ResourceCard from "../../../Components/CourseDashboard/ResourceCard";
+const profileImage =
+	"https://res.cloudinary.com/dk6q93ryt/image/upload/v1696217092/samples/smile.jpg";
 
 
 const CourseDashBoard = () => {
   const haveCourse = false;
 
+  const resource1 = {
+    imgSrc: profileImage,
+    title: "Create an Engaging Course",
+    desciption: "Whether you've been teaching for years or are teaching for the first time, you can make an engaging course. We've compiled resources and best practices to help you get to the next level, no matter where you're starting.",
+    getStartedUrl: '#',
+  }
+  const resource2 = {
+    imgSrc: profileImage,
+    title: "Get Started with Video",
+    desciption: "Quality video lectures can set your course apart. Use our resources to learn the basics.",
+    getStartedUrl: '#',
+  }
+  const resource3 = {
+    imgSrc: profileImage,
+    title: "Build Your Audience",
+    desciption: "Set your course up for success by building your audience.",
+    getStartedUrl: '#',
+  }
+  const resource4 = {
+    imgSrc: profileImage,
+    title: "Join the New Instructor Challenge!",
+    desciption: "Get exclusive tips and resources designed to help you launch your first course faster! Eligible instructors who publish their first course on time will receive a special bonus to celebrate. Start today!",
+    getStartedUrl: '#',
+  }
 
   return (
     <DashboardHeaderTitle title={"Courses"}>
@@ -33,7 +60,19 @@ const CourseDashBoard = () => {
         </div>
       )}
       
-      <CreateCourseCard/>
+      <CreateCourseCard />
+      
+      <h2 className="mx-auto my-16 text-center">Based on your experience, we think these resources will be helpful.</h2>
+
+      <ResourceCard props={resource1} />
+      <div className="flex gap-6 my-8">
+        
+        <ResourceCard props={resource2} />
+        <ResourceCard props={resource3} />
+
+      </div>
+      <ResourceCard props={resource4} />
+      <h2 className="mx-auto my-16 text-center">Have questions? Here are our most popular instructor resources.</h2>
 
     </DashboardHeaderTitle>
   );
