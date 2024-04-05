@@ -6,5 +6,5 @@ const sectionSchema = mongoose.Schema({
     lectureList: {type: Schema.Types.ObjectId, ref: "Lecture"},
 })
 
-const section = mongoose.model("Section", sectionSchema);
-export default section;
+const Section = mongoose.model("Section", sectionSchema);
+export default Section;

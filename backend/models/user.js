@@ -15,5 +15,5 @@ const userSchema = new mongoose.Schema({
     instructor: { type: Schema.Types.ObjectId, ref: "Instructor" }
 })
 
-const user = mongoose.model("User", userSchema);
-export default user;
+const User = mongoose.model("User", userSchema);
+export default User;

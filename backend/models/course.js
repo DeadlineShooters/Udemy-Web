@@ -18,5 +18,5 @@ const courseSchema = mongoose.Schema({
     createDate: {type: Date, default: Date.now()},
 })
 
-const course = mongoose.model("Course", courseSchema);
-export default course;
+const Course = mongoose.model("Course", courseSchema);
+export default Course;

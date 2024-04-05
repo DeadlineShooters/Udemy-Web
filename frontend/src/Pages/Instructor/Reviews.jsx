@@ -13,8 +13,7 @@ const reviews = [
     rating: 5,
     feedback: "Great course!",
     courseName: "The Complete 2024 Software Testing Bootcamp ",
-    courseThumbnail:
-      "https://cdn.discordapp.com/attachments/973498508793503745/1217696152044961852/2151486_095a_6.jpg?ex=6604f6ea&is=65f281ea&hm=2c883878c56eeeccff8c64f989924f67a38678a3e4254290d7c09392b68b6d86&",
+    courseThumbnail: "https://cdn.discordapp.com/attachments/973498508793503745/1217696152044961852/2151486_095a_6.jpg?ex=6604f6ea&is=65f281ea&hm=2c883878c56eeeccff8c64f989924f67a38678a3e4254290d7c09392b68b6d86&",
     instructorResponse: {
       firstName: "Ngoc",
       lastName: "Pham",
