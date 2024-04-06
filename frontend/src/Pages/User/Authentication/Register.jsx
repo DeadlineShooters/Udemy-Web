@@ -8,8 +8,6 @@ import { useAuth } from '../../../AuthContextProvider';
 const Register = () => {
   const {setUser, setIsLogged} = useAuth();
   const [fullName, setFullName] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassWord] = useState("");
   const [isChecked, setChecked] = useState(false);

@@ -13,11 +13,10 @@ const Login = () => {
   let features = 'menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=no,height=600,width=400';
   const googleAuth = () => {
     const popup = window.open("http://localhost:5000/auth/google", "_blank", features);
-    popup.postMessage("message", "http://localhost:3000/login");
     window.addEventListener("message", (event) => {
       if (event.data === "Exit") {
         popup.close();
-        window.location.href = "http://localhost:3000/home";
+        window.location.href="http://localhost:3000/";
       }
       if (event.data === "Failed") {
         popup.close();
@@ -31,7 +30,7 @@ const Login = () => {
     window.addEventListener("message", (event) => {
       if (event.data === "Exit") {
         popup.close();
-        window.location.href = "http://localhost:3000/home";
+        navigate("/home", {replace: true});
       }
       if (event.data === "Failed") {
         popup.close();
