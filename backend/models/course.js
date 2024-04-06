@@ -5,6 +5,7 @@ const courseSchema = mongoose.Schema({
     instructor: { type: Schema.Types.ObjectId, ref: "Instructor" },
     totalStudent: { type: Number },
     introduction: { type: String },
+    description: {type: String},
     price: { type: Number },
     sectionList: { type: Schema.Types.ObjectId, ref: "Section" },
     promotionalVideo: {type: Schema.Types.ObjectId, ref: "Video"},

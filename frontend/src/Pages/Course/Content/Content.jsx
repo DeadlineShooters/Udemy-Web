@@ -1,74 +1,174 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import "./Content.css";
 import arrow_down from "../../../Assets/arrow_down.png";
 import arrow_up from "../../../Assets/arrow_up.png";
 import ReactPlayer from "react-player";
 import CourseNavbar from "../../../Components/CourseNavBar/CourseNavBar";
+import CourseOverview from "../Overview/Overview";
 
 const CourseContent = () => {
-  const courseContent = {
-    author: "Tomato Group 09",
-    lecturePlaying: { sectionID: 1, lectureID: 1 },
-    video: [
+  const CourseDetails = {
+    name: "Sample Course",
+    instructor: {
+      firstName: "John",
+      lastName: "Doe",
+      headline: "Experienced Software Engineer",
+      totalReviews: 50,
+      totalStudents: 1000,
+      bio: "John Doe is an experienced software engineer with expertise in web development.",
+      wallet: {
+        walletID: "1234567890",
+        walletName: "John's Wallet"
+      }
+    },
+    totalStudent: 100,
+    introduction: "This is a sample course introduction.",
+    description: "Welcome to the Complete Software Testing Masterclass. Learn software testing with this course and become a successful software tester/agile Tester. Obtain the core Mobile Testing, Backend testing, Web testing, and Test Engineering skills, and learn JIRA, SQL, TestRail, TestGear, Confluence, Charles Proxy, and GitHub. By the end of this course, you will have enough knowledge to get a job as a software tester or start working as a freelancer! We will also explain many testing platforms where you can start earning money as a beta tester. We'll take you step-by-step through engaging video tutorials and teach you everything you need to know to succeed as a Software Tester. The course includes over hours and hours of 1080P (HD) video tutorials with high-quality sound. All the videos are hand-edited and unnecessary parts are removed. You will only learn what you need to learn to become successful!",
+    price: 49.99,
+    sectionList: [
       {
-        sectionID: 1,
-        sectionName: "Introduction to course",
-        videoNum: 2,
-        courseLecture: [
-          {
-            lectureID: 1,
-            lectureName: "Introducing the authors",
-            url: "https://www.youtube.com/watch?v=KNtJGQkC-WI",
+        index: 0,
+        name: "Introduction to Programming",
+        lectureList: [{
+          index: 0,
+          name: "Introduction to JavaScript",
+          content: "This lecture covers the basics of JavaScript programming language.",
+          video: {
+            secureURL: "https://example.com/secure-video.mp4",
+            publicURL: "https://www.youtube.com/watch?v=KwL1qTR5MT8",
+            type: "mp4",
+            duration: 120
           },
-          {
-            lectureID: 2,
-            lectureName: "Presenting the course structure",
-            url: "https://www.youtube.com/watch?v=j23AZoRyOWk",
+          QA: {
+            user: "610f42941c7c4b001f4e06cc",
+            course: "610f42941c7c4b001f4e06cd",
+            title: "How to install React?",
+            description: "I'm having trouble installing React on my machine. Can someone provide step-by-step instructions?",
+            answer: "To install React, you can use npm or yarn. First, make sure you have Node.js installed...",
+            createdTime: new Date()
+          }
+        }, {
+          index: 1,
+          name: "Introduction to JavaScript",
+          content: "This lecture covers the basics of JavaScript programming language.",
+          video: {
+            secureURL: "https://example.com/secure-video.mp4",
+            publicURL: "https://www.youtube.com/watch?v=5Ym-dOS9ssA&list=PLhhyoLH6IjfxVOdVC1P1L5z5azs0XjMsb",
+            type: "mp4",
+            duration: 120
           },
-        ],
+          QA: {
+            user: "610f42941c7c4b001f4e06cc",
+            course: "610f42941c7c4b001f4e06cd",
+            title: "How to install React?",
+            description: "I'm having trouble installing React on my machine. Can someone provide step-by-step instructions?",
+            answer: "To install React, you can use npm or yarn. First, make sure you have Node.js installed...",
+            createdTime: new Date()
+          }
+        }, {
+          index: 2,
+          name: "Introduction to JavaScript",
+          content: "This lecture covers the basics of JavaScript programming language.",
+          video: {
+            secureURL: "https://example.com/secure-video.mp4",
+            publicURL: "https://www.youtube.com/watch?v=HPjBY1H-U4U&list=PLhhyoLH6IjfxVOdVC1P1L5z5azs0XjMsb&index=2",
+            type: "mp4",
+            duration: 120
+          },
+          QA: {
+            user: "610f42941c7c4b001f4e06cc",
+            course: "610f42941c7c4b001f4e06cd",
+            title: "How to install React?",
+            description: "I'm having trouble installing React on my machine. Can someone provide step-by-step instructions?",
+            answer: "To install React, you can use npm or yarn. First, make sure you have Node.js installed...",
+            createdTime: new Date()
+          }
+        }]
       },
-      {
-        sectionID: 2,
-        sectionName: "Software design",
-        videoNum: 3,
-        courseLecture: [
-          {
-            lectureID: 3,
-            lectureName: "Test 01",
-            url: "https://www.youtube.com/watch?v=ZXNrz72k1ew",
-          },
-          {
-            lectureID: 4,
-            lectureName: "Test 02",
-            url: "https://www.youtube.com/watch?v=j23AZoRyOWk",
-          },
-          {
-            lectureID: 5,
-            lectureName: "Test 03",
-            url: "https://www.youtube.com/watch?v=j23AZoRyOWk",
-          },
-        ],
-      },
-      {
-        sectionID: 3,
-        sectionName: "Ending course",
-        videoNum: 1,
-        courseLecture: [
-          {
-            lectureID: 6,
-            lectureName: "Introducing the authors",
-            url: "https://www.youtube.com/watch?v=PUofnMN4v0k",
-          },
-          {
-            lectureID: 7,
-            lectureName: "Presenting the course structure",
-            url: "https://www.youtube.com/watch?v=j23AZoRyOWk",
-          },
-        ],
-      },
-    ],
+    , {
+      index: 1,
+      name: "Introduction to Programming",
+      lectureList: [{
+        index: 3,
+        name: "Introduction to JavaScript",
+        content: "This lecture covers the basics of JavaScript programming language.",
+        video: {
+          secureURL: "https://example.com/secure-video.mp4",
+          publicURL: "https://www.youtube.com/watch?v=HPjBY1H-U4U&list=PLhhyoLH6IjfxVOdVC1P1L5z5azs0XjMsb&index=2",
+          type: "mp4",
+          duration: 120
+        },
+        QA: {
+          user: "610f42941c7c4b001f4e06cc",
+          course: "610f42941c7c4b001f4e06cd",
+          title: "How to install React?",
+          description: "I'm having trouble installing React on my machine. Can someone provide step-by-step instructions?",
+          answer: "To install React, you can use npm or yarn. First, make sure you have Node.js installed...",
+          createdTime: new Date()
+        }
+      }, {
+        index: 4,
+        name: "Introduction to JavaScript",
+        content: "This lecture covers the basics of JavaScript programming language.",
+        video: {
+          secureURL: "https://example.com/secure-video.mp4",
+          publicURL: "https://www.youtube.com/watch?v=HPjBY1H-U4U&list=PLhhyoLH6IjfxVOdVC1P1L5z5azs0XjMsb&index=2",
+          type: "mp4",
+          duration: 120
+        },
+        QA: {
+          user: "610f42941c7c4b001f4e06cc",
+          course: "610f42941c7c4b001f4e06cd",
+          title: "How to install React?",
+          description: "I'm having trouble installing React on my machine. Can someone provide step-by-step instructions?",
+          answer: "To install React, you can use npm or yarn. First, make sure you have Node.js installed...",
+          createdTime: new Date()
+        }
+      }, {
+        index: 5,
+        name: "Introduction to JavaScript",
+        content: "This lecture covers the basics of JavaScript programming language.",
+        video: {
+          secureURL: "https://example.com/secure-video.mp4",
+          publicURL: "https://www.youtube.com/watch?v=HPjBY1H-U4U&list=PLhhyoLH6IjfxVOdVC1P1L5z5azs0XjMsb&index=2",
+          type: "mp4",
+          duration: 120
+        },
+        QA: {
+          user: "610f42941c7c4b001f4e06cc",
+          course: "610f42941c7c4b001f4e06cd",
+          title: "How to install React?",
+          description: "I'm having trouble installing React on my machine. Can someone provide step-by-step instructions?",
+          answer: "To install React, you can use npm or yarn. First, make sure you have Node.js installed...",
+          createdTime: new Date()
+        }
+      }]
+    }],
+    promotionalVideo: "610f42941c7c4b001f4e06c5",
+    category: "Programming",
+    totalLecture: 20,
+    totalSection: 5,
+    totalLength: 180,
+    rating: 4.5,
+    thumbNail: "610f42941c7c4b001f4e06c6",
+    status: true, // Active
+    createDate: new Date() // Current date and time
   };
-  const [expandedSections, setExpandedSections] = useState({});
+  const localNavigate = useNavigate();
+  const handleOverviewClick = () => {
+    localNavigate(window.location.pathname + '#overview');
+  };
+  const handleQAClick = () => {
+    localNavigate(window.location.pathname + '#QA');
+  };
+  const initialExpandedSections = {};
+  CourseDetails.sectionList.forEach(section => {
+    initialExpandedSections[section.index] = true; // Initialize each section as collapsed
+  });
+
+  // State to manage expanded sections
+  const [expandedSections, setExpandedSections] = useState(initialExpandedSections);
   const toggleSection = (sectionID) => {
     setExpandedSections((prevState) => ({
       ...prevState,
@@ -84,12 +184,12 @@ const CourseContent = () => {
     }));
   };
   useEffect(() => {
-    const getVideoUrl = (courseContent, sectionID, lectureID) => {
-      const targetSection = courseContent.video.find((section) => section.sectionID === sectionID);
+    const getVideoUrl = (CourseDetails, sectionID, lectureID) => {
+      const targetSection = CourseDetails.sectionList.find((section) => section.index === sectionID);
       if (targetSection) {
-        const targetLecture = targetSection.courseLecture.find((lecture) => lecture.lectureID === lectureID);
+        const targetLecture = targetSection.lectureList.find((lecture) => lecture.index === lectureID);
         if (targetLecture) {
-          const targetURL = targetLecture.url;
+          const targetURL = targetLecture.publicURL;
           return targetURL;
         } else {
           console.log("Lecture not found with given LectureID");
@@ -98,12 +198,13 @@ const CourseContent = () => {
         console.log("Lecture not found with given SectionID");
       }
     };
-    if (courseContent.lecturePlaying.sectionID != null && courseContent.lecturePlaying.lectureID != null) {
-      const url = getVideoUrl(courseContent, courseContent.lecturePlaying.sectionID, courseContent.lecturePlaying.lectureID);
-      setVideoUrl(url);
-    } else {
-      setVideoUrl(courseContent.video[0].courseLecture[0].url);
-    }
+    // if (courseContent.lecturePlaying.sectionID != null && courseContent.lecturePlaying.lectureID != null) {
+    //   const url = getVideoUrl(CourseDetails, CourseDetails.lecturePlaying.sectionID, courseContent.lecturePlaying.lectureID);
+    //   setVideoUrl(url);
+    // } else {
+    //   setVideoUrl(CourseDetails.sectionList[0].lectureList[0].video.publicURL);
+    // }
+    setVideoUrl(CourseDetails.sectionList[0].lectureList[0].video.publicURL);
   }, []);
   useEffect(() => {
     localStorage.setItem("selectLecture", JSON.stringify(selectLecture));
@@ -120,9 +221,14 @@ const CourseContent = () => {
       {!loading ? (
         <div class="flex flex-col">
           <ReactPlayer controls={true} url={videoUrl} height="603px" width="1072px" />
+          <div className="flex flex-row my-3">
+            <div className={` ${window.location.hash === '#overview' ? "text-[rgb(109,60,208)]" : "black"} font-bold hover:text-[#382660] text-lg mx-5 cursor-pointer`} onClick={handleOverviewClick}>Overview</div>
+            <div className="font-bold hover:text-[#382660] text-lg mx-5 cursor-pointer" onClick={handleQAClick}>QA</div>
+          </div>
+          {window.location.hash === '#overview' && <CourseOverview course={CourseDetails} />}
         </div>
       ) : (
-        <div role="status" class="flex bg-slate-900 items-center justify-center" style={{ height: "603px", width: "3560px" }}>
+        <div role="status" class="flex flex-col bg-slate-900 items-center justify-center" style={{ height: "603px", width: "3560px" }}>
           <svg
             aria-hidden="true"
             class="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300"
@@ -146,39 +252,38 @@ const CourseContent = () => {
         <div class="flex flew-row border">
           <p class="font-bold text-xl my-5 ml-5">Course content</p>
         </div>
-        {courseContent.video.map((content) => (
-          <div key={content.sectionID}>
-            <div class="flex flew-row border justify-between items-center cursor-pointer" onClick={() => toggleSection(content.sectionID)}>
+        {CourseDetails.sectionList.map((section) => (
+          <div key={section.index}>
+            <div class="flex flew-row border justify-between items-center cursor-pointer" onClick={() => toggleSection(section.index)}>
               <p class="font-bold text-base my-3 ml-5">
-                Section {content.sectionID}: {content.sectionName}
+                Section {section.index}: {section.name}
               </p>
               <img
-                src={expandedSections[content.sectionID] ? arrow_up : arrow_down}
-                alt={expandedSections[content.sectionID] ? "up-arrow" : "down-arrow"}
+                src={expandedSections[section.index] ? arrow_up : arrow_down}
+                alt={expandedSections[section.index] ? "up-arrow" : "down-arrow"}
                 class="w-5 h-5 mr-5"
               ></img>
             </div>
-            <div class={`${expandedSections[content.sectionID] ? "flex flex-col" : "hidden"} ml-5 cursor-pointer`}>
-              {content.courseLecture.map((lecture) => (
+            <div class={`${expandedSections[section.index] ? "flex flex-col" : "hidden"} ml-5 cursor-pointer`}>
+              {section.lectureList.map((lecture) => (
                 <div
-                  key={lecture.lectureID}
-                  class={`${selectLecture[lecture.lectureID] ? "bg-slate-200" : ""} my-3 hover:bg-slate-200 flex flex-row items-center z-10`}
+                  key={lecture.index}
+                  class={`${selectLecture[lecture.index] ? "bg-gray-300" : ""} hover:bg-slate-200 flex flex-row items-center z-10`}
+                  onClick={() => {
+                    {
+                      handleLectureClick(lecture.video.publicURL, section.index, lecture.index);
+                    }
+                    toggleSelectLecture(lecture.index);
+                  }}
                 >
                   <input
-                    id={lecture.lectureID}
+                    id={lecture.index}
                     type="checkbox"
                     value=""
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-5"
                   />
-                  <p
-                    onClick={() => {
-                      {
-                        handleLectureClick(lecture.url, content.sectionID, lecture.lectureID);
-                      }
-                      toggleSelectLecture(lecture.lectureID);
-                    }}
-                  >
-                    {lecture.lectureName}
+                  <p className="p-2">
+                    {lecture.name}
                   </p>
                 </div>
               ))}

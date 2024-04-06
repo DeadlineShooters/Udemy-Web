@@ -74,13 +74,11 @@ const QAList = [
 const QuestionAndAnswer = () => {
     const [value, setValue] = useState("");
     const [oneQA, setOneQA] = useState(QAList[0]);
-    const [index, setIndex] = useState();
-    const getIndex = (index) => {
-        setIndex(index);
-    }
+    const [edit, setEdit] = useState(false);
     const getQA = (id) => {
         const selectedQA = QAList.find(qa => qa.id === id);
         if (selectedQA) {
+            turnOffEdit();
             setOneQA(selectedQA);
         }
     };
@@ -99,6 +97,13 @@ const QuestionAndAnswer = () => {
             setQAWithSelectedCourse(filteredQA);
         }
     };
+    const turnOffEdit = () => {
+        setEdit(false);
+        setValue("");
+    }
+    const turnOnEdit = () => {
+        setEdit(true);
+    }
     useEffect(() => {
         filterItems();
     }, [filterValue]);
@@ -185,9 +190,9 @@ const QuestionAndAnswer = () => {
                     </div>
                     <hr className="border-black"/>
                     <div className="flex flex-col p-5 w-full">
-                        {oneQA.answer.length === 0 ? (
+                        {oneQA.answer.length === 0 || edit === true ? (
                             <div> 
-                                <ReactQuill theme="snow" value={value} onChange={setValue} style={{height:"200px", marginBottom: "50px"}} />
+                                <ReactQuill theme="snow" value={oneQA.answer.length === 0 ? value : oneQA.answer} onChange={setValue} style={{height:"200px", marginBottom: "50px"}} />
                                 <button className="flex flex-row bg-black rounded-lg w-24 p-1 justify-center mt-2">
                                     <IconSend2 stroke={2} color="white"/>
                                     <p className="font-bold text-white mx-1">Send</p>
@@ -196,7 +201,7 @@ const QuestionAndAnswer = () => {
                         ) : (
                             <div>
                                 <p>{oneQA.answer}</p>
-                                <button id="edit" className="flex flex-row bg-black rounded-lg w-24 p-1 justify-center mt-2">
+                                <button id="edit" className="flex flex-row bg-black rounded-lg w-24 p-1 justify-center mt-2" onClick={() => setEdit(true)}>
                                     <IconSend2 stroke={2} color="white"/>
                                     <p className="font-bold text-white mx-1">Edit</p>
                                 </button>
