@@ -1,0 +1,35 @@
+@media (min-width: 1340px) {
+	.itemClassCoursesByCategory {
+		width: calc((1340px - 4rem - 4rem) / 4) !important;
+	}
+}
+
+@media (min-width: 1280px) and (max-width: 1339px) {
+	.itemClassCoursesByCategory {
+		width: calc((var(--containerWidth) - 4rem - 4rem) / 4) !important;
+	}
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+	.itemClassCoursesByCategory {
+		width: calc((var(--containerWidth) - 4rem - 3rem) / 3) !important;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+	.itemClassCoursesByCategory {
+		width: calc((var(--containerWidth) - 4rem - 3rem) / 3) !important;
+	}
+}
+
+@media (min-width: 640px) and (max-width: 767px) {
+	.itemClassCoursesByCategory {
+		width: calc((var(--containerWidth) - 4rem - 2rem) / 2) !important;
+	}
+}
+
+@media (max-width: 639px) {
+	.itemClassCoursesByCategory {
+		width: calc(var(--containerWidth) - 4rem - 1rem) !important;
+	}
+}

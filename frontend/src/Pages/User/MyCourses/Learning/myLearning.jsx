@@ -60,10 +60,10 @@ const MyLearning = () => {
             <button className="text-white border-b-8 font-bold py-2 rounded text-lg max-sm:text-base">
               <Link to="/home/my-courses/learning">All courses</Link>
             </button>
-            <button className="text-white lg:border-b-8 border-slate-900 font-bold py-2 rounded text-lg mx-8">
+            <button className="text-white lg:border-b-8 hover:bg-violet-950 border-slate-900 font-bold py-2 rounded text-lg mx-8">
               <Link to="/home/my-courses/wishlist">Wishlist</Link>
             </button>
-            <button className="text-white lg:border-b-8 border-slate-900 font-bold py-2 rounded text-lg">
+            <button className="text-white lg:border-b-8 hover:bg-violet-950 border-slate-900 font-bold py-2 rounded text-lg">
               <Link to="/home/my-courses/archived">Archived</Link>
             </button>
           </div>
