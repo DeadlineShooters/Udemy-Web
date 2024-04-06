@@ -19,7 +19,7 @@ export default function Pagination() {
     className:
       active === index
         ? "rounded-full bg-gray-500 flex justify-center text-white"
-        : "rounded-full text-gray-500 flex justify-center",
+        : "rounded-full text-black bg-gray-300 flex justify-center",
   });
 
   const next = () => {

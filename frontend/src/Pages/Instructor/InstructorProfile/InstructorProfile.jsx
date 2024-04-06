@@ -33,7 +33,7 @@ const InstructorProfile = () => {
 		>
 			<div style={{ width: "200px" }}>
 				<img
-					className="instructor-image instructor-image rounded-full mb-5"
+					className="instructor-image instructor-image rounded-full mb-5 object-cover"
 					style={{ width: "200px", height: "200px" }}
 					src={profileImage}
 					alt={"Instructor profile image"}
