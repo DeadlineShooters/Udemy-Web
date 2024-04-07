@@ -15,7 +15,7 @@ import HandlePopUpLogin from './Pages/User/Authentication/HandlePopUpLogin.jsx';
 import CourseContent from './Pages/Course/Content/Content.jsx';
 import NotFound from './Components/404/404.jsx';
 import CourseDetail from './Pages/User/CourseLandingPage/CourseDetail.jsx';
-import ManageCourses from './Pages/Instructor/ManageCourses/ManageCourses.jsx';
+import CourseDashBoard from './Pages/Instructor/ManageCourses/CourseDashboard.jsx';
 import Statistics from './Pages/Instructor/Statistics/Statistics.jsx';
 import Sidebar from './Components/Sidebar/sidebar.jsx';
 import CourseLandingPage from './Pages/Instructor/ManageCourses/CourseLandingPage.jsx';
@@ -25,6 +25,10 @@ import Curriculum from './Pages/Instructor/ManageCourses/Curriculum.jsx';
 import Cart from './Pages/Cart/cart.jsx';
 import CoursesByCategory from './Pages/Discover/CoursesByCategory/coursesByCategory.jsx';
 import ProtectedRoutes from "./Components/Utils/AuthSecure.jsx";
+
+import InstructorProfile from "./Pages/Instructor/InstructorProfile/InstructorProfile.jsx";
+
+
 // import fonts
 import "./fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf";
 import { useAuth } from "./AuthContextProvider.jsx";
@@ -141,6 +145,10 @@ const router = createBrowserRouter([
 				element: <AccountSettings />,
 			},
 			{
+				path: 'instructor-profile',
+				element: <InstructorProfile />,
+			},
+			{
 				path: 'close-account',
 				element: <CloseAccount />,
 			}]
@@ -175,7 +183,7 @@ const router = createBrowserRouter([
 			children: [
 				{
 					path: 'courses',
-					element: <ManageCourses />,
+					element: <CourseDashBoard />,
 				},
 				{
 					path: 'statistics',
