@@ -29,13 +29,17 @@ import Login from './Pages/User/Authentication/Login.jsx';
 import HandlePopUpLogin from './Pages/User/Authentication/HandlePopUpLogin.jsx';
 
 //Instructor page
-import ManageCourses from './Pages/Instructor/ManageCourses/ManageCourses.jsx';
+import CourseDashBoard from './Pages/Instructor/ManageCourses/CourseDashboard.jsx';
 import Statistics from './Pages/Instructor/Statistics/Statistics.jsx';
 import CourseLandingPage from './Pages/Instructor/ManageCourses/CourseLandingPage.jsx';
 import Reviews from './Pages/Instructor/Reviews.jsx';
 import ManageCourseLayout from './Components/CourseManagement/ManageCourseLayout.jsx';
 import Curriculum from './Pages/Instructor/ManageCourses/Curriculum.jsx';
 import QuestionAndAnswer from "./Pages/Instructor/QA.jsx";
+
+
+import InstructorProfile from "./Pages/Instructor/InstructorProfile/InstructorProfile.jsx";
+
 
 // import fonts
 import "./fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf";
@@ -153,6 +157,10 @@ const router = createBrowserRouter([
 				element: <AccountSettings />,
 			},
 			{
+				path: 'instructor-profile',
+				element: <InstructorProfile />,
+			},
+			{
 				path: 'close-account',
 				element: <CloseAccount />,
 			}]
@@ -187,7 +195,7 @@ const router = createBrowserRouter([
 			children: [
 				{
 					path: 'courses',
-					element: <ManageCourses />,
+					element: <CourseDashBoard />,
 				},
 				{
 					path: 'statistics',
