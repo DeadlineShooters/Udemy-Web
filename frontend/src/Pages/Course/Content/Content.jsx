@@ -6,6 +6,7 @@ import arrow_up from "../../../Assets/arrow_up.png";
 import ReactPlayer from "react-player";
 import CourseNavbar from "../../../Components/CourseNavBar/CourseNavBar";
 import CourseOverview from "../Overview/Overview";
+import CompQA from "../../../Components/QA/CompQA";
 
 const CourseContent = () => {
   const CourseDetails = {
@@ -159,15 +160,12 @@ const CourseContent = () => {
   const handleOverviewClick = () => {
     localNavigate(window.location.pathname + '#overview');
   };
-  const handleQAClick = () => {
-    localNavigate(window.location.pathname + '#QA');
-  };
+
   const initialExpandedSections = {};
   CourseDetails.sectionList.forEach(section => {
     initialExpandedSections[section.index] = true; // Initialize each section as collapsed
   });
 
-  // State to manage expanded sections
   const [expandedSections, setExpandedSections] = useState(initialExpandedSections);
   const toggleSection = (sectionID) => {
     setExpandedSections((prevState) => ({
@@ -178,32 +176,14 @@ const CourseContent = () => {
   const [videoUrl, setVideoUrl] = useState("");
   const initialSelectLecture = JSON.parse(localStorage.getItem("selectLecture")) || {};
   const [selectLecture, setSelectLecture] = useState(initialSelectLecture);
-  const toggleSelectLecture = (lectureID) => {
+  const toggleSelectLecture = (sectionID, lectureID) => {
+    setSectionIndex(sectionID);
+    setLectureIndex(lectureID);
     setSelectLecture((prevState) => ({
       [lectureID]: !prevState[lectureID],
     }));
   };
   useEffect(() => {
-    const getVideoUrl = (CourseDetails, sectionID, lectureID) => {
-      const targetSection = CourseDetails.sectionList.find((section) => section.index === sectionID);
-      if (targetSection) {
-        const targetLecture = targetSection.lectureList.find((lecture) => lecture.index === lectureID);
-        if (targetLecture) {
-          const targetURL = targetLecture.publicURL;
-          return targetURL;
-        } else {
-          console.log("Lecture not found with given LectureID");
-        }
-      } else {
-        console.log("Lecture not found with given SectionID");
-      }
-    };
-    // if (courseContent.lecturePlaying.sectionID != null && courseContent.lecturePlaying.lectureID != null) {
-    //   const url = getVideoUrl(CourseDetails, CourseDetails.lecturePlaying.sectionID, courseContent.lecturePlaying.lectureID);
-    //   setVideoUrl(url);
-    // } else {
-    //   setVideoUrl(CourseDetails.sectionList[0].lectureList[0].video.publicURL);
-    // }
     setVideoUrl(CourseDetails.sectionList[0].lectureList[0].video.publicURL);
   }, []);
   useEffect(() => {
@@ -216,6 +196,29 @@ const CourseContent = () => {
     setVideoUrl(videoUrl);
     setLoading(false);
   };
+  const findQAByLectureIndex = (courseDetails, lectureIndex) => {
+    // Iterate over sectionList
+    for (const section of courseDetails.sectionList) {
+        // Iterate over lectureList in each section
+        for (const lecture of section.lectureList) {
+            // Check if the lecture index matches the desired index
+            if (lecture.index === lectureIndex) {
+                // Return the QA object if found
+                return lecture.QA;
+            }
+        }
+    }
+    // Return null if lecture with given index is not found
+    return null;
+  };
+  const [lectureIndex, setLectureIndex] = useState("");
+  const [sectionIndex, setSectionIndex] = useState("");
+  const [QAlistOfLecture, setQAlistOfLecture] = useState();
+  const handleQAClick = () => {
+    const QAList = findQAByLectureIndex(CourseDetails, 1);
+    setQAlistOfLecture(QAList);
+    localNavigate(window.location.pathname + '#QA');
+  };
   return (
     <div class="flex flex-row">
       {!loading ? (
@@ -226,6 +229,7 @@ const CourseContent = () => {
             <div className="font-bold hover:text-[#382660] text-lg mx-5 cursor-pointer" onClick={handleQAClick}>QA</div>
           </div>
           {window.location.hash === '#overview' && <CourseOverview course={CourseDetails} />}
+          {window.location.hash === '#QA' && <CompQA QA={QAlistOfLecture}/>}
         </div>
       ) : (
         <div role="status" class="flex flex-col bg-slate-900 items-center justify-center" style={{ height: "603px", width: "3560px" }}>
@@ -273,7 +277,7 @@ const CourseContent = () => {
                     {
                       handleLectureClick(lecture.video.publicURL, section.index, lecture.index);
                     }
-                    toggleSelectLecture(lecture.index);
+                    toggleSelectLecture(section.index, lecture.index);
                   }}
                 >
                   <input
