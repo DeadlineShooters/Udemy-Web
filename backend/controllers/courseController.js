@@ -28,11 +28,12 @@ controller.getCourseById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const courseDetails = await course.findById(id).populate("sectionList").populate("instructor");
+    let courseDetails = await course.findById(id).populate("sectionList").populate("instructor");
     if (!courseDetails) {
       return res.status(404).json({ message: "Course not found" });
     }
 
+    courseDetails = courseDetails.toObject();
     // Fetch the lectures for each section
     for (let section of courseDetails.sectionList) {
       section.lectures = await lecture.find({ sectionID: section._id });

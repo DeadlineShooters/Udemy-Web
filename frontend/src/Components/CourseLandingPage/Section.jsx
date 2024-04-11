@@ -6,8 +6,8 @@ const Section = ({ title, lectures, isLastSection }) => (
       {title}
     </h2>
     <div className="lectures p-5 border-l border-gray-300 border-r">
-      {lectures.map((lecture, index) => (
-        <Lecture key={index} {...lecture} />
+      {lectures.map((lecture) => (
+        <Lecture key={lecture._id} title={lecture.name} duration={lecture.video.duration} />
       ))}
     </div>
   </div>

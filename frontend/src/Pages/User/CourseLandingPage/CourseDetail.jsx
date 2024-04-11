@@ -1,5 +1,6 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import "./CourseDetail.css"; // Importing a CSS file to style the component
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faExclamation, faCirclePlay, faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
@@ -8,8 +9,9 @@ import Section from "../../../Components/CourseLandingPage/Section";
 import ProfileCard from "../../../Components/CourseLandingPage/ProfileCard";
 import CourseReview from "../../../Components/CourseLandingPage/CourseReview";
 import HeartIcon from "../../../Components/CourseLandingPage/HeartIcon";
+import NotFound from "../../../Components/404/404";
 
-const CourseDetail = () => {
+const CourseDetail = ({ courseId }) => {
   const courseSections = [
     {
       title: "Introduction",
@@ -51,12 +53,49 @@ const CourseDetail = () => {
     { id: 12, firstName: "Lucas", lastName: "An", rating: 5, comment: "The course was challenging but rewarding. I learned a lot." },
   ];
 
-  const [isFocused, setIsFocused] = useState(false);
+  const [course, setCourse] = useState(null);
+  const [error, setError] = useState(null);
 
-  const toggleFocus = () => {
-    setIsFocused(!isFocused);
-  };
-  const heartIcon = isFocused ? solidHeart : regularHeart;
+  // TODO: Delete this line
+  courseId = "60d5ecb7b484193dd2b8b781";
+
+  console.log(process.env.REACT_APP_BACKEND_HOST);
+
+  function formatSecondsToHoursMinutesSeconds(seconds) {
+    var hours = Math.floor(seconds / 3600);
+    var minutes = Math.floor((seconds % 3600) / 60);
+    seconds = seconds % 60;
+    return hours + "h" + minutes + "m" + seconds + "s";
+  }
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_HOST}/courses/${courseId}`)
+      .then((response) => {
+        setCourse(response.data);
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 404) {
+          setError("Course not found");
+        } else {
+          console.error("Error:", error);
+        }
+      });
+  }, [courseId]);
+
+  if (error) {
+    return <NotFound />;
+  }
+
+  if (!course) {
+    return <div>Loading...</div>;
+  }
+
+  // Convert the createDate string to a Date object
+  const date = new Date(course.createDate);
+
+  // Format the date
+  const formattedDate = `${date.toLocaleString("default", { month: "short" })} ${date.getDate()}, ${date.getFullYear()}`;
 
   return (
     <div className="w-full h-full course-title-container">
@@ -65,26 +104,24 @@ const CourseDetail = () => {
        lg:px-20 py-5 md:px-10 sm:px-5 sm:text-black lg:text-white sm:flex sm:flex-col sm:items-center lg:block "
       >
         <div id="short-description" className=" lg:w-1/2 relative left-0">
-          <h1 className="course-title font-bold text-3xl">Software Testing Masterclass (2024) - From Novice to Expert</h1>
+          <h1 className="course-title font-bold text-3xl">{course.name}</h1>
           <br />
-          <p className="course-description">
-            Learn software testing and become QA Engineer/Agile Tester. Mobile/Backend/Web/QA testing. JIRA, TestRail & much more!
-          </p>
+          <p className="course-description">{course.introduction}</p>
           <br />
 
           <div className="course-rating flex items-center">
             <div className="text-amber-500 font-bold mr-1 text-sm">
-              <span>4.5 </span>
+              <span>{course.avgRating}</span>
               <FontAwesomeIcon icon={faStar} />
             </div>
             <a href="/" className="mr-3 text-violet-500 underline text-sm ">
-              (9,662 ratings)
+              ({course.oneStarCnt + course.twoStarCnt + course.threeStarCnt + course.fiveStarCnt + course.fourStarCnt} ratings)
             </a>
-            <span className="text-sm">40,653 students</span>
+            <span className="text-sm">{course.totalStudent} students</span>
           </div>
           <p>
             <FontAwesomeIcon icon={faExclamation} className="text-red-500 text-sm mr-2" />
-            <span className="text-sm">Created date Apr 9, 2022</span>
+            <span className="text-sm">Created date {formattedDate}</span>
           </p>
         </div>
         <div className="sidebar-container  sm:w-8/12 lg:w-3/12 shadow-lg sm:-translate-y-0 lg:-translate-y-1/2 bg-white lg:fixed lg:right-6">
@@ -104,9 +141,9 @@ const CourseDetail = () => {
             <span className="absolute bottom-1 left-0 right-0 text-center font-bold text-white">Preview this course</span>
           </button>
           <div className="body-sidebar px-6 py-4">
-            <div className="price mb-2 break-words">
-              <span className="money-unit font-bold lg:text-3xl sm:text-lg md:text-xl text-slate-950">đ</span>
-              <span className="price-number font-bold lg:text-3xl sm:text-lg md:text-xl text-slate-950 ">349,000</span>
+            <div className="price mb-2 break-words text-black">
+              <span className="money-unit font-bold lg:text-3xl sm:text-lg md:text-xl text-slate-900">đ</span>
+              <span className="price-number font-bold lg:text-3xl sm:text-lg md:text-xl text-slate-900">{course.price.toLocaleString()}</span>
             </div>
             <div className="flex flex-row mb-2 buttons w-full justify-between ">
               <button className="flex-5 w-full mr-2 py-2 h-12 text-sm xl:text-lg bg-purple-500 text-white rounded font-bold">Add to Cart</button>
@@ -121,17 +158,17 @@ const CourseDetail = () => {
         <div className="course-info-container lg:w-7/12 sm:10/12 md:px-10 sm:px-1">
           <span className="price-number font-bold text-2xl text-slate-950 ">Course content</span>
           <div className="content-description mt-5">
-            <span className="price-number text-sm text-slate-950 ">13</span>
+            <span className="price-number text-sm text-slate-950 ">{course.totalSection}</span>
             <span className="price-number  text-sm  text-slate-950 "> sections • </span>
-            <span className="price-number  text-sm  text-slate-950 ">94</span>
+            <span className="price-number  text-sm  text-slate-950 ">{course.totalLecture}</span>
             <span className="price-number  text-sm  text-slate-950 "> lectures • </span>
-            <span className="price-number  text-sm  text-slate-950 ">8h41m</span>
+            <span className="price-number  text-sm  text-slate-950 ">{formatSecondsToHoursMinutesSeconds(course.totalLength)}</span>
             <span className="price-number  text-sm  text-slate-950 "> total length</span>
           </div>
 
           <div className="curriculum-container course-layout mb-5 ">
-            {courseSections.map((section, index) => (
-              <Section key={index} {...section} isLastSection={index === courseSections.length - 1} />
+            {course.sectionList.map((section) => (
+              <Section key={section._id} title={section.title} lectures={section.lectures} isLastSection={section.index === course.sectionList.length - 1} />
             ))}
           </div>
           <span className="price-number font-bold text-2xl text-slate-950">Description</span>

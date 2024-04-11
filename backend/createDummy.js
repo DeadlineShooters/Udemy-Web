@@ -4,6 +4,7 @@ import course from "./models/course.js";
 import section from "./models/section.js";
 import dotenv from "dotenv";
 import { ObjectId } from "mongodb";
+import lecture from "./models/lecture.js";
 dotenv.config({ path: "../.env" });
 
 async function importSectionData() {
@@ -22,6 +23,31 @@ async function deleteSectionData() {
   // Delete the data from the database
   await section.deleteMany({});
   console.log("Section data deleted");
+}
+
+async function importLectureData() {
+  // Read the JSON file
+  const data = fs.readFileSync("./data/lectures.json", "utf-8");
+
+  // Parse the data as JSON
+  let lectures = JSON.parse(data);
+
+  // Convert sectionList strings to ObjectIds
+  lectures = lectures.map((lecture) => ({
+    ...lecture,
+    sectionID: new mongoose.Types.ObjectId(lecture.sectionID),
+  }));
+
+  // Insert the data into the database
+  await lecture.insertMany(lectures);
+
+  console.log("Lecture data inserted");
+}
+
+async function deleteLectureData() {
+  // Delete the data from the database
+  await lecture.deleteMany({});
+  console.log("Lecture data deleted");
 }
 
 async function importClassData() {
@@ -58,7 +84,9 @@ mongoose
 if (process.argv[2] === "--delete-data") {
   await deleteSectionData();
   await deleteClassData();
+  await deleteLectureData();
 } else {
   await importSectionData();
+  await importLectureData();
   await importClassData();
 }
