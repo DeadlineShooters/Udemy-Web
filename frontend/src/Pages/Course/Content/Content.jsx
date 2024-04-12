@@ -28,66 +28,66 @@ const CourseContent = () => {
     description: "Welcome to the Complete Software Testing Masterclass. Learn software testing with this course and become a successful software tester/agile Tester. Obtain the core Mobile Testing, Backend testing, Web testing, and Test Engineering skills, and learn JIRA, SQL, TestRail, TestGear, Confluence, Charles Proxy, and GitHub. By the end of this course, you will have enough knowledge to get a job as a software tester or start working as a freelancer! We will also explain many testing platforms where you can start earning money as a beta tester. We'll take you step-by-step through engaging video tutorials and teach you everything you need to know to succeed as a Software Tester. The course includes over hours and hours of 1080P (HD) video tutorials with high-quality sound. All the videos are hand-edited and unnecessary parts are removed. You will only learn what you need to learn to become successful!",
     price: 49.99,
     sectionList: [
-      {
+    {
+      index: 0,
+      name: "Introduction to Programming",
+      lectureList: [{
         index: 0,
-        name: "Introduction to Programming",
-        lectureList: [{
-          index: 0,
-          name: "Introduction to JavaScript",
-          content: "This lecture covers the basics of JavaScript programming language.",
-          video: {
-            secureURL: "https://example.com/secure-video.mp4",
-            publicURL: "https://www.youtube.com/watch?v=KwL1qTR5MT8",
-            type: "mp4",
-            duration: 120
-          },
-          QA: {
-            user: "610f42941c7c4b001f4e06cc",
-            course: "610f42941c7c4b001f4e06cd",
-            title: "How to install React?",
-            description: "I'm having trouble installing React on my machine. Can someone provide step-by-step instructions?",
-            answer: "To install React, you can use npm or yarn. First, make sure you have Node.js installed...",
-            createdTime: new Date()
-          }
-        }, {
-          index: 1,
-          name: "Introduction to JavaScript",
-          content: "This lecture covers the basics of JavaScript programming language.",
-          video: {
-            secureURL: "https://example.com/secure-video.mp4",
-            publicURL: "https://www.youtube.com/watch?v=5Ym-dOS9ssA&list=PLhhyoLH6IjfxVOdVC1P1L5z5azs0XjMsb",
-            type: "mp4",
-            duration: 120
-          },
-          QA: {
-            user: "610f42941c7c4b001f4e06cc",
-            course: "610f42941c7c4b001f4e06cd",
-            title: "How to install React?",
-            description: "I'm having trouble installing React on my machine. Can someone provide step-by-step instructions?",
-            answer: "To install React, you can use npm or yarn. First, make sure you have Node.js installed...",
-            createdTime: new Date()
-          }
-        }, {
-          index: 2,
-          name: "Introduction to JavaScript",
-          content: "This lecture covers the basics of JavaScript programming language.",
-          video: {
-            secureURL: "https://example.com/secure-video.mp4",
-            publicURL: "https://www.youtube.com/watch?v=HPjBY1H-U4U&list=PLhhyoLH6IjfxVOdVC1P1L5z5azs0XjMsb&index=2",
-            type: "mp4",
-            duration: 120
-          },
-          QA: {
-            user: "610f42941c7c4b001f4e06cc",
-            course: "610f42941c7c4b001f4e06cd",
-            title: "How to install React?",
-            description: "I'm having trouble installing React on my machine. Can someone provide step-by-step instructions?",
-            answer: "To install React, you can use npm or yarn. First, make sure you have Node.js installed...",
-            createdTime: new Date()
-          }
-        }]
-      },
-    , {
+        name: "Introduction to JavaScript",
+        content: "This lecture covers the basics of JavaScript programming language.",
+        video: {
+          secureURL: "https://example.com/secure-video.mp4",
+          publicURL: "https://www.youtube.com/watch?v=KwL1qTR5MT8",
+          type: "mp4",
+          duration: 120
+        },
+        QA: {
+          user: "610f42941c7c4b001f4e06cc",
+          course: "610f42941c7c4b001f4e06cd",
+          title: "How to install React?",
+          description: "I'm having trouble installing React on my machine. Can someone provide step-by-step instructions?",
+          answer: "To install React, you can use npm or yarn. First, make sure you have Node.js installed...",
+          createdTime: new Date()
+        }
+      }, {
+        index: 1,
+        name: "Introduction to JavaScript",
+        content: "This lecture covers the basics of JavaScript programming language.",
+        video: {
+          secureURL: "https://example.com/secure-video.mp4",
+          publicURL: "https://www.youtube.com/watch?v=5Ym-dOS9ssA&list=PLhhyoLH6IjfxVOdVC1P1L5z5azs0XjMsb",
+          type: "mp4",
+          duration: 120
+        },
+        QA: {
+          user: "610f42941c7c4b001f4e06cc",
+          course: "610f42941c7c4b001f4e06cd",
+          title: "How to install React?",
+          description: "I'm having trouble installing React on my machine. Can someone provide step-by-step instructions?",
+          answer: "To install React, you can use npm or yarn. First, make sure you have Node.js installed...",
+          createdTime: new Date()
+        }
+      }, {
+        index: 2,
+        name: "Introduction to JavaScript",
+        content: "This lecture covers the basics of JavaScript programming language.",
+        video: {
+          secureURL: "https://example.com/secure-video.mp4",
+          publicURL: "https://www.youtube.com/watch?v=HPjBY1H-U4U&list=PLhhyoLH6IjfxVOdVC1P1L5z5azs0XjMsb&index=2",
+          type: "mp4",
+          duration: 120
+        },
+        QA: {
+          user: "610f42941c7c4b001f4e06cc",
+          course: "610f42941c7c4b001f4e06cd",
+          title: "How to install React?",
+          description: "I'm having trouble installing React on my machine. Can someone provide step-by-step instructions?",
+          answer: "To install React, you can use npm or yarn. First, make sure you have Node.js installed...",
+          createdTime: new Date()
+        }
+      }]
+    },
+    {
       index: 1,
       name: "Introduction to Programming",
       lectureList: [{
@@ -176,9 +176,30 @@ const CourseContent = () => {
   const [videoUrl, setVideoUrl] = useState("");
   const initialSelectLecture = JSON.parse(localStorage.getItem("selectLecture")) || {};
   const [selectLecture, setSelectLecture] = useState(initialSelectLecture);
-  const toggleSelectLecture = (sectionID, lectureID) => {
-    setSectionIndex(sectionID);
-    setLectureIndex(lectureID);
+
+  const findQAByLectureIndex = (lectureIndex, sectionIndex) => {
+    console.log("lec", lectureIndex);
+    console.log("sec", sectionIndex);
+    for (let i = 0; i < CourseDetails.sectionList.length; i++) {
+      if (i === 0)
+      {
+        console.log("i", i);
+        for (let j = 0; j < CourseDetails.sectionList[i].lectureList.length; j++)
+        {
+          if (j == 2)
+          {
+            return CourseDetails.sectionList[i].lectureList[j].QA;
+          }
+        }
+      }
+    }
+    return 0;
+  };
+
+  const toggleSelectLecture = (lectureID, sectionID) => {
+    const QAList = findQAByLectureIndex(0, 2);
+    console.log(QAList);
+    setQAlistOfLecture(QAList);
     setSelectLecture((prevState) => ({
       [lectureID]: !prevState[lectureID],
     }));
@@ -196,27 +217,8 @@ const CourseContent = () => {
     setVideoUrl(videoUrl);
     setLoading(false);
   };
-  const findQAByLectureIndex = (courseDetails, lectureIndex) => {
-    // Iterate over sectionList
-    for (const section of courseDetails.sectionList) {
-        // Iterate over lectureList in each section
-        for (const lecture of section.lectureList) {
-            // Check if the lecture index matches the desired index
-            if (lecture.index === lectureIndex) {
-                // Return the QA object if found
-                return lecture.QA;
-            }
-        }
-    }
-    // Return null if lecture with given index is not found
-    return null;
-  };
-  const [lectureIndex, setLectureIndex] = useState("");
-  const [sectionIndex, setSectionIndex] = useState("");
   const [QAlistOfLecture, setQAlistOfLecture] = useState();
   const handleQAClick = () => {
-    const QAList = findQAByLectureIndex(CourseDetails, 1);
-    setQAlistOfLecture(QAList);
     localNavigate(window.location.pathname + '#QA');
   };
   return (
@@ -277,7 +279,7 @@ const CourseContent = () => {
                     {
                       handleLectureClick(lecture.video.publicURL, section.index, lecture.index);
                     }
-                    toggleSelectLecture(section.index, lecture.index);
+                    toggleSelectLecture(lecture.index, section.index);
                   }}
                 >
                   <input

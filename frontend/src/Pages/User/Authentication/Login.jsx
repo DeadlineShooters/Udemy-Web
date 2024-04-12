@@ -69,7 +69,7 @@ const Login = () => {
         setUser(userData);
         setIsLogged(true);
         localStorage.setItem('user', JSON.stringify(userData));
-        navigate("/home", {replace: true});
+        navigate("/", {replace: true});
       }
     } catch (err)
     {

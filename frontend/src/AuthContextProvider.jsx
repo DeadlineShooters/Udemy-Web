@@ -42,6 +42,7 @@ const AuthContextProvider = ({ children }) => {
         getUserGoogleAuth();
     }, [setUser, setIsLogged]);
     const userData = JSON.parse(localStorage.getItem('user'));
+    console.log("User data from storage: ", userData);
     return (
         <AuthContext.Provider value={{ user, userData, isLogged, setUser, setIsLogged }}>
             {children}

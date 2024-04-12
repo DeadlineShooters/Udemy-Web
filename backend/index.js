@@ -3,6 +3,7 @@ import cookieSession from "cookie-session";
 import mongoose from "mongoose";
 import "./passport.js";
 import authRoute from "./routes/user/authRoute.js";
+import accountRoute from "./routes/user/accountRoute.js"
 import passport from "passport";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -36,6 +37,7 @@ app.use(
     })
 );
 app.use("/auth", authRoute);
+app.use("/user", accountRoute);
 
 app.listen(5000, () => {
     console.log("Server is running");

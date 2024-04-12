@@ -211,9 +211,8 @@ const courses = [
 ];
 
 const Navbar = () => {
-	const user = useAuth();
-	console.log(user);
-	const isLogged = user.userData !== null;
+	const {userData} = useAuth();
+	const isLogged = userData !== null;
 	function classNames(...classes) {
 		return classes.filter(Boolean).join(' ');
 	}
@@ -226,8 +225,6 @@ const Navbar = () => {
 		setTurnOnSideBar(!isTurnOnSideBar);
 		console.log(isTurnOnSideBar);
 	};
-	const userName = 'Nguyen Minh Thong';
-
 	const [isWishlistDropdownOpen, setWishlistDropdownOpen] = useState(false);
 	const toggleWishlistDropdown = () => {
 		setWishlistDropdownOpen(!isWishlistDropdownOpen);
@@ -318,7 +315,7 @@ const Navbar = () => {
 				{isLogged === true ? (
 					<div className={`flex items-center`}>
 						<ul>
-							{user.instructor !== null ? (
+							{userData.instructor !== null ? (
 								<li class='hover:text-purple-700 hide-teach-udemy'>
 									<Link to='/instructor/courses'>Instructor</Link>
 								</li>
@@ -428,7 +425,7 @@ const Navbar = () => {
 						<Menu as='div' className='user relative ml-4'>
 							<div>
 								<Menu.Button className='relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:outline-none focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800'>
-									<img id='preview' src={createImageFromInitials(40, userName, getColor())} alt='profile-pic' className='avatar' />
+									<img id='preview' src={createImageFromInitials(40, userData.firstName + " " + userData.lastName, getColor())} alt='profile-pic' className='avatar' />
 								</Menu.Button>
 							</div>
 							<Transition
@@ -522,10 +519,10 @@ const Navbar = () => {
 				<div className={`sidebar md:hidden ${isTurnOnSideBar ? 'open' : ''} border-r-2 shadow-xl`}>
 					<div className='flex flex-row items-center bg-slate-50 py-2'>
 						<div className='flex rounded-full text-sm focus:ring-2 focus:outline-none focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 ml-5'>
-							<img id='preview' src={createImageFromInitials(80, userName, getColor())} alt='profile-pic' className='avatar' />
+							<img id='preview' src={createImageFromInitials(80, userData.firstName + " " + userData.lastName, getColor())} alt='profile-pic' className='avatar' />
 						</div>
 						<div className='flex flex-col ml-5'>
-							<p className='font-bold'>Hi, {userName} </p>
+							<p className='font-bold'>Hi, {userData.firstName + " " + userData.lastName} </p>
 							<p className=''>Welcome back</p>
 						</div>
 					</div>
