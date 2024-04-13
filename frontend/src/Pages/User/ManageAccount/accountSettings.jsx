@@ -3,31 +3,65 @@ import {getColor,createImageFromInitials} from '../../../Components/Utils/Utils.
 import { Link, useLocation } from "react-router-dom";
 import './accountSettings.css'
 import { useAuth } from '../../../AuthContextProvider.jsx';
-import axios from "axios"
+import axios from "axios";
+import { Bounce, toast } from 'react-toastify';
+import { useForm } from 'react-hook-form';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AccountSettings = () => {
   const {setUser, userData} = useAuth();
   let fullname = userData.firstName + " " + userData.lastName;
   const userId = userData._id;
-  const [password, setPassword] = useState("");
-  const [enterConfirmPassword, setConfirmPassword] = useState("");
-
-  const submit = async (e) => {
-    e.preventDefault();
+  const [isMatch, setIsMatch] = useState(true);
+  const successNotify = () => {
+    toast.success('Updated successfully!', {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Bounce,
+    });
+  };
+  const failNotify = () => {
+    toast.error('Updated failed!', {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Bounce,
+    });
+  }
+  const {register, handleSubmit, watch, formState: {errors}} = useForm({
+    mode: "onSubmit"
+  });
+  const submit = async (data) => {
+    const password = data.Password;
+    const confirmPassword = data.ConfirmPassword;
     try {
       const response = await axios.post("http://localhost:5000/user/change-password", {
-        userId, password, enterConfirmPassword
+        userId, password, confirmPassword
       })
       console.log("Data cap nhat: ", response.data);
       if (response.status === 200) {
+        successNotify();
         const userData = await response.data;
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
       }
     } catch (err) {
+      failNotify();
       console.log(err);
     }
   }
+  const Password = watch('Password');
   return (
     <div className="template flex flex-row pt-8">
       <div className="flex flex-col border border-r-0 border-[#A6A6A6]" style={{height: "40rem"}}>
@@ -74,33 +108,60 @@ const AccountSettings = () => {
         </div>
         <div className='flex flex-col'>
           <p className='font-bold px-12 pt-2'>Change password:</p>
-          <form className='w-full px-12 pt-2'>
+          <form className='w-full px-12 pt-2' onSubmit={handleSubmit(submit)}>
             <input 
               type="password" 
               id="new-password" 
-              className="block w-full p-2 text-gray-900 border border-gray-500 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+              className="block w-full p-2 my-2 text-gray-900 border border-gray-500 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
               placeholder='Enter new password'
-              onChange={(e) => setPassword(e.target.value)}
+              {...register("Password", 
+                {
+                  required: {
+                    value: true,
+                    message: "Your new password is required"
+                  },
+                  minLength: 
+                  {
+                    value: 8,
+                    message: "Your password must be longer than 8"
+                  }
+                }
+              )}
             />
-          </form>
-          <form className='w-full px-12 pt-2'>
+            {errors.Password && <span className='text-[#b84444]'>{errors.Password.message}</span>}
             <input 
               type="password" 
               id="re-enter-password" 
-              className="block w-full p-2 text-gray-900 border border-gray-500 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+              className="block w-full p-2 my-2 text-gray-900 border border-gray-500 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
               placeholder='Re-type new password'
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              {...register("ConfirmPassword", 
+                {
+                  required: {
+                    value: true,
+                    message: "Your new password is required",
+                    pattern: {
+                      value:/^(\S)(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹])[a-zA-Z0-9~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹]{10,16}$/,
+                      message: "Your password should include at least one uppercase, one numeric value and one special character"
+                    }
+                  },
+                  minLength: 
+                  {
+                    value: 8,
+                    message: "Your password must be longer than 8"
+                  },
+                  validate: (value) => (
+                    value === Password || "The passwords do not match!"
+                  )
+                },
+              )}
             />
+            {errors.ConfirmPassword && <span className='text-[#b84444]'>{errors.ConfirmPassword.message}</span>}
+            <button 
+              type="submit" 
+              className=" block my-2 text-white bg-purple-900 hover:bg-sky-900 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+              Change password
+            </button>
           </form>
-        </div>
-        <div className='pl-12 pt-5'>
-          <button 
-            type="button" 
-            className="text-white bg-purple-900 hover:bg-sky-900 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-            onClick={submit}
-          >
-            Change password
-          </button>
         </div>
       </div>
     </div>

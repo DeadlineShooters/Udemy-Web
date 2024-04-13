@@ -12,6 +12,7 @@ import { IconMenu2 } from '@tabler/icons-react';
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { Menu as MenuMT, MenuHandler, MenuList, MenuItem } from '@material-tailwind/react';
 import { IconChevronLeft } from '@tabler/icons-react';
+import secureLocalStorage from 'react-secure-storage';
 
 const categories = [
 	'Development',
@@ -217,7 +218,7 @@ const Navbar = () => {
 		return classes.filter(Boolean).join(' ');
 	}
 	const logout = () => {
-		localStorage.clear();
+		secureLocalStorage.clear();
 		window.open('http://localhost:5000/auth/logout', '_self');
 	};
 	const [isTurnOnSideBar, setTurnOnSideBar] = useState(false);

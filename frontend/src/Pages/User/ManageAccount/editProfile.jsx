@@ -3,7 +3,9 @@ import { getColor, createImageFromInitials } from "../../../Components/Utils/Uti
 import { Link } from "react-router-dom";
 import './editProfile.css';
 import { useAuth } from '../../../AuthContextProvider.jsx';
+import { Bounce, toast } from 'react-toastify';
 import axios from "axios"
+import secureLocalStorage from "react-secure-storage";
 
 const EditProfile = () => {
   /* Retrieve user data */
@@ -19,6 +21,19 @@ const EditProfile = () => {
   const [userWeb, setUserWeb] = useState(userData.socialLinks.web);
   const [userFb, setUserFb] = useState(userData.socialLinks.youtube);
   const [userYtb, setUserYtb] = useState(userData.socialLinks.facebook);
+  const successNotify = () => {
+    toast.success('Updated successfully!', {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Bounce,
+    });
+  };
   const submit = async (e) => {
     e.preventDefault();
     try {
@@ -27,9 +42,10 @@ const EditProfile = () => {
       })
       console.log("Data cap nhat: ", response.data);
       if (response.status === 200) {
+        successNotify();
         const userData = await response.data;
         setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
+        secureLocalStorage.setItem('user', JSON.stringify(userData));
       }
     } catch (err) {
       console.log(err);

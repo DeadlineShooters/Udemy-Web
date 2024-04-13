@@ -150,7 +150,13 @@ const QuestionAndAnswer = () => {
             <div className="flex flex-grow flex-row mt-3 ">
                 <div className="border border-black w-[400px]">
                     <div className="flex justify-between border-black border-b-[1px] ">
-                        <input type="search" id="default-search" className="block w-full p-2 text-sm text-gray-900 border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search by keyword" required />
+                        <input 
+                            type="search" 
+                            id="default-search" 
+                            className="block w-full p-2 text-sm text-gray-900 border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                            placeholder="Search by keyword" 
+                            required 
+                        />
                         <button className="p-2 border-black border-l-[1px]"><IconSearch stroke={2} color="#3d07bb" /></button>
                     </div>
                     {QAWithSelectedCourse.map((oneQAInTab) => (
