@@ -1,20 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import Carousel from 'react-multi-carousel';
+import Drawer from 'react-modern-drawer';
+import axios from 'axios';
 import 'react-multi-carousel/lib/styles.css';
 import './coursesByCategory.css';
-import Drawer from 'react-modern-drawer';
 import 'react-modern-drawer/dist/index.css';
 import { Select, Option, Accordion, AccordionHeader, AccordionBody, Checkbox, List, ListItem, ListItemPrefix, Typography } from '@material-tailwind/react';
 
 const responsive = {
 	xl: {
-		breakpoint: { max: 3000, min: 1140 },
+		breakpoint: { max: 3000, min: 1280 },
 		items: 4,
 		slidesToSlide: 3,
 	},
 	md: {
-		breakpoint: { max: 1140, min: 720 },
+		breakpoint: { max: 1280, min: 720 },
 		items: 3,
 		slidesToSlide: 2,
 	},
@@ -73,75 +75,12 @@ const instructors = [
 	},
 ];
 
-const courses = [
-	{
-		name: 'Docker & Kubernetes: The Practical Guide [2024 Edition]',
-		headline: 'Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up!',
-		instructor: 'Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller',
-		rating: 4.7,
-		ratingCnt: 25485,
-		hours: 23.5,
-		lectures: 262,
-		discountedPrice: 349000,
-		originalPrice: 2199000,
-		image: 'https://img-b.udemycdn.com/course/240x135/3490000_d298_2.jpg',
-	},
-	{
-		name: 'Docker & Kubernetes: The Practical Guide [2024 Edition]',
-		headline: 'Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up!',
-		instructor: 'Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller',
-		rating: 4.7,
-		ratingCnt: 25485,
-		hours: 23.5,
-		lectures: 262,
-		discountedPrice: 349000,
-		originalPrice: 2199000,
-		image: 'https://img-b.udemycdn.com/course/240x135/3490000_d298_2.jpg',
-	},
-	{
-		name: 'Docker & Kubernetes: The Practical Guide [2024 Edition]',
-		headline: 'Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up!',
-		instructor: 'Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller',
-		rating: 4.7,
-		ratingCnt: 25485,
-		hours: 23.5,
-		lectures: 262,
-		discountedPrice: 349000,
-		originalPrice: 2199000,
-		image: 'https://img-b.udemycdn.com/course/240x135/3490000_d298_2.jpg',
-	},
-	{
-		name: 'Docker & Kubernetes: The Practical Guide [2024 Edition]',
-		headline: 'Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up!',
-		instructor: 'Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller',
-		rating: 4.7,
-		ratingCnt: 25485,
-		hours: 23.5,
-		lectures: 262,
-		discountedPrice: 349000,
-		originalPrice: 2199000,
-		image: 'https://img-b.udemycdn.com/course/240x135/3490000_d298_2.jpg',
-	},
-	{
-		name: 'Docker & Kubernetes: The Practical Guide [2024 Edition]',
-		headline: 'Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up!',
-		instructor: 'Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller',
-		rating: 4.7,
-		ratingCnt: 25485,
-		hours: 23.5,
-		lectures: 262,
-		discountedPrice: 349000,
-		originalPrice: 2199000,
-		image: 'https://img-b.udemycdn.com/course/240x135/3490000_d298_2.jpg',
-	},
-];
-
 const filterFields = ['Ratings', 'Languages', 'Video Duration', 'Features', 'Price'];
 
 const filterOptions = [
 	[4.5, 4.0, 3.5, 3.0],
 	['English', 'Vietnamese'],
-	['0-3 hours', '3-6 hours', '6-9 hours', '9-12 hours'],
+	['0-3 hours', '3-6 hours', '6-9 hours', '9-12 hours', '12+ hours'],
 	['Subtitles', 'Quizzes', 'Coding Exercises', 'Practice Tests'],
 	['Free', 'Paid'],
 ];
@@ -200,18 +139,18 @@ function RenderStars({ rating }) {
 }
 
 const CoursesByCategory = () => {
+	let { categoryId } = useParams();
+	const isMediumScreen = useMediaQuery({ query: '(max-width: 1024px)' });
+	const refContainer = useRef();
+	const [containerWidth, setContainerWidth] = useState(0);
 	const [sortBy, setSortBy] = useState('mostPopular');
 	const [openFilters, setOpenFilters] = useState(filterFields.map(() => 0));
 	const [openFilterBar, setOpenFilterBar] = useState(false);
 	const [openFilterBarSm, setOpenFilterBarSm] = useState(false);
-
-	const handleOpenFilters = (ind) => setOpenFilters((prev) => prev.map((value, index) => (index === ind ? !value : value)));
-	const toggleDrawer = () => {
-		setOpenFilterBarSm((prevState) => !prevState);
-	};
-
-	const refContainer = useRef();
-	const [containerWidth, setContainerWidth] = useState(0);
+	const [courses, setCourses] = useState([]);
+	const [filterCourses, setFilterCourses] = useState([]);
+	const [categoryName, setCategoryName] = useState(null);
+	const [selectedFilters, setSelectedFilters] = useState([]);
 
 	useEffect(() => {
 		setContainerWidth(refContainer.current.offsetWidth);
@@ -221,7 +160,7 @@ const CoursesByCategory = () => {
 			document.documentElement.style.setProperty('--containerWidth', `${containerWidth}px`);
 			if (!isMediumScreen) {
 				setOpenFilterBarSm(false);
-			}
+			} 
 		};
 
 		window.addEventListener('resize', handleResize);
@@ -230,20 +169,104 @@ const CoursesByCategory = () => {
 	}, []);
 
 	useEffect(() => {
-		console.log(containerWidth);
 		if (refContainer.current) {
 			setContainerWidth(refContainer.current.offsetWidth);
 			document.documentElement.style.setProperty('--containerWidth', `${containerWidth}px`);
 		}
 	}, [containerWidth]);
 
-	const isMediumScreen = useMediaQuery({ query: '(max-width: 1024px)' });
+	useEffect(() => {
+		axios
+			.get(`http://localhost:5000/courses/?category=${categoryId}`)
+			.then((response) => {
+				if (response.data.success) {
+					setCourses(response.data.courses);
+					setFilterCourses(response.data.courses)
+					setCategoryName(response.data.courses[0].category.name);
+				}
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+			});
+	}, []);
+
+	useEffect(() => {
+		let sortedCourses = [...courses];
+
+		switch (sortBy) {
+			case 'mostPopular':
+				sortedCourses.sort((a, b) => b.totalStudent - a.totalStudent);
+				break;
+			case 'highestRated':
+				sortedCourses.sort((a, b) => b.avgRating - a.avgRating);
+				break;
+			case 'newest':
+				sortedCourses.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+				break;
+			default:
+				break;
+		}
+
+		setCourses(sortedCourses);
+	}, [sortBy]);
+
+	useEffect(() => {
+		if (openFilterBarSm) {
+			return;
+		}
+		let newCourses = [...courses];
+		for (let field in selectedFilters) {
+			if (selectedFilters[field].length === 0) continue;
+			newCourses = newCourses.filter((course) => {
+				if (field === 'Ratings') {
+					return course.avgRating >= Math.min(...selectedFilters[field]);
+				} else if (field === 'Video Duration') {
+					return selectedFilters[field].some((range) => {
+						const selectedRange = range.split('-');
+						const minHours = parseFloat(selectedRange[0]);
+						const maxHours = selectedRange[1] === '12+ hours' ? Infinity : parseFloat(selectedRange[1]);
+						return course.totalLength >= minHours && course.totalLength <= maxHours;
+					});
+				} else if (field === 'Price') {
+					return selectedFilters[field].includes(course.price === 0 ? 'Free' : 'Paid');
+					// } else if (field === 'Languages') {
+					// 	return selectedFilters[field].includes(course.language);
+					// } else if (field === 'Features') {
+					// 	return selectedFilters[field].every((feature) => course.features.includes(feature));
+				}
+				return true;
+			});
+		}
+
+		setFilterCourses(newCourses);
+	}, [selectedFilters, openFilterBarSm]);
+
+	const handleOpenFilters = (ind) => setOpenFilters((prev) => prev.map((value, index) => (index === ind ? !value : value)));
+	const toggleDrawer = () => {
+		setOpenFilterBarSm((prevState) => !prevState);
+	};
+
+	const handleFilterOptionSelect = (field, option) => () => {
+		setSelectedFilters((prev) => {
+			const newFilters = { ...prev };
+			if (!newFilters[field]) {
+				newFilters[field] = [];
+			}
+			if (newFilters[field].includes(option)) {
+				newFilters[field] = newFilters[field].filter((item) => item !== option);
+			} else {
+				newFilters[field] = [...newFilters[field], option];
+			}
+			console.log(newFilters);
+			return newFilters;
+		});
+	};
 
 	return (
 		<>
 			<div className='flex justify-center'>
 				<div ref={refContainer} className='w-full max-w-[1340px] px-8 pt-12'>
-					<div className='font-bold text-3xl mb-12'>Category Name Courses</div>
+					<div className='font-bold text-3xl mb-12'>{categoryName} Courses</div>
 					<div className='font-bold text-2xl'>Popular instructors</div>
 					<Carousel containerClass='' itemClass='m-2 itemClassCoursesByCategory' responsive={responsive}>
 						{instructors.map((instructor) => (
@@ -269,7 +292,7 @@ const CoursesByCategory = () => {
 							</div>
 						))}
 					</Carousel>
-					<div className='font-bold text-2xl mb-4'>All Data Science courses</div>
+					<div className='font-bold text-2xl mt-12 mb-4'>All {categoryName} courses</div>
 					<div className='flex justify-between items-center my-8'>
 						<div className='flex gap-3 items-center'>
 							<button
@@ -305,7 +328,7 @@ const CoursesByCategory = () => {
 								</Select>
 							</div>
 						</div>
-						<span className='font-bold text-gray-600 text-md'>3,647 results</span>
+						<span className='font-bold text-gray-600 text-md'>{filterCourses.length} results</span>
 					</div>
 					<div className='grid grid-cols-12 gap-4'>
 						<div className={`hidden ${openFilterBar ? 'lg:block col-span-3' : ''} `}>
@@ -324,6 +347,7 @@ const CoursesByCategory = () => {
 																containerProps={{
 																	className: 'p-0',
 																}}
+																onClick={handleFilterOptionSelect(field, option)}
 															/>
 														</ListItemPrefix>
 														<Typography color='blue-gray' className='font-medium'>
@@ -343,34 +367,35 @@ const CoursesByCategory = () => {
 							))}
 						</div>
 						<div className={`col-span-full ${openFilterBar ? 'lg:col-span-9' : ''}  divide-y divide-gray-300`}>
-							{courses.map((course) => (
-								<div className='flex gap-4 pb-8 pt-4 '>
-									<img className='w-24 h-24 object-cover object-center md:w-60 md:h-fit' src={course.image} alt='' />
-									<div className='pr-24 relative flex flex-col gap-1 w-full '>
-										<h3 class='font-bold text-gray-900 line-clamp-2 leading-tight'>{course.name}</h3>
-										<span class='text-sm text-gray-700 font-medium'>{course.headline}</span>
-										<span class='text-xs text-gray-700'>{course.instructor}</span>
-										<div class='flex gap-1 items-center'>
-											<span class='text-gray-900 font-bold text-sm'>{course.rating}</span>
-											<div class='flex gap-0.5'>{RenderStars({ rating: course.rating })}</div>
-											<span class='text-gray-700 font-medium text-xs inline-block align-middle'>({course.ratingCnt.toLocaleString()})</span>
-										</div>
-										<div class='text-gray-700 text-xs align-middle'>
-											{course.hours} total hours • {course.lectures} lectures
-										</div>
-										<div class='flex flex-col items-end content-end space-x-2 absolute top-0 right-0'>
-											<span class='font-bold text-gray-900 '>
-												<span class='underline'>đ</span>
-												{course.discountedPrice.toLocaleString()}
-											</span>
-											<span class='text-gray-700 line-through'>
-												<span class='underline'>đ</span>
-												{course.originalPrice.toLocaleString()}
-											</span>
+							{filterCourses &&
+								filterCourses.map((course) => (
+									<div className='flex gap-4 pb-8 pt-4 '>
+										<img className='w-24 h-24 object-cover object-center md:w-60 md:h-fit' src={course.thumbNail.publicURL} alt='' />
+										<div className='pr-24 relative flex flex-col gap-1 w-full '>
+											<h3 class='font-bold text-gray-900 line-clamp-2 leading-tight'>{course.name}</h3>
+											<span class='text-sm text-gray-700 font-medium'>{course.introduction}</span>
+											<span class='text-xs text-gray-700'>{course.instructor}</span>
+											<div class='flex gap-1 items-center'>
+												<span class='text-gray-900 font-bold text-sm'>{course.avgRating}</span>
+												<div class='flex gap-0.5'>{RenderStars({ rating: course.avgRating })}</div>
+												{/* <span class='text-gray-700 font-medium text-xs inline-block align-middle'>({course.ratingCnt.toLocaleString()})</span> */}
+											</div>
+											<div class='text-gray-700 text-xs align-middle'>
+												{course.totalLength} total hours • {course.totalLecture} lectures
+											</div>
+											<div class='flex flex-col items-end content-end space-x-2 absolute top-0 right-0'>
+												<span class='font-bold text-gray-900 '>
+													<span class='underline'>đ</span>
+													{(course.price * 0.8).toLocaleString()}
+												</span>
+												<span class='text-gray-700 line-through'>
+													<span class='underline'>đ</span>
+													{course.price.toLocaleString()}
+												</span>
+											</div>
 										</div>
 									</div>
-								</div>
-							))}
+								))}
 						</div>
 					</div>
 				</div>
@@ -393,6 +418,7 @@ const CoursesByCategory = () => {
 															containerProps={{
 																className: 'p-0',
 															}}
+															onClick={handleFilterOptionSelect(field, option)}
 														/>
 													</ListItemPrefix>
 													<Typography color='blue-gray' className='font-medium'>
@@ -412,7 +438,7 @@ const CoursesByCategory = () => {
 						))}
 					</div>
 					<div className='sticky bottom-0 w-full bg-white shadow-[0_-2px_4px_rgba(0,0,0,.08),0_-4px_12px_rgba(0,0,0,.08)] py-4'>
-						<button className='bg-gray-900 text-white w-11/12 mx-auto flex justify-center p-2'>Done</button>
+						<button className='bg-gray-900 text-white w-11/12 mx-auto flex justify-center p-2' onClick={() => {toggleDrawer()}}>Done</button>
 					</div>
 				</div>
 			</Drawer>

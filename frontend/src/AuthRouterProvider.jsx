@@ -121,7 +121,7 @@ const router = createBrowserRouter([
 		element: <Layout />,
 		children: [
 			{
-				path: 'category-name',
+				path: ':categoryId',
 				element: <CoursesByCategory />,
 			},
 		],

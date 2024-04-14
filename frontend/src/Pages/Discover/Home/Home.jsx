@@ -32,140 +32,6 @@ const responsive = {
 	},
 };
 
-const categories = [
-	'Development',
-	'Business',
-	'Finance & Accounting',
-	'IT & Software',
-	'Office Productivity',
-	'Personal Development',
-	'Design',
-	'Marketing',
-	'Health & Fitness',
-	'Music',
-];
-
-const subCategories = [
-	[
-		'Web Development',
-		'Data Science',
-		'Mobile Development',
-		'Programming Languages',
-		'Game Development',
-		'Database Design & Development',
-		'Software Testing',
-		'Software Engineering',
-		'Software Development Tools',
-		'No-Code Development',
-	],
-	[
-		'Entrepreneurship',
-		'Communication',
-		'Management',
-		'Sales',
-		'Business Strategy',
-		'Operations',
-		'Project Management',
-		'Business Law',
-		'Business Analytics & Intelligence',
-		'Human Resources',
-		'Industry',
-		'E-Commerce',
-		'Media',
-		'Real Estate',
-		'Other Business',
-	],
-	[
-		'Accounting & Bookkeeping',
-		'Compliance',
-		'Cryptocurrency & Blockchain',
-		'Economics',
-		'Finance',
-		'Finance Cert & Exam Prep',
-		'Financial Modeling & Analysis',
-		'Investing & Trading',
-		'Money Management Tools',
-		'Taxes',
-		'Other Finance & Accounting',
-	],
-	['IT certifications', 'Network & Security', 'Hardware', 'Operating Systems & Servers', 'Other IT & Software'],
-	['Microsoft', 'Apple', 'Google', 'SAP', 'Oracle', 'Other Office Productivity'],
-	[
-		'Personal Transformation',
-		'Productivity',
-		'Leadership',
-		'Personal Finance',
-		'Career Development',
-		'Parenting & Relationships',
-		'Happiness',
-		'Religion & Spirituality',
-		'Personal Brand Building',
-		'Creativity',
-		'Influence',
-		'Self Esteem',
-		'Stress Management',
-		'Memory & Study Skills',
-		'Motivation',
-		'Other Personal Development',
-	],
-	[
-		'Web Design',
-		'Graphic Design & Illustration',
-		'Design Tools',
-		'User Experience',
-		'Game Design',
-		'Design Thinking',
-		'3D & Animation',
-		'Fashion',
-		'Architectural Design',
-		'Interior Design',
-		'Other Design',
-	],
-	[
-		'Digital Marketing',
-		'Search Engine Optimization',
-		'Social Media Marketing',
-		'Branding',
-		'Marketing Fundamentals',
-		'Analytics & Automation',
-		'Public Relations',
-		'Advertising',
-		'Video & Mobile Marketing',
-		'Content Marketing',
-		'Growth Hacking',
-		'Affiliate Marketing',
-		'Product Marketing',
-		'Other Marketing',
-	],
-	[
-		'Fitness',
-		'General Health',
-		'Sports',
-		'Nutrition',
-		'Yoga',
-		'Mental Health',
-		'Dieting',
-		'Self Defense',
-		'Safety & First Aid',
-		'Dance',
-		'Meditation',
-		'Other Health & Fitness',
-	],
-	['Instruments', 'Production', 'Music Fundamentals', 'Vocal', 'Music Techniques', 'Music Software', 'Other Music'],
-	[
-		'Engineering',
-		'Humanities',
-		'Math',
-		'Science',
-		'Online Education',
-		'Social Science',
-		'Language Learning',
-		'Teacher Training',
-		'Test Prep',
-		'Other Teaching & Academics',
-	],
-];
-
 function FullStarIcon() {
 	return (
 		<svg xmlns='http://www.w3.org/2000/svg' class='text-[#b4690e] w-3 h-auto fill-current ' viewBox='0 0 16 16'>
@@ -206,6 +72,7 @@ function RenderStars({ rating }) {
 
 const Home = () => {
 	const [courses, setCourses] = useState(null);
+	const [categories, setCategories] = useState(null);
 	const [categoryInd, setCategoryInd] = useState(null);
 	const refContainer = useRef();
 	const [containerWidth, setContainerWidth] = useState(0);
@@ -231,11 +98,31 @@ const Home = () => {
 	}, [containerWidth]);
 
 	useEffect(() => {
+		if (categories) {
+			categories.forEach((category) => {
+				axios
+					.get(`http://localhost:5000/courses/?category=${category.id}`)
+					.then((response) => {
+						if (response.data.success) {
+							setCourses((prevCourses) => ({
+								...prevCourses,
+								[category.name]: response.data.courses,
+							}));
+						}
+					})
+					.catch((error) => {
+						console.error('Error:', error);
+					});
+			});
+		}
+	}, [categories]);
+
+	useEffect(() => {
 		axios
-			.get('http://localhost:5000/courses')
+			.get('http://localhost:5000/courses/categories')
 			.then((response) => {
 				if (response.data.success) {
-					setCourses(response.data.courses);
+					setCategories(response.data.categories);
 				}
 			})
 			.catch((error) => {
@@ -252,23 +139,24 @@ const Home = () => {
 				}}
 			>
 				<ul class='md:flex justify-center shadow-md flex-wrap max-h-12 overflow-hidden hidden'>
-					{categories.map((category, ind) => (
-						<a
-							href='/courses/category-name'
-							className='group relative m-0 py-3 px-4'
-							key={category.id}
-							onMouseEnter={() => {
-								setCategoryInd(ind);
-							}}
-						>
-							{category}
-							<div
-								className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-8 border-solid border-transparent border-b-[#2d2f31] ${
-									categoryInd != null && categoryInd === ind ? 'block' : 'hidden'
-								} `}
-							></div>
-						</a>
-					))}
+					{categories &&
+						categories.map((category, ind) => (
+							<a
+								href={`/courses/${category.id}`}
+								className='group relative m-0 py-3 px-4'
+								key={category._id}
+								onMouseEnter={() => {
+									setCategoryInd(ind);
+								}}
+							>
+								{category.name}
+								<div
+									className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-8 border-solid border-transparent border-b-[#2d2f31] ${
+										categoryInd != null && categoryInd === ind ? 'block' : 'hidden'
+									} `}
+								></div>
+							</a>
+						))}
 				</ul>
 				<ul
 					class='w-full z-9999 absolute bg-[#2d2f31] text-white md:flex justify-center shadow-md flex-wrap max-h-12 overflow-hidden'
@@ -277,8 +165,8 @@ const Home = () => {
 					}}
 				>
 					{categoryInd !== null &&
-						subCategories[categoryInd].slice(0, 6).map((subCategory) => (
-							<a href='/courses/category-name' className='m-0 py-3 px-4' key={subCategory.id}>
+						categories[categoryInd].subCategories.slice(0, 6).map((subCategory) => (
+							<a href={`/courses/${categories[categoryInd].id}`} className='m-0 py-3 px-4' key={subCategory.id}>
 								{subCategory}
 							</a>
 						))}
@@ -296,49 +184,50 @@ const Home = () => {
 			</div>
 			<div ref={refContainer} className='px-8 max-w-[1340px] mx-auto'>
 				<span className='font-bold text-3xl text-gray-800 mb-8 block'>What to learn next</span>
-				{categories.map((category) => (
-					<div className='mb-12'>
-						<span className='font-bold text-2xl text-gray-800 block mb-4'>
-							Top courses in{' '}
-							<a href='courses/category-name' className='text-[#5624d0] underline'>
-								{category}
-							</a>
-						</span>
-						{courses && courses.length > 0 ? (
-							<Carousel containerClass='' itemClass='m-2 itemClassHome' responsive={responsive}>
-								{courses.map((course) => (
-									<div class=''>
-										<img class='' src={course.thumbNail.publicURL} alt='' />
-										<div class='flex flex-col gap-1 pt-1.5'>
-											<h3 class='font-bold text-gray-900 line-clamp-2 leading-tight'>{course.name}</h3>
-											<p class='text-xs truncate text-gray-500'>{course.instructor}</p>
-											<div class='flex gap-1 items-center'>
-												<span class='text-gray-900 font-bold text-sm'>{course.avgRating}</span>
-												<div class='flex gap-0.5'>{RenderStars({ rating: course.avgRating })}</div>
-												<span class='text-gray-500 font-medium text-xs inline-block align-middle'>({course.totalStudent.toLocaleString()})</span>
-											</div>
-											<div class='text-gray-500 text-xs align-middle'>
-												{course.totalLength} total hours • {course.totalLecture} lectures
-											</div>
-											<div class='flex items-center space-x-2'>
-												<span class='font-bold text-gray-900 '>
-													<span class='underline'>đ</span>
-													{(course.price * 0.8).toLocaleString()}
-												</span>
-												<span class='text-gray-500 line-through'>
-													<span class='underline'>đ</span>
-													{course.price.toLocaleString()}
-												</span>
+				{categories &&
+					categories.map((category) =>
+						courses && courses[category.name] && courses[category.name].length > 0 ? (
+							<div className='mb-12'>
+								<span className='font-bold text-2xl text-gray-800 block mb-4'>
+									Top courses in{' '}
+									<a href={`courses/${category.id}`} className='text-[#5624d0] underline'>
+										{category.name}
+									</a>
+								</span>
+								<Carousel containerClass='' itemClass='m-2 itemClassHome' responsive={responsive}>
+									{courses[category.name].map((course) => (
+										<div class=''>
+											<img class='' src={course.thumbNail.publicURL} alt='' />
+											<div class='flex flex-col gap-1 pt-1.5'>
+												<h3 class='font-bold text-gray-900 line-clamp-2 leading-tight'>{course.name}</h3>
+												<p class='text-xs truncate text-gray-500'>{course.instructor}</p>
+												<div class='flex gap-1 items-center'>
+													<span class='text-gray-900 font-bold text-sm'>{course.avgRating}</span>
+													<div class='flex gap-0.5'>{RenderStars({ rating: course.avgRating })}</div>
+													<span class='text-gray-500 font-medium text-xs inline-block align-middle'>
+														({course.totalStudent.toLocaleString()})
+													</span>
+												</div>
+												<div class='text-gray-500 text-xs align-middle'>
+													{course.totalLength} total hours • {course.totalLecture} lectures
+												</div>
+												<div class='flex items-center space-x-2'>
+													<span class='font-bold text-gray-900 '>
+														<span class='underline'>đ</span>
+														{(course.price * 0.8).toLocaleString()}
+													</span>
+													<span class='text-gray-500 line-through'>
+														<span class='underline'>đ</span>
+														{course.price.toLocaleString()}
+													</span>
+												</div>
 											</div>
 										</div>
-									</div>
-								))}
-							</Carousel>
-						) : (
-							<div>No courses available</div>
-						)}
-					</div>
-				))}
+									))}
+								</Carousel>
+							</div>
+						) : null
+					)}
 			</div>
 		</>
 	);
