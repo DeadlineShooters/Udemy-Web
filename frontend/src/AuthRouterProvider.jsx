@@ -36,10 +36,9 @@ import Reviews from './Pages/Instructor/Reviews.jsx';
 import ManageCourseLayout from './Components/CourseManagement/ManageCourseLayout.jsx';
 import Curriculum from './Pages/Instructor/ManageCourses/Curriculum.jsx';
 import QuestionAndAnswer from "./Pages/Instructor/QA.jsx";
-
+import CreateCourse from "./Pages/Instructor/ManageCourses/CreateCourse.jsx";
 
 import InstructorProfile from "./Pages/Instructor/InstructorProfile/InstructorProfile.jsx";
-
 
 // import fonts
 import "./fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf";
@@ -228,6 +227,14 @@ const router = createBrowserRouter([
 					element: <CourseLandingPage />,
 				},
 			],
+		}]
+	},
+	{
+		path: '/instructor/course/create',
+		element: <ProtectedRoutes />,
+		children: [{
+			path: '',
+			element: <CreateCourse/>,
 		}]
 	},
 ]);

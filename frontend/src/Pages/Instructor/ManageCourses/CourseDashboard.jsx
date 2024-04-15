@@ -11,6 +11,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { getColor, createImageFromInitials } from '../../../Components/Utils/Utils.js';
 import secureLocalStorage from 'react-secure-storage';
 import { useAuth } from "../../../AuthContextProvider.jsx";
+import { Link, useNavigate } from "react-router-dom";
 
 const profileImage =
 	"https://res.cloudinary.com/dk6q93ryt/image/upload/v1696217092/samples/smile.jpg";
@@ -20,7 +21,7 @@ const CourseDashBoard = () => {
   const { userData } = useAuth();
   const [selectedFilter, setSelectedFilter] = useState('');
   const [courses, setCourses] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const res = [
       {
@@ -189,16 +190,13 @@ const CourseDashBoard = () => {
               </Button> */}
               <DropdownMenu onSelect={handleFilterSelect} />
             </div>
-            <Button color="purple" className="rounded-none hover:bg-violet-800" style={{height: "48px"}}>
+            <Button color="purple" className="rounded-none hover:bg-violet-800" style={{height: "48px"}} onClick={() => navigate("/instructor/course/create", {replace: true})}>
               <span className="font-bold text-base normal-case">New Course</span>
             </Button>
           </div>
-
-
           <div className="my-courses mt-6">
             {courses.map((course, index) => (
               <div className="flex mb-6" key={index}>
-
                 <img src={course.thumbnail} className="object-cover" style={{width: "118px", height: "118px"}} />
                 <div className="flex-1 border border-gray-400 p-2 flex relative">
                   <div className="content-block w-1/4 flex flex-col justify-between">
@@ -211,18 +209,15 @@ const CourseDashBoard = () => {
                       <div class="bg-blue-500 h-full w-1/2 "></div>
                     </div>
                   </div>
-
-                  <button className="edit-cover absolute top-0 left-0 w-full h-full bg-white opacity-0 hover:opacity-90 flex items-center justify-center hover:cursor-pointer" onClick={() => alert('aa')}>
-                    <p className="font-bold text-purple-500">Edit / manage course</p>
+                  <button className="edit-cover absolute top-0 left-0 w-full h-full bg-white opacity-0 hover:opacity-90 flex items-center justify-center hover:cursor-pointer">
+                    <a href="/instructor/course/123/manage/curriculum"><p className="font-bold text-purple-500">Edit / manage course</p></a>
                   </button>
                 </div>
               </div>
             ))}
           </div>
-
         </div>
       )}
-      
       {!haveCourse && (<CreateCourseCard />)}
       
       <h2 className="mx-auto my-16 text-center">Based on your experience, we think these resources will be helpful.</h2>
