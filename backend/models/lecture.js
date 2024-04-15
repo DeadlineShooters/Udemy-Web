@@ -5,7 +5,7 @@ const lectureSchema = mongoose.Schema({
     name: {type: String},
     content: {type: String},
     video: {type: Schema.Types.ObjectId, ref: "Video"},
-    QA: {type: Schema.Types.ObjectId, ref: "QA"}
+    QA: [{type: Schema.Types.ObjectId, ref: "QA"}],
 })
 
 const Lecture = mongoose.model("Lecture", lectureSchema);
