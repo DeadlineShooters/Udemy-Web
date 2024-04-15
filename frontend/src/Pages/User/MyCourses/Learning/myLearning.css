@@ -32,6 +32,19 @@
     }
 }
 
+@media (max-width: 375px) {
+    .searchbar {
+        flex-direction: column !important;
+    }
+    .formsearch {
+        width: 18rem !important;
+    }
+    .filter {
+        margin-right: 0 !important;
+        margin-bottom: 1rem !important;
+    }
+}
+
 .imgContainer {
     width: '150px';
     height: '150px';

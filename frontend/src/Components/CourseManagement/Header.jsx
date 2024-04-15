@@ -17,7 +17,7 @@ export default function Header() {
   const showSaveButton = !location.pathname.endsWith("curriculum");
 
   return (
-    <header className="bg-gray-950 py-5 px-8 border-b border-gray-200 flex gap-6 items-center justify-between">
+    <header className="bg-gray-900 py-5 px-8 border-b border-gray-200 flex gap-6 items-center justify-between">
       <div className="flex gap-6 items-center">
         <button onClick={goToCourses}>
           <FontAwesomeIcon icon={faChevronLeft} color="white" />

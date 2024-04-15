@@ -3,9 +3,11 @@ import cookieSession from "cookie-session";
 import mongoose from "mongoose";
 import "./passport.js";
 import authRoute from "./routes/user/authRoute.js";
+import accountRoute from "./routes/user/accountRoute.js"
 import passport from "passport";
 import cors from "cors";
 import dotenv from "dotenv";
+import cloudinary from "cloudinary";
 dotenv.config();
 
 const mongoURI = process.env.MONGODB_URI;
@@ -15,6 +17,12 @@ try {
     } catch (error) {
     console.log("Could not connect to the database", error);
 }
+
+cloudinary.v2.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET_KEY,
+});
 
 const app = express();
 app.use(express.json());
@@ -36,6 +44,7 @@ app.use(
     })
 );
 app.use("/auth", authRoute);
+app.use("/user", accountRoute);
 
 app.listen(5000, () => {
     console.log("Server is running");

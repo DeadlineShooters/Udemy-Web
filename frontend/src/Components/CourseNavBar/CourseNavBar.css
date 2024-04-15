@@ -54,6 +54,6 @@ ul li {
 
 @media (max-width: 1024px) {
     .rightBar {
-        display: none;
+        display: none !important;
     }
 }

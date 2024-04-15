@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import user from "../../models/user.js";
+import User from "../../models/user.js";
 import bcrypt from "bcrypt";
 const saltRounds = 10;
 
@@ -7,7 +7,7 @@ export const signup = async (req, res) => {
     try {
         console.log("Tai khoan user:", req.body);
         const {firstName, lastName, email, password} = req.body;
-        const existingUser = await user.findOne({email});
+        const existingUser = await User.findOne({email});
         if (existingUser) {
             console.log("Found existing user with email:", email);
             return res.status(400).send({ success: false, messages: "Email has been already registered!" });
@@ -15,7 +15,7 @@ export const signup = async (req, res) => {
             const salt = bcrypt.genSaltSync(saltRounds);
             const hash = bcrypt.hashSync(password, salt);
 
-            const newUser = new user();
+            const newUser = new User();
             newUser.firstName = firstName;
             newUser.lastName = lastName;
             newUser.email = email;
@@ -33,7 +33,7 @@ export const signup = async (req, res) => {
 export const signin = async (req, res) => {{
     try {
         const {email, password} = req.body;
-        const userData = await user.findOne({email});
+        const userData = await User.findOne({email});
         if (userData) {
             const isMatchPassword = await bcrypt.compare(password, userData.hashedPassword);
             if (isMatchPassword) {

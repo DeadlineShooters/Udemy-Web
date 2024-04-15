@@ -12,6 +12,7 @@ import { IconMenu2 } from '@tabler/icons-react';
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { Menu as MenuMT, MenuHandler, MenuList, MenuItem } from '@material-tailwind/react';
 import { IconChevronLeft } from '@tabler/icons-react';
+import secureLocalStorage from 'react-secure-storage';
 
 const categories = [
 	'Development',
@@ -211,14 +212,13 @@ const courses = [
 ];
 
 const Navbar = () => {
-	const user = useAuth();
-	console.log(user);
-	const isLogged = user.userData !== null;
+	const {userData} = useAuth();
+	const isLogged = userData !== null;
 	function classNames(...classes) {
 		return classes.filter(Boolean).join(' ');
 	}
 	const logout = () => {
-		localStorage.clear();
+		secureLocalStorage.clear();
 		window.open('http://localhost:5000/auth/logout', '_self');
 	};
 	const [isTurnOnSideBar, setTurnOnSideBar] = useState(false);
@@ -226,8 +226,6 @@ const Navbar = () => {
 		setTurnOnSideBar(!isTurnOnSideBar);
 		console.log(isTurnOnSideBar);
 	};
-	const userName = 'Nguyen Minh Thong';
-
 	const [isWishlistDropdownOpen, setWishlistDropdownOpen] = useState(false);
 	const toggleWishlistDropdown = () => {
 		setWishlistDropdownOpen(!isWishlistDropdownOpen);
@@ -239,17 +237,17 @@ const Navbar = () => {
 	};
 	return (
 		<div className='header'>
-			<div className='navbar justify-between max-md:justify-center'>
-				<div className='flex items-center max-md:w-full'>
-					<button type='button' className='md:hidden z-9999' onClick={sideBarToggle}>
+			<div className='navbar justify-between'>
+				<div className='flex items-center'>
+					<button type='button' className='md:hidden' onClick={sideBarToggle}>
 						<IconMenu2 stroke={2} />
 					</button>
-					<div className='max-md:m-auto'>
+					<div className='logo-udemy'>
 						<Link to='/'>
 							<img src={logo} alt='' className='logo'></img>
 						</Link>
 					</div>
-					<ul class='mx-5 relative'>
+					<ul class='category mx-5 relative'>
 						<MenuMT allowHover>
 							<MenuHandler>
 								<div className='cursor-pointer py-4'>Categories</div>
@@ -277,7 +275,7 @@ const Navbar = () => {
 							</MenuList>
 						</MenuMT>
 					</ul>
-					<form className='max-md:hidden'>
+					<form>
 						<label htmlFor='default-search' className='mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white'>
 							Search
 						</label>
@@ -318,8 +316,8 @@ const Navbar = () => {
 				{isLogged === true ? (
 					<div className={`flex items-center`}>
 						<ul>
-							{user.instructor !== null ? (
-								<li class='hover:text-purple-700'>
+							{userData.instructor !== null ? (
+								<li class='hover:text-purple-700 hide-teach-udemy'>
 									<Link to='/instructor/courses'>Instructor</Link>
 								</li>
 							) : (
@@ -425,10 +423,10 @@ const Navbar = () => {
 								</div>
 							)}
 						</div>
-						<Menu as='div' className='relative ml-4 max-md:hidden'>
+						<Menu as='div' className='user relative ml-4'>
 							<div>
 								<Menu.Button className='relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:outline-none focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800'>
-									<img id='preview' src={createImageFromInitials(40, userName, getColor())} alt='profile-pic' className='avatar' />
+									<img id='preview' src={createImageFromInitials(40, userData.firstName + " " + userData.lastName, getColor())} alt='profile-pic' className='avatar' />
 								</Menu.Button>
 							</div>
 							<Transition
@@ -522,10 +520,10 @@ const Navbar = () => {
 				<div className={`sidebar md:hidden ${isTurnOnSideBar ? 'open' : ''} border-r-2 shadow-xl`}>
 					<div className='flex flex-row items-center bg-slate-50 py-2'>
 						<div className='flex rounded-full text-sm focus:ring-2 focus:outline-none focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 ml-5'>
-							<img id='preview' src={createImageFromInitials(80, userName, getColor())} alt='profile-pic' className='avatar' />
+							<img id='preview' src={createImageFromInitials(80, userData.firstName + " " + userData.lastName, getColor())} alt='profile-pic' className='avatar' />
 						</div>
 						<div className='flex flex-col ml-5'>
-							<p className='font-bold'>Hi, {userName} </p>
+							<p className='font-bold'>Hi, {userData.firstName + " " + userData.lastName} </p>
 							<p className=''>Welcome back</p>
 						</div>
 					</div>

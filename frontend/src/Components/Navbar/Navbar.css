@@ -101,3 +101,27 @@ ul li {
         display: none;
     }
 }
+
+@media not all and (min-width: 720px){
+    .navbar {
+        justify-content: center;
+    }
+    .logo-udemy {
+        margin: auto;
+    }
+    .category {
+        display: none;
+    }
+    form {
+        display: none;
+    }
+    .user {
+        display: none;
+    }
+    .wishlist {
+        display: none;
+    }
+    .cart {
+        display: none;
+    }
+}
