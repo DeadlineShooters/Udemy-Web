@@ -76,6 +76,7 @@ const QuestionAndAnswer = () => {
     const [oneQA, setOneQA] = useState(QAList[0]);
     const [edit, setEdit] = useState(false);
     const getQA = (id) => {
+        toggleSelectQA(id)
         const selectedQA = QAList.find(qa => qa.id === id);
         if (selectedQA) {
             turnOffEdit();
@@ -107,6 +108,22 @@ const QuestionAndAnswer = () => {
     useEffect(() => {
         filterItems();
     }, [filterValue]);
+    // Toggle QA
+    // 1: Get the QA Id stored in local
+    const initialSelectQA = JSON.parse(localStorage.getItem("selectQA")) || {};
+    // 2: Assign the Id to selectQA
+    const [selectQA, setSelectQA] = useState(initialSelectQA);
+    // 3: Handle QA select: by replace the chosen QA id  with the new one
+    const toggleSelectQA = (Id_QA) => {
+        setSelectQA((prevState) => ({
+          [Id_QA]: !prevState[Id_QA],
+        }));
+    };
+    // 4: Store the QA id when have change in QA id
+    useEffect(() => {
+        localStorage.setItem("selectQA", JSON.stringify(selectQA));
+    }, [selectQA]);
+
     return (
     <div className="flex w-full">
         <div className="md:w-16 h-screen"></div>
@@ -129,8 +146,8 @@ const QuestionAndAnswer = () => {
                     </div>
 
                     <div className="flex items-center mr-8">
-                        <input type="checkbox" id="alreadyResponded" className="mr-2" />
-                        <label htmlFor="alreadyResponded">No top answer</label>
+                        <input type="checkbox" id="noTopAnswer" className="mr-2" />
+                        <label htmlFor="noTopAnswer">No top answer</label>
                     </div>
 
                     <div className="flex items-center mr-8">
@@ -160,8 +177,9 @@ const QuestionAndAnswer = () => {
                         <button className="p-2 border-black border-l-[1px]"><IconSearch stroke={2} color="#3d07bb" /></button>
                     </div>
                     {QAWithSelectedCourse.map((oneQAInTab) => (
-                        <div key={oneQAInTab.id} onClick={()=> getQA(oneQAInTab.id)}>
-                            <div className="flex flex-row py-2 border-gray-600 border-b-[1px] bg-gray-100 hover:cursor-pointer">
+                        <div key={oneQAInTab.id} 
+                            onClick={()=> {getQA(oneQAInTab.id)}}>
+                            <div className={`${selectQA[oneQAInTab.id] ? "bg-gray-300" : ""} flex flex-row py-2 border-gray-600 border-b-[1px] hover:cursor-pointer`}>
                                 <div className="mx-2 w-[40px]">
                                     <img id='preview' src={createImageFromInitials(160, oneQAInTab.user.firstName + " " + oneQAInTab.user.lastName, getColor())} alt='profile-pic' className='avatar' />
                                 </div>
