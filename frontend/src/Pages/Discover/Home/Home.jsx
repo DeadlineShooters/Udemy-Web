@@ -200,7 +200,7 @@ const Home = () => {
 											<img class='' src={course.thumbNail.publicURL} alt='' />
 											<div class='flex flex-col gap-1 pt-1.5'>
 												<h3 class='font-bold text-gray-900 line-clamp-2 leading-tight'>{course.name}</h3>
-												<p class='text-xs truncate text-gray-500'>{course.instructor}</p>
+												<p class='text-xs truncate text-gray-500'>{course.instructor.firstName} {course.instructor.lastName}</p>
 												<div class='flex gap-1 items-center'>
 													<span class='text-gray-900 font-bold text-sm'>{course.avgRating}</span>
 													<div class='flex gap-0.5'>{RenderStars({ rating: course.avgRating })}</div>

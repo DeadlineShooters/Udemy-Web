@@ -12,8 +12,9 @@ const userSchema = new mongoose.Schema({
     archivedCourse:  { type: Array },
     wishList: { type: Array },
     favoritesCourse: { type: Array },
+    cart: { type: Array },
     instructor: { type: Schema.Types.ObjectId, ref: "Instructor" }
 })
 
-const user = mongoose.model("User", userSchema);
-export default user;
+const User = mongoose.model("User", userSchema);
+export default User;

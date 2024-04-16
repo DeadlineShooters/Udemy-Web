@@ -8,5 +8,5 @@ const lectureSchema = mongoose.Schema({
     video: {type: Schema.Types.ObjectId, ref: "Video"},
 })
 
-const lecture = mongoose.model("Lecture", lectureSchema);
-export default lecture;
+const Lecture = mongoose.model("Lecture", lectureSchema);
+export default Lecture;

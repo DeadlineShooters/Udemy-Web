@@ -10,5 +10,5 @@ const instructorSchema = mongoose.Schema({
     wallet: { walletID: {type: String}, walletName: {type: String}},
 })
 
-const instructor = mongoose.model("Instructor", instructorSchema);
-export default instructor;
+const Instructor = mongoose.model("Instructor", instructorSchema);
+export default Instructor;

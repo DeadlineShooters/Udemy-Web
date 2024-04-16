@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import Carousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
 import Drawer from 'react-modern-drawer';
-import 'react-modern-drawer/dist/index.css';
+import axios from 'axios';
 import { Select, Option, Accordion, AccordionHeader, AccordionBody, Checkbox, List, ListItem, ListItemPrefix, Typography } from '@material-tailwind/react';
+import 'react-multi-carousel/lib/styles.css';
+import 'react-modern-drawer/dist/index.css';
 
 const responsive = {
 	xl: {
@@ -163,18 +164,12 @@ function RenderStars({ rating }) {
 }
 
 const Cart = () => {
-	const [sortBy, setSortBy] = useState('mostPopular');
-	const [openFilters, setOpenFilters] = useState(filterFields.map(() => 0));
-	const [openFilterBar, setOpenFilterBar] = useState(false);
-	const [openFilterBarSm, setOpenFilterBarSm] = useState(false);
-
-	const handleOpenFilters = (ind) => setOpenFilters((prev) => prev.map((value, index) => (index === ind ? !value : value)));
-	const toggleDrawer = () => {
-		setOpenFilterBarSm((prevState) => !prevState);
-	};
-
 	const refContainer = useRef();
 	const [containerWidth, setContainerWidth] = useState(0);
+	const [amount, setAmount] = useState(0);
+	const [cartedCourses, setCartedCourses] = useState([]);
+	const [savedCourses, setSavedCourses] = useState([]);
+	const [wishlistedCourses, setWishlistedCourses] = useState([]);
 
 	useEffect(() => {
 		setContainerWidth(refContainer.current.offsetWidth);
@@ -182,9 +177,6 @@ const Cart = () => {
 		const handleResize = () => {
 			setContainerWidth(refContainer.current.offsetWidth);
 			document.documentElement.style.setProperty('--containerWidth', `${containerWidth}px`);
-			if (!isMediumScreen) {
-				setOpenFilterBarSm(false);
-			}
 		};
 
 		window.addEventListener('resize', handleResize);
@@ -200,7 +192,35 @@ const Cart = () => {
 		}
 	}, [containerWidth]);
 
-	const isMediumScreen = useMediaQuery({ query: '(max-width: 1024px)' });
+	useEffect(() => async () => {
+		const userId = localStorage.getItem('user')._id;
+		try {
+			const response = await axios.post('http://localhost:5000/user', { userId });
+			if (response.data.success) {
+				
+				setCartedCourses(response.data.cartedCourses);
+				setSavedCourses(response.data.savedCourses);
+				setWishlistedCourses(response.data.wishlistedCourses);
+			}
+		} catch (error) {
+			console.error('Error:', error);
+		}
+	}, [])
+
+	const handlePayment = async () => {
+		const userId = localStorage.getItem('user')._id;
+		try {
+			const response = await axios.post('http://localhost:5000/payment', {
+				userId,
+				amount: 100000,
+			});
+			if (response.data.success) {
+				window.location.href = response.data.payUrl;
+			}
+		} catch (error) {
+			console.error('Error:', error);
+		}
+	};
 
 	return (
 		<>

@@ -25,6 +25,7 @@ import Curriculum from './Pages/Instructor/ManageCourses/Curriculum.jsx';
 import Cart from './Pages/Cart/cart.jsx';
 import CoursesByCategory from './Pages/Discover/CoursesByCategory/coursesByCategory.jsx';
 import ProtectedRoutes from "./Components/Utils/AuthSecure.jsx";
+import Search from "./Pages/Discover/Search/search.jsx";
 
 import InstructorProfile from "./Pages/Instructor/InstructorProfile/InstructorProfile.jsx";
 
@@ -123,6 +124,10 @@ const router = createBrowserRouter([
 			{
 				path: ':categoryId',
 				element: <CoursesByCategory />,
+			},
+			{
+				path: 'search',
+				element: <Search/>,
 			},
 		],
 	},
