@@ -14,7 +14,7 @@ const courseSchema = mongoose.Schema({
     price: { type: Number },
     sectionList: { type: Schema.Types.ObjectId, ref: "Section" },
     promotionalVideo: {type: Schema.Types.ObjectId, ref: "Video"},
-    category: {type: String},
+    category: {type: Schema.Types.ObjectId, ref: "Category" },
     totalLecture: {type: Number},
     totalSection: {type: Number},
     totalLength: {type: Number},

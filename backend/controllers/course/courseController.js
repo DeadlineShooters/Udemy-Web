@@ -15,8 +15,9 @@ controller.courses = async (req, res) => {
 			let categoryObj = await Category.findOne({ id: category });
 			courses = await Course.find({ category: categoryObj._id }).populate('category').populate('instructor');
 		} else {
-			courses = await Course.find().populate('category');
+			courses = await Course.find().populate('category').populate('instructor');
 		}
+		console.log(courses)
 		if (courses.length > 0) {
 			res.json({ success: true, courses });
 		} else {
