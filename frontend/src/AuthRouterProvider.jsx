@@ -218,15 +218,14 @@ const router = createBrowserRouter([
 			path: '',
 			element: <ManageCourseLayout />,
 			children: [
-				{
-					path: 'curriculum',
-					element: <Curriculum />,
-				},
-				{
-					path: 'basics',
-					element: <CourseLandingPage />,
-				},
-			],
+			{
+				path: 'curriculum',
+				element: <Curriculum />,
+			},
+			{
+				path: 'basics',
+				element: <CourseLandingPage />,
+			}],
 		}]
 	},
 	{
