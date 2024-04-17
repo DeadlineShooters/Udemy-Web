@@ -8,9 +8,11 @@ import { Button } from "@material-tailwind/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ButtonDefault from "../../../Components/CourseFeedback/ButtonDefault";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import { IconPlus, IconEdit, IconTrash, IconCheck, IconAlertCircleFilled, IconTypography, IconBrandYoutubeFilled } from '@tabler/icons-react';
+import { IconPlus, IconEdit, IconTrash, 
+        IconCheck, IconAlertCircleFilled, IconClipboardText, 
+        IconBrandYoutubeFilled, IconEye } from '@tabler/icons-react';
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UploadWidget from "./UploadWidget";
 
 const DynamicInput = ({ defaultValue, onChange, className, maxLength }) => {
@@ -47,11 +49,16 @@ const DynamicInput = ({ defaultValue, onChange, className, maxLength }) => {
   );
 };
 
-const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionUpdate}) => {
+const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionUpdate, onLectureUpdate}) => {
   const [addLecture, setAddLecute] = useState(false);
   const [newLectureName, setNewLectureName] = useState('');
   const [url, updateUrl] = useState();
   const [error, updateError] = useState();
+  const [isEditLecture, setIsEditLecture] = useState(false);
+  const [oldLectureName, setOldLectureName] = useState("");
+  const [oldLectureVideo, setOldLectureVideo] = useState("");
+  const [editLectureName, setEditLectureName] = useState("");
+  const [editUrl, setEditUrl] = useState();
 
   const handleOnUpload = (error, result, widget) => {
     if (error) {
@@ -62,6 +69,17 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
       return;
     }
     updateUrl(result?.info?.secure_url);
+  }
+
+  const handleOnEditUpload = (error, result, widget) => {
+    if (error) {
+      updateError(error);
+      widget.close({
+        quiet: true,
+      });
+      return;
+    }
+    setEditUrl(result?.info?.secure_url);
   }
 
   const toggleAddLecture = () => {
@@ -75,8 +93,9 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
   const handleCreateLecture = () => {
     setAddLecute(!addLecture);
     if (newLectureName.trim() !== '') {
-      onLectureCreate(sectionName, newLectureName);
+      onLectureCreate(sectionName, newLectureName, url);
       setNewLectureName('');
+      updateUrl();
     }
   };
 
@@ -93,6 +112,34 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
       onSectionUpdate(sectionId, updatedSectionName);
     }
   };
+
+  const DeleteSelectVideo = () => {
+    if (!isEditLecture) {
+      updateUrl();
+    } else {
+      setEditUrl();
+    }
+    //Handle delete image from cloudinary
+  }
+
+  const EditLecture = (lecture) => {
+    setIsEditLecture(!isEditLecture);
+    setOldLectureName(lecture.name);
+    setOldLectureVideo(lecture.video);
+    setEditLectureName(lecture.name);
+    setEditUrl(lecture.video);
+  }
+  const handleEditLectureName = (e) => {
+    setEditLectureName(e.target.value);
+  };
+  const handleUpdateLecture = () => {
+    if (editLectureName.trim() !== '' && editUrl) {
+      onLectureUpdate(sectionName, editLectureName, editUrl, oldLectureName, oldLectureVideo);
+      setIsEditLecture(false);
+      setEditLectureName("");
+      setEditUrl();
+    }
+  }
 
   return (
     <div>
@@ -146,6 +193,7 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
       <div>
         <Heading1>Create Your Lecture: </Heading1>
         <div className="flex justify-between border border-black p-3 mb-2">
+          <div><IconClipboardText className="mr-2" /></div>
           <input 
             type="text" 
             placeholder="Input your lecture name" 
@@ -155,8 +203,27 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
             onChange={handleLectureNameChange}/>
           <span>120</span>
         </div>
-        <UploadWidget onUpload={handleOnUpload} />
-        {url && <div>Your upload video: {url}</div>}
+        {url ? <div className="flex justify-between border border-black p-3 mb-2 items-center">
+          <div><IconBrandYoutubeFilled className="mr-2" /></div>
+          <input 
+            type="text" 
+            placeholder="Input your lecture name" 
+            maxLength={120} 
+            defaultValue={url} 
+            className="focus:outline-none focus:ring-0 w-full" />
+          <span className="flex flex-row">      
+            <Link target={"_blank"} to={url}>       
+              <button 
+                className="flex flex-row p-1 px-2 bg-[#241d6c] rounded-md mr-2">
+                  <IconEye stroke={2} color="white" className="mr-2"/>
+                  <p className="font-bold text-white">Preview</p>
+              </button>
+            </Link>
+            <button className="bg-[#e95a5a] p-1 rounded-md" onClick={DeleteSelectVideo}>
+              <IconTrash stroke={2} color="white"/>
+            </button>
+          </span>
+        </div> : <UploadWidget onUpload={handleOnUpload} />}
         <Button 
           color="black" 
           className="rounded-none hover:bg-violet-800" 
@@ -164,6 +231,51 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
           onClick={handleCreateLecture}>
           <span className="font-bold text-base normal-case">
             Add
+          </span>
+        </Button>
+        <hr className="border-[1px] border-black my-5"/>
+      </div>}
+      {isEditLecture && 
+      <div>
+        <Heading1>Edit Your Lecture: </Heading1>
+        <div className="flex justify-between border border-black p-3 mb-2">
+          <div><IconClipboardText className="mr-2" /></div>
+          <input 
+            type="text" 
+            placeholder="Input your lecture name" 
+            maxLength={120} 
+            value={editLectureName} 
+            className="focus:outline-none focus:ring-0 w-full" 
+            onChange={handleEditLectureName}/>
+          <span>120</span>
+        </div>
+        {editUrl ? <div className="flex justify-between border border-black p-3 mb-2 items-center">
+          <div><IconBrandYoutubeFilled className="mr-2" /></div>
+          <input 
+            type="text"
+            maxLength={120} 
+            defaultValue={editUrl} 
+            className="focus:outline-none focus:ring-0 w-full"/>
+          <span className="flex flex-row">      
+            <Link target={"_blank"} to={url}>       
+              <button 
+                className="flex flex-row p-1 px-2 bg-[#241d6c] rounded-md mr-2">
+                  <IconEye stroke={2} color="white" className="mr-2"/>
+                  <p className="font-bold text-white">Preview</p>
+              </button>
+            </Link>
+            <button className="bg-[#e95a5a] p-1 rounded-md" onClick={DeleteSelectVideo}>
+              <IconTrash stroke={2} color="white"/>
+            </button>
+          </span>
+        </div> : <UploadWidget onUpload={handleOnEditUpload} />}
+        <Button 
+          color="black" 
+          className="rounded-none hover:bg-violet-800" 
+          style={{height: "48px"}} 
+          onClick={handleUpdateLecture}>
+          <span className="font-bold text-base normal-case">
+            Save
           </span>
         </Button>
         <hr className="border-[1px] border-black my-5"/>
@@ -180,19 +292,26 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
       {lectures.map((lecture, index) => (
         <div key={index}>
           <div className="flex flex-row">
-            
             <div className="flex justify-between border border-black p-3 w-full items-center">
               <div className="flex flex-row items-center">
                 <div>
                   <IconBrandYoutubeFilled className="w-[40px] h-[40px] mr-2" color="#52214f"/>
                 </div>
                 <div className="flex flex-col">
-                  <p className="w-full line-clamp-2">Lecture {index + 1}: {lecture}</p>
-                  <p className="text-gray-600 text-sm">Video</p>
+                  <p className="w-full line-clamp-2">Lecture {index + 1}: {lecture.name}</p>
+                  <Link to={lecture.video} target="_blank">
+                    <p className="text-gray-600 text-sm">
+                      Video
+                    </p>
+                  </Link>
                 </div>
               </div>            
               <div>
-                <button className="py-1 px-5 border border-black rounded-md"><p className="font-bold text-[#752f93]">Edit</p></button>
+                <button 
+                  className="py-1 px-5 border border-black rounded-md"
+                  onClick={() => EditLecture(lecture)}>
+                    <p className="font-bold text-[#752f93]">Edit</p>
+                </button>
               </div>
             </div>
           </div>
@@ -239,15 +358,31 @@ const CreateCourse = () => {
     }
   };
 
-  const handleLectureCreate = (sectionName, lectureName) => {
+  const handleLectureCreate = (sectionName, lectureName, lectureVideo) => {
     const updatedSections = sections.map((section) => {
       if (section.name === sectionName) {
-        return { ...section, lectures: [...section.lectures, lectureName] };
+        return { 
+          ...section, 
+          lectures: [...section.lectures, { name: lectureName, video: lectureVideo }] 
+        };
       }
       return section;
     });
     setSections(updatedSections);
   };
+
+  const handleLectureUpdate = (sectionName, lectureName, lectureVideo, oldLectureName, oldLectureVideo) => {
+    const updatedSections = sections.map((section) => {
+      if (section.name === sectionName) {
+        let updatedLectures = section.lectures;
+        const lectureIndex = updatedLectures.findIndex(lecture => lecture.name === oldLectureName);
+        updatedLectures[lectureIndex] = { name: lectureName, video: lectureVideo };
+        return { ...section, lectures: updatedLectures };
+      }
+      return section;
+    });
+    setSections(updatedSections);
+  }
 
   const handleSectionUpdate = (sectionId, newSectionName) => {
     // Create a new copy of sections array
@@ -362,6 +497,7 @@ const CreateCourse = () => {
                       lectures={section.lectures}
                       onLectureCreate={handleLectureCreate}
                       onSectionUpdate={handleSectionUpdate}
+                      onLectureUpdate={handleLectureUpdate}
                     />
                   ))}
                 </div>
