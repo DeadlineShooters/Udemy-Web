@@ -110,7 +110,7 @@ const Register = () => {
                 message: "Your password must be longer than 8"
               },
               pattern: {
-                value:/^(\S)(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹])[a-zA-Z0-9~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹]{10,16}$/,
+                value: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/,
                 message: "Your password must include at least one uppercase, one numeric value and one special character"
               }
             })}

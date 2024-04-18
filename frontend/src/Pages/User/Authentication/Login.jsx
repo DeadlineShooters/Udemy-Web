@@ -4,6 +4,7 @@ import facebook_icon from "../../../Assets/facebook.png";
 import { Link, useNavigate} from "react-router-dom";
 import axios from "axios";
 import { useAuth } from '../../../AuthContextProvider';
+import secureLocalStorage from 'react-secure-storage';
 
 const Login = () => {
   const [isChecked, setChecked] = useState(true);
@@ -68,7 +69,7 @@ const Login = () => {
         const {userData } = await response.data;
         setUser(userData);
         setIsLogged(true);
-        localStorage.setItem('user', JSON.stringify(userData));
+        secureLocalStorage.setItem('user', JSON.stringify(userData));
         navigate("/", {replace: true});
       }
     } catch (err)
