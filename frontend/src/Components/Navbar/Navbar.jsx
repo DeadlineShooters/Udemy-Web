@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { Link, useLocation } from 'react-router-dom';
@@ -13,6 +14,7 @@ import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { Menu as MenuMT, MenuHandler, MenuList, MenuItem } from '@material-tailwind/react';
 import { IconChevronLeft } from '@tabler/icons-react';
 import secureLocalStorage from 'react-secure-storage';
+import axios from 'axios';
 
 const categories = [
 	'Development',
@@ -235,6 +237,19 @@ const Navbar = () => {
 	const toggleCartDropdown = () => {
 		setCartDropdownOpen(!isCartDropdownOpen);
 	};
+
+	const [searchQuery, setSearchQuery] = useState('');
+	const navigate = useNavigate();
+
+	const handleInputChange = (event) => {
+		setSearchQuery(event.target.value);
+	};
+
+	const handleSearch = async (event) => {
+		event.preventDefault();
+		navigate(`/courses/search?query=${searchQuery}`);
+	};
+
 	return (
 		<div className='header'>
 			<div className='navbar justify-between'>
@@ -275,7 +290,7 @@ const Navbar = () => {
 							</MenuList>
 						</MenuMT>
 					</ul>
-					<form>
+					<form onSubmit={handleSearch}>
 						<label htmlFor='default-search' className='mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white'>
 							Search
 						</label>
@@ -303,6 +318,8 @@ const Navbar = () => {
 								className='block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
 								placeholder='Search for anything...'
 								required
+								value={searchQuery}
+								onChange={handleInputChange}
 							/>
 							<button
 								type='submit'

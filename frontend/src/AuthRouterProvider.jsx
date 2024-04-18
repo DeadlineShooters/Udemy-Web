@@ -37,6 +37,7 @@ import ManageCourseLayout from './Components/CourseManagement/ManageCourseLayout
 import Curriculum from './Pages/Instructor/ManageCourses/Curriculum.jsx';
 import QuestionAndAnswer from "./Pages/Instructor/QA.jsx";
 import CreateCourse from "./Pages/Instructor/ManageCourses/CreateCourse.jsx";
+import Search from "./Pages/Discover/Search/search.jsx";
 
 import InstructorProfile from "./Pages/Instructor/InstructorProfile/InstructorProfile.jsx";
 
@@ -132,8 +133,12 @@ const router = createBrowserRouter([
 		element: <Layout />,
 		children: [
 			{
-				path: 'category-name',
+				path: ':categoryId',
 				element: <CoursesByCategory />,
+			},
+			{
+				path: 'search',
+				element: <Search/>,
 			},
 		],
 	},

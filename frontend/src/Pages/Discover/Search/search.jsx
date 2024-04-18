@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import Carousel from 'react-multi-carousel';
 import Drawer from 'react-modern-drawer';
 import axios from 'axios';
 import 'react-multi-carousel/lib/styles.css';
-import './coursesByCategory.css';
+import './search.css';
 import 'react-modern-drawer/dist/index.css';
 import { Select, Option, Accordion, AccordionHeader, AccordionBody, Checkbox, List, ListItem, ListItemPrefix, Typography } from '@material-tailwind/react';
 
@@ -31,49 +31,6 @@ const responsive = {
 		slidesToSlide: 1,
 	},
 };
-
-const instructors = [
-	{
-		name: 'John Doe',
-		image: 'https://img-c.udemycdn.com/user/200_H/38516954_b11c_3.jpg',
-		subCategories: ['Web Development', 'Data Science'],
-		rating: 4.5,
-		students: 1164668,
-		courses: 8,
-	},
-	{
-		name: 'John Doe',
-		image: 'https://img-c.udemycdn.com/user/200_H/38516954_b11c_3.jpg',
-		subCategories: ['Web Development', 'Data Science'],
-		rating: 4.5,
-		students: 1164668,
-		courses: 8,
-	},
-	{
-		name: 'John Doe',
-		image: 'https://img-c.udemycdn.com/user/200_H/38516954_b11c_3.jpg',
-		subCategories: ['Web Development', 'Data Science'],
-		rating: 4.5,
-		students: 1164668,
-		courses: 8,
-	},
-	{
-		name: 'John Doe',
-		image: 'https://img-c.udemycdn.com/user/200_H/38516954_b11c_3.jpg',
-		subCategories: ['Web Development', 'Data Science'],
-		rating: 4.5,
-		students: 1164668,
-		courses: 8,
-	},
-	{
-		name: 'John Doe',
-		image: 'https://img-c.udemycdn.com/user/200_H/38516954_b11c_3.jpg',
-		subCategories: ['Web Development', 'Data Science'],
-		rating: 4.5,
-		students: 1164668,
-		courses: 8,
-	},
-];
 
 const filterFields = ['Ratings', 'Languages', 'Video Duration', 'Features', 'Price'];
 
@@ -138,7 +95,7 @@ function RenderStars({ rating }) {
 	return stars;
 }
 
-const CoursesByCategory = () => {
+const Search = () => {
 	let { categoryId } = useParams();
 	const isMediumScreen = useMediaQuery({ query: '(max-width: 1024px)' });
 	const refContainer = useRef();
@@ -149,8 +106,10 @@ const CoursesByCategory = () => {
 	const [openFilterBarSm, setOpenFilterBarSm] = useState(false);
 	const [courses, setCourses] = useState([]);
 	const [filterCourses, setFilterCourses] = useState([]);
-	const [categoryName, setCategoryName] = useState(null);
 	const [selectedFilters, setSelectedFilters] = useState([]);
+
+	const [searchParams] = useSearchParams();
+	const query = searchParams.get('query');
 
 	useEffect(() => {
 		setContainerWidth(refContainer.current.offsetWidth);
@@ -160,7 +119,7 @@ const CoursesByCategory = () => {
 			document.documentElement.style.setProperty('--containerWidth', `${containerWidth}px`);
 			if (!isMediumScreen) {
 				setOpenFilterBarSm(false);
-			} 
+			}
 		};
 
 		window.addEventListener('resize', handleResize);
@@ -177,18 +136,17 @@ const CoursesByCategory = () => {
 
 	useEffect(() => {
 		axios
-			.get(`http://localhost:5000/courses/?category=${categoryId}`)
+			.get(`http://localhost:5000/courses/search?query=${query}`)
 			.then((response) => {
 				if (response.data.success) {
 					setCourses(response.data.courses);
-					setFilterCourses(response.data.courses)
-					setCategoryName(response.data.courses[0].category.name);
+					setFilterCourses(response.data.courses);
 				}
 			})
 			.catch((error) => {
 				console.error('Error:', error);
 			});
-	}, []);
+	}, [query]);
 
 	useEffect(() => {
 		let sortedCourses = [...filterCourses];
@@ -265,34 +223,8 @@ const CoursesByCategory = () => {
 	return (
 		<>
 			<div className='flex justify-center'>
-				<div ref={refContainer} className='w-full max-w-[1340px] px-8 pt-12'>
-					<div className='font-bold text-3xl mb-12'>{categoryName} Courses</div>
-					<div className='font-bold text-2xl'>Popular instructors</div>
-					<Carousel containerClass='' itemClass='m-2 itemClassCoursesByCategory' responsive={responsive}>
-						{instructors.map((instructor) => (
-							<div class='flex border p-4 border-gray-400 gap-4 mt-4'>
-								<img className='rounded-full w-16 h-fit' src={instructor.image} alt='' />
-								<div className='flex flex-col gap-0.5'>
-									<span className='font-bold'>{instructor.name}</span>
-									<span className='text-sm line-clamp-2'>{instructor.subCategories.join(', ')}</span>
-									<span className='flex gap-1 items-center'>
-										<span className='font-bold'>{instructor.rating}</span>
-										<svg xmlns='http://www.w3.org/2000/svg' class='text-[#b4690e] w-3 h-auto fill-current ' viewBox='0 0 16 16'>
-											<path d='M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z' />
-										</svg>
-										<span className='text-xs'>Instructor Rating</span>
-									</span>
-									<span className='text-xs'>
-										<span className='font-bold'>{instructor.students.toLocaleString()}</span> students
-									</span>
-									<span className='text-xs'>
-										<span className='font-bold'>{instructor.courses.toLocaleString()}</span> courses
-									</span>
-								</div>
-							</div>
-						))}
-					</Carousel>
-					<div className='font-bold text-2xl mt-12 mb-4'>All {categoryName} courses</div>
+				<div ref={refContainer} className='w-full max-w-[1340px] px-8'>
+					<div className='font-bold text-3xl mt-12 mb-4'>{filterCourses.length} results for "{query}"</div>
 					<div className='flex justify-between items-center my-8'>
 						<div className='flex gap-3 items-center'>
 							<button
@@ -438,7 +370,14 @@ const CoursesByCategory = () => {
 						))}
 					</div>
 					<div className='sticky bottom-0 w-full bg-white shadow-[0_-2px_4px_rgba(0,0,0,.08),0_-4px_12px_rgba(0,0,0,.08)] py-4'>
-						<button className='bg-gray-900 text-white w-11/12 mx-auto flex justify-center p-2' onClick={() => {toggleDrawer()}}>Done</button>
+						<button
+							className='bg-gray-900 text-white w-11/12 mx-auto flex justify-center p-2'
+							onClick={() => {
+								toggleDrawer();
+							}}
+						>
+							Done
+						</button>
 					</div>
 				</div>
 			</Drawer>
@@ -446,4 +385,4 @@ const CoursesByCategory = () => {
 	);
 };
 
-export default CoursesByCategory;
+export default Search;

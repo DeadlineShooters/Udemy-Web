@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Carousel from 'react-multi-carousel';
+import axios from 'axios';
 import 'react-multi-carousel/lib/styles.css';
 import './Home.css';
 
@@ -31,141 +32,47 @@ const responsive = {
 	},
 };
 
-const categories = [
-	'Development',
-	'Business',
-	'Finance & Accounting',
-	'IT & Software',
-	'Office Productivity',
-	'Personal Development',
-	'Design',
-	'Marketing',
-	'Health & Fitness',
-	'Music',
-];
+function FullStarIcon() {
+	return (
+		<svg xmlns='http://www.w3.org/2000/svg' class='text-[#b4690e] w-3 h-auto fill-current ' viewBox='0 0 16 16'>
+			<path d='M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z' />
+		</svg>
+	);
+}
 
-const subCategories = [
-	[
-		'Web Development',
-		'Data Science',
-		'Mobile Development',
-		'Programming Languages',
-		'Game Development',
-		'Database Design & Development',
-		'Software Testing',
-		'Software Engineering',
-		'Software Development Tools',
-		'No-Code Development',
-	],
-	[
-		'Entrepreneurship',
-		'Communication',
-		'Management',
-		'Sales',
-		'Business Strategy',
-		'Operations',
-		'Project Management',
-		'Business Law',
-		'Business Analytics & Intelligence',
-		'Human Resources',
-		'Industry',
-		'E-Commerce',
-		'Media',
-		'Real Estate',
-		'Other Business',
-	],
-	[
-		'Accounting & Bookkeeping',
-		'Compliance',
-		'Cryptocurrency & Blockchain',
-		'Economics',
-		'Finance',
-		'Finance Cert & Exam Prep',
-		'Financial Modeling & Analysis',
-		'Investing & Trading',
-		'Money Management Tools',
-		'Taxes',
-		'Other Finance & Accounting',
-	],
-	['IT certifications', 'Network & Security', 'Hardware', 'Operating Systems & Servers', 'Other IT & Software'],
-	['Microsoft', 'Apple', 'Google', 'SAP', 'Oracle', 'Other Office Productivity'],
-	[
-		'Personal Transformation',
-		'Productivity',
-		'Leadership',
-		'Personal Finance',
-		'Career Development',
-		'Parenting & Relationships',
-		'Happiness',
-		'Religion & Spirituality',
-		'Personal Brand Building',
-		'Creativity',
-		'Influence',
-		'Self Esteem',
-		'Stress Management',
-		'Memory & Study Skills',
-		'Motivation',
-		'Other Personal Development',
-	],
-	[
-		'Web Design',
-		'Graphic Design & Illustration',
-		'Design Tools',
-		'User Experience',
-		'Game Design',
-		'Design Thinking',
-		'3D & Animation',
-		'Fashion',
-		'Architectural Design',
-		'Interior Design',
-		'Other Design',
-	],
-	[
-		'Digital Marketing',
-		'Search Engine Optimization',
-		'Social Media Marketing',
-		'Branding',
-		'Marketing Fundamentals',
-		'Analytics & Automation',
-		'Public Relations',
-		'Advertising',
-		'Video & Mobile Marketing',
-		'Content Marketing',
-		'Growth Hacking',
-		'Affiliate Marketing',
-		'Product Marketing',
-		'Other Marketing',
-	],
-	[
-		'Fitness',
-		'General Health',
-		'Sports',
-		'Nutrition',
-		'Yoga',
-		'Mental Health',
-		'Dieting',
-		'Self Defense',
-		'Safety & First Aid',
-		'Dance',
-		'Meditation',
-		'Other Health & Fitness',
-	],
-	['Instruments', 'Production', 'Music Fundamentals', 'Vocal', 'Music Techniques', 'Music Software', 'Other Music'],
-	[
-		'Engineering',
-		'Humanities',
-		'Math',
-		'Science',
-		'Online Education',
-		'Social Science',
-		'Language Learning',
-		'Teacher Training',
-		'Test Prep',
-		'Other Teaching & Academics',
-	],
-];
+function HalfStarIcon() {
+	return (
+		<svg xmlns='http://www.w3.org/2000/svg' class='text-[#b4690e] w-3 h-auto fill-current' viewBox='0 0 16 16'>
+			<path d='M5.354 5.119 7.538.792A.516.516 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.537.537 0 0 1 16 6.32a.548.548 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.52.52 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.58.58 0 0 1 .085-.302.513.513 0 0 1 .37-.245l4.898-.696zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.565.565 0 0 1 .162-.505l2.907-2.77-4.052-.576a.525.525 0 0 1-.393-.288L8.001 2.223 8 2.226v9.8z' />
+		</svg>
+	);
+}
+
+function StarIcon() {
+	return (
+		<svg xmlns='http://www.w3.org/2000/svg' class='text-[#b4690e] w-3 h-auto fill-current' viewBox='0 0 16 16'>
+			<path d='M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z' />
+		</svg>
+	);
+}
+
+function RenderStars({ rating }) {
+	const stars = [];
+	for (let i = 0; i < 5; i++) {
+		if (i < rating - 0.7) {
+			stars.push(<FullStarIcon key={i} />);
+		} else if (i < rating) {
+			stars.push(<HalfStarIcon key={i} />);
+		} else {
+			stars.push(<StarIcon key={i} />);
+		}
+	}
+	return stars;
+}
 
 const Home = () => {
+	const [courses, setCourses] = useState(null);
+	const [categories, setCategories] = useState(null);
 	const [categoryInd, setCategoryInd] = useState(null);
 	const refContainer = useRef();
 	const [containerWidth, setContainerWidth] = useState(0);
@@ -184,12 +91,44 @@ const Home = () => {
 	}, []);
 
 	useEffect(() => {
-		console.log(containerWidth);
 		if (refContainer.current) {
 			setContainerWidth(refContainer.current.offsetWidth);
 			document.documentElement.style.setProperty('--containerWidth', `${containerWidth}px`);
 		}
 	}, [containerWidth]);
+
+	useEffect(() => {
+		if (categories) {
+			categories.forEach((category) => {
+				axios
+					.get(`http://localhost:5000/courses/?category=${category.id}`)
+					.then((response) => {
+						if (response.data.success) {
+							setCourses((prevCourses) => ({
+								...prevCourses,
+								[category.name]: response.data.courses,
+							}));
+						}
+					})
+					.catch((error) => {
+						console.error('Error:', error);
+					});
+			});
+		}
+	}, [categories]);
+
+	useEffect(() => {
+		axios
+			.get('http://localhost:5000/courses/categories')
+			.then((response) => {
+				if (response.data.success) {
+					setCategories(response.data.categories);
+				}
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+			});
+	}, []);
 
 	return (
 		<>
@@ -200,19 +139,24 @@ const Home = () => {
 				}}
 			>
 				<ul class='md:flex justify-center shadow-md flex-wrap max-h-12 overflow-hidden hidden'>
-					{categories.map((category, ind) => (
-						<a
-							href='/courses/category-name'
-							className='group relative m-0 py-3 px-4'
-							key={category.id}
-							onMouseEnter={() => {
-								setCategoryInd(ind);
-							}}
-						>
-							{category}
-							<div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-8 border-solid border-transparent border-b-[#2d2f31] ${categoryInd != null && categoryInd === ind ? 'block' : 'hidden'} `}></div>
-						</a>
-					))}
+					{categories &&
+						categories.map((category, ind) => (
+							<a
+								href={`/courses/${category.id}`}
+								className='group relative m-0 py-3 px-4'
+								key={category._id}
+								onMouseEnter={() => {
+									setCategoryInd(ind);
+								}}
+							>
+								{category.name}
+								<div
+									className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-8 border-solid border-transparent border-b-[#2d2f31] ${
+										categoryInd != null && categoryInd === ind ? 'block' : 'hidden'
+									} `}
+								></div>
+							</a>
+						))}
 				</ul>
 				<ul
 					class='w-full z-9999 absolute bg-[#2d2f31] text-white md:flex justify-center shadow-md flex-wrap max-h-12 overflow-hidden'
@@ -221,8 +165,8 @@ const Home = () => {
 					}}
 				>
 					{categoryInd !== null &&
-						subCategories[categoryInd].slice(0, 6).map((subCategory) => (
-							<a href='/courses/category-name' className='m-0 py-3 px-4' key={subCategory.id}>
+						categories[categoryInd].subCategories.slice(0, 6).map((subCategory) => (
+							<a href={`/courses/${categories[categoryInd].id}`} className='m-0 py-3 px-4' key={subCategory.id}>
 								{subCategory}
 							</a>
 						))}
@@ -240,58 +184,50 @@ const Home = () => {
 			</div>
 			<div ref={refContainer} className='px-8 max-w-[1340px] mx-auto'>
 				<span className='font-bold text-3xl text-gray-800 mb-8 block'>What to learn next</span>
-				{categories.map((category) => (
-					<div className='mb-12'>
-						<span className='font-bold text-2xl text-gray-800 block mb-4'>
-							Top courses in <a href='courses/category-name' className='text-[#5624d0] underline'>{category}</a>
-						</span>
-						<Carousel containerClass='' itemClass='m-2 itemClassHome' responsive={responsive}>
-							{categories.map((category) => (
-								<div class=''>
-									<a href='/course/:courseId'><img class='' src='https://img-c.udemycdn.com/course/480x270/3490000_d298_2.jpg' alt='' /></a>
-									<div class='flex flex-col gap-1 pt-1.5'>
-										<h3 class='font-bold text-gray-900 line-clamp-2 leading-tight'>Docker & Kubernetes: The Practical Guide [2024 Edition]</h3>
-										<p class='text-xs truncate text-gray-500'>Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller</p>
-										<div class='flex gap-1 items-center'>
-											<span class='text-gray-900 font-bold text-sm'>4.7</span>
-
-											<div class='flex gap-0.5'>
-												<svg xmlns='http://www.w3.org/2000/svg' class='text-[#b4690e] w-3 h-auto fill-current ' viewBox='0 0 16 16'>
-													<path d='M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z' />
-												</svg>
-												<svg xmlns='http://www.w3.org/2000/svg' class='text-[#b4690e] w-3 h-auto fill-current' viewBox='0 0 16 16'>
-													<path d='M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z' />
-												</svg>
-												<svg xmlns='http://www.w3.org/2000/svg' class='text-[#b4690e] w-3 h-auto fill-current' viewBox='0 0 16 16'>
-													<path d='M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z' />
-												</svg>
-												<svg xmlns='http://www.w3.org/2000/svg' class='text-[#b4690e] w-3 h-auto fill-current' viewBox='0 0 16 16'>
-													<path d='M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z' />
-												</svg>
-												<svg xmlns='http://www.w3.org/2000/svg' class='text-[#b4690e] w-3 h-auto fill-current' viewBox='0 0 16 16'>
-													<path d='M5.354 5.119 7.538.792A.516.516 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.537.537 0 0 1 16 6.32a.548.548 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.52.52 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.58.58 0 0 1 .085-.302.513.513 0 0 1 .37-.245l4.898-.696zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.565.565 0 0 1 .162-.505l2.907-2.77-4.052-.576a.525.525 0 0 1-.393-.288L8.001 2.223 8 2.226v9.8z' />
-												</svg>
+				{categories &&
+					categories.map((category) =>
+						courses && courses[category.name] && courses[category.name].length > 0 ? (
+							<div className='mb-12'>
+								<span className='font-bold text-2xl text-gray-800 block mb-4'>
+									Top courses in{' '}
+									<a href={`courses/${category.id}`} className='text-[#5624d0] underline'>
+										{category.name}
+									</a>
+								</span>
+								<Carousel containerClass='' itemClass='m-2 itemClassHome' responsive={responsive}>
+									{courses[category.name].map((course) => (
+										<div class=''>
+											<img class='' src={course.thumbNail.publicURL} alt='' />
+											<div class='flex flex-col gap-1 pt-1.5'>
+												<h3 class='font-bold text-gray-900 line-clamp-2 leading-tight'>{course.name}</h3>
+												<p class='text-xs truncate text-gray-500'>{course.instructor.firstName} {course.instructor.lastName}</p>
+												<div class='flex gap-1 items-center'>
+													<span class='text-gray-900 font-bold text-sm'>{course.avgRating}</span>
+													<div class='flex gap-0.5'>{RenderStars({ rating: course.avgRating })}</div>
+													<span class='text-gray-500 font-medium text-xs inline-block align-middle'>
+														({course.totalStudent.toLocaleString()})
+													</span>
+												</div>
+												<div class='text-gray-500 text-xs align-middle'>
+													{course.totalLength} total hours • {course.totalLecture} lectures
+												</div>
+												<div class='flex items-center space-x-2'>
+													<span class='font-bold text-gray-900 '>
+														<span class='underline'>đ</span>
+														{(course.price * 0.8).toLocaleString()}
+													</span>
+													<span class='text-gray-500 line-through'>
+														<span class='underline'>đ</span>
+														{course.price.toLocaleString()}
+													</span>
+												</div>
 											</div>
-
-											<span class='text-gray-500 font-medium text-xs inline-block align-middle'>({(25359).toLocaleString()})</span>
 										</div>
-										<div class='text-gray-500 text-xs align-middle'>23.5 total hours • 262 lectures</div>
-										<div class='flex items-center space-x-2'>
-											<span class='font-bold text-gray-900 '>
-												<span class='underline'>đ</span>
-												{(349000).toLocaleString()}
-											</span>
-											<span class='text-gray-500 line-through'>
-												<span class='underline'>đ</span>
-												{(2199000).toLocaleString()}
-											</span>
-										</div>
-									</div>
-								</div>
-							))}
-						</Carousel>
-					</div>
-				))}
+									))}
+								</Carousel>
+							</div>
+						) : null
+					)}
 			</div>
 		</>
 	);
