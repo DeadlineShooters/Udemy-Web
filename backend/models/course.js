@@ -12,7 +12,7 @@ const courseSchema = mongoose.Schema({
     introduction: { type: String },
     description: {type: String},
     price: { type: Number },
-    sectionList: { type: Schema.Types.ObjectId, ref: "Section" },
+    sectionList: [{ type: Schema.Types.ObjectId, ref: "Section" }],
     promotionalVideo: {type: Schema.Types.ObjectId, ref: "Video"},
     category: {type: Schema.Types.ObjectId, ref: "Category" },
     totalLecture: {type: Number},

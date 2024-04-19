@@ -3,7 +3,7 @@ import { IconUpload } from '@tabler/icons-react';
 import { MdCloudUpload, MdDelete} from 'react-icons/md'
 import { AiFillFileImage } from 'react-icons/ai'
 
-const UploadWidget = ({onUpload}) => {
+const UploadWidget = ({onUpload, type}) => {
     const cloudinaryRef = useRef();
     const widgetRef = useRef();
     useEffect(() => {
@@ -23,7 +23,8 @@ const UploadWidget = ({onUpload}) => {
                 className='flex p-2 bg-black rounded-md mb-2'
                 onClick={() => widgetRef.current.open()}>
                 <IconUpload color='white' stroke={2}/>
-                <p className='text-white font-bold'>Upload your video</p>
+                {(type==="video") && <p className='text-white font-bold'>Upload your video</p>}
+                {(type==="image") && <p className='text-white font-bold'>Upload your image</p>}
             </button>
         </div>
     )

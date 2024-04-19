@@ -1,7 +1,6 @@
 import React from "react";
 import DashboardHeaderTitle from "../../../Components/DashboardHeaderTitle";
 import Heading1 from "../../../Components/CourseManagement/Heading1";
-import TextInput from "./TextInput";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Button } from "@material-tailwind/react";
@@ -246,7 +245,7 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
               <IconTrash stroke={2} color="white"/>
             </button>
           </span>
-        </div> : <UploadWidget onUpload={handleOnUpload} />}
+        </div> : <UploadWidget onUpload={handleOnUpload} type="video" />}
         {isErrorVideo && <div className="text-[#d44343] font-bold my-2">OOPS! You need to upload the lecture's video</div>}
         <Button 
           color="black" 
@@ -293,7 +292,7 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
               <IconTrash stroke={2} color="white"/>
             </button>
           </span>
-        </div> : <UploadWidget onUpload={handleOnEditUpload} />}
+        </div> : <UploadWidget onUpload={handleOnEditUpload} type="video" />}
         {isErrorUpdateVideo && <div className="text-[#d44343] font-bold my-2">OOPS! You need to upload the lecture's video</div>}
         <Button 
           color="black" 
@@ -361,11 +360,29 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
 };
 
 const CreateCourse = () => {
-  const [value, setValue] = useState("");
-  const [file, setFile] = useState(null);
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
+  const [title, setTitle] = useState("");
+  const [introduction, setIntroduction] = useState("");
+  const [description, setDescription] = useState("");
+  const [thumbNail, setThumbNail] = useState();
+  const [sections, setSections] = useState([]);
+  const [addSection, setAddSection] = useState(false);
+  const [newSectionName, setNewSectionName] = useState('');
+
+  const handleOnUpload = (error, result, widget) => {
+    if (error) {
+      widget.close({
+        quiet: true,
+      });
+      return;
+    }
+    //setIsErrorVideo(false);
+    setThumbNail(result?.info?.secure_url);
+  }
+
+  const deleteThumbNail = () => {
+    setThumbNail();
+  }
+
   const quillRef = useRef(); // Create a ref
   useEffect(() => {
     if (quillRef.current != null) {
@@ -377,9 +394,6 @@ const CreateCourse = () => {
     navigate("/instructor/courses");
   };
   const onSave = () => {};
-  const [addSection, setAddSection] = useState(false);
-  const [sections, setSections] = useState([]);
-  const [newSectionName, setNewSectionName] = useState('');
 
   const toggleAddSection = () => {
     setAddSection(!addSection);
@@ -456,6 +470,16 @@ const CreateCourse = () => {
     setSections(updatedSections);
   };
 
+  const handleCreateCourse = () => {
+    const data = {
+      title: title, 
+      introduction: introduction, 
+      description: description, 
+      thumbNail: thumbNail,
+      sections: sections
+    }
+    console.log(data);
+  }
   return (
     <div>
       <header className="bg-gray-900 py-5 px-8 border-b border-gray-200 flex gap-6 items-center justify-between">
@@ -476,23 +500,56 @@ const CreateCourse = () => {
                 <div className="mt-6 "></div>
                   <div className="form-group mb-5">
                     <Heading1>Course title</Heading1>
-                    <TextInput limit={60} placeholder={"Insert your course title"} />
+                    <div className="flex justify-between border border-black p-3">
+                      <input 
+                        type="text" 
+                        placeholder="Input the course's title" 
+                        maxLength={120} 
+                        className="focus:outline-none focus:ring-0 w-full"
+                        onChange={(e) => setTitle(e.target.value)} />
+                      <span>{120 - title.length}</span>
+                    </div>
                   </div>
                   <div className="form-group mb-5">
-                    <Heading1>Course subtitle</Heading1>
-                    <TextInput limit={120} placeholder={"Insert your course subtitle"} />
+                    <Heading1>Course introduction</Heading1>
+                    <div className="flex justify-between border border-black p-3">
+                      <input 
+                        type="text" 
+                        placeholder="Input the course's introduction" 
+                        maxLength={120} 
+                        className="focus:outline-none focus:ring-0 w-full"
+                        onChange={(e) => setIntroduction(e.target.value)} />
+                      <span>{120 - introduction.length}</span>
+                    </div>
                   </div>
                   <div className="form-group mb-5">
                     <Heading1>Course description</Heading1>
-                    <ReactQuill theme="snow" value={value} onChange={setValue} placeholder="Insert your course description" />
+                    <ReactQuill theme="snow" value={description} onChange={setDescription} placeholder="Insert your course description" />
                   </div>
                   <div className="form-group mb-5">
                     <Heading1>Course image</Heading1>
-                  <div>
-                    <input type="file" onChange={handleFileChange} />
+                    {thumbNail ? <div className="flex justify-between border border-black p-3 mb-2 items-center">
+                    <div><IconBrandYoutubeFilled className="mr-2" /></div>
+                      <input 
+                        type="text"
+                        maxLength={120} 
+                        defaultValue={thumbNail} 
+                        className="focus:outline-none focus:ring-0 w-full" />
+                      <span className="flex flex-row">      
+                        <Link target={"_blank"} to={thumbNail}>       
+                          <button 
+                            className="flex flex-row p-1 px-2 bg-[#241d6c] rounded-md mr-2">
+                              <IconEye stroke={2} color="white" className="mr-2"/>
+                              <p className="font-bold text-white">Preview</p>
+                          </button>
+                        </Link>
+                        <button className="bg-[#e95a5a] p-1 rounded-md" onClick={deleteThumbNail}>
+                          <IconTrash stroke={2} color="white"/>
+                        </button>
+                      </span>
+                    </div> : <UploadWidget onUpload={handleOnUpload} type="image" />}
                   </div>
                 </div>
-              </div>
               <div className="flex flex-row items-center justify-between">
                 <div>
                   <p className="text-3xl font-bold text-[#af39d3]">Course Content</p>
@@ -569,7 +626,7 @@ const CreateCourse = () => {
                 <Button color="white" className="rounded-none hover:bg-gray-100 border mr-2" style={{height: "48px"}} onClick={() => navigate("/instructor/course/create", {replace: true})}>
                   <span className="font-bold text-base normal-case">Cancel</span>
                 </Button>
-                <Button color="purple" className="rounded-none hover:bg-violet-800" style={{height: "48px"}} onClick={() => navigate("/instructor/course/create", {replace: true})}>
+                <Button color="purple" className="rounded-none hover:bg-violet-800" style={{height: "48px"}} onClick={() => handleCreateCourse()}>
                   <span className="font-bold text-base normal-case">Create Course</span>
                 </Button>
               </div>
