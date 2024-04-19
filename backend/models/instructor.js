@@ -4,9 +4,9 @@ const instructorSchema = mongoose.Schema({
     firstName: {type: String},
     lastName: {type: String},
     headline: {type: String},
+    bio: {type: String},
     totalReviews: {type: Number},
     totalStudents: {type: Number},
-    bio: {type: String},
     wallet: { walletID: {type: String}, walletName: {type: String}},
 })
 

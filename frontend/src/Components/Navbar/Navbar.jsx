@@ -215,6 +215,7 @@ const courses = [
 
 const Navbar = () => {
 	const {userData} = useAuth();
+	console.log("instructor", userData.instructor);
 	const isLogged = userData !== null;
 	function classNames(...classes) {
 		return classes.filter(Boolean).join(' ');
@@ -226,7 +227,6 @@ const Navbar = () => {
 	const [isTurnOnSideBar, setTurnOnSideBar] = useState(false);
 	const sideBarToggle = () => {
 		setTurnOnSideBar(!isTurnOnSideBar);
-		console.log(isTurnOnSideBar);
 	};
 	const [isWishlistDropdownOpen, setWishlistDropdownOpen] = useState(false);
 	const toggleWishlistDropdown = () => {
@@ -253,11 +253,11 @@ const Navbar = () => {
 	return (
 		<div className='header'>
 			<div className='navbar justify-between'>
-				<div className='flex items-center'>
+				<div className='flex items-center lg-max:w-full'>
 					<button type='button' className='md:hidden' onClick={sideBarToggle}>
 						<IconMenu2 stroke={2} />
 					</button>
-					<div className='logo-udemy'>
+					<div className='logo-udemy justify-center'>
 						<Link to='/'>
 							<img src={logo} alt='' className='logo'></img>
 						</Link>
@@ -333,12 +333,14 @@ const Navbar = () => {
 				{isLogged === true ? (
 					<div className={`flex items-center`}>
 						<ul>
-							{userData.instructor !== null ? (
+							{userData.instructor ? (
 								<li class='hover:text-purple-700 hide-teach-udemy'>
 									<Link to='/instructor/courses'>Instructor</Link>
 								</li>
 							) : (
-								<li className='hover:text-purple-700 hide-teach-udemy'>Teach on Udemy</li>
+								<li className='hover:text-purple-700 hide-teach-udemy'>
+									<Link to='/instructor/become'>Teach on Udemy</Link>
+								</li>
 							)}
 							<li className='hover:text-purple-700 hide-my-learning'>
 								<Link to='/home/my-courses/learning'>My learning</Link>
