@@ -14,42 +14,10 @@ import { IconPlus, IconEdit, IconTrash,
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UploadWidget from "./UploadWidget";
+import Modal from "../../../Components/CourseManagement/Modal";
+import DynamicInput from "../../../Components/CourseManagement/DynamicInput";
 
-const DynamicInput = ({ defaultValue, onChange, className, maxLength }) => {
-  const [value, setValue] = useState(defaultValue);
-  const inputRef = useRef(null);
-  const maxWidth = 600;
-  useEffect(() => {
-    if (inputRef.current) {
-      let newWidth = Math.max(value.length, defaultValue.length) * 12;
-      if (newWidth > maxWidth) {
-        newWidth = maxWidth;
-      }
-      inputRef.current.style.width = `${newWidth}px`;
-    }
-  }, [value, defaultValue]);
-
-  const handleChange = (e) => {
-    setValue(e.target.value);
-    if (onChange) {
-      onChange(e);
-    }
-  };
-
-  return (
-    <input 
-      type="text"
-      ref={inputRef}
-      value={value}
-      onChange={handleChange}
-      className={className}
-      maxLength={maxLength}
-      autoFocus
-    />
-  );
-};
-
-const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionUpdate, onLectureUpdate}) => {
+const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionUpdate, onLectureUpdate, onLectureDelete, onSectionDelete}) => {
   const [addLecture, setAddLecute] = useState(false);
   const [newLectureName, setNewLectureName] = useState('');
   const [url, updateUrl] = useState();
@@ -59,6 +27,13 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
   const [oldLectureVideo, setOldLectureVideo] = useState("");
   const [editLectureName, setEditLectureName] = useState("");
   const [editUrl, setEditUrl] = useState();
+  const [deleteLectureData, setDeleteLectureData] = useState();
+  const [showSectionModal, setShowSectionModal] = useState(false); // State for section modal
+  const [showLectureModal, setShowLectureModal] = useState(false); // State for lecture modal
+  const [isErrorName, setIsErrorName] = useState(false);
+  const [isErrorVideo, setIsErrorVideo] = useState(false);
+  const [isErrorUpdateName, setIsErrorUpdateName] = useState(false);
+  const [isErrorUpdateVideo, setIsErrorUpdateVideo] = useState(false);
 
   const handleOnUpload = (error, result, widget) => {
     if (error) {
@@ -68,6 +43,7 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
       });
       return;
     }
+    setIsErrorVideo(false);
     updateUrl(result?.info?.secure_url);
   }
 
@@ -79,6 +55,7 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
       });
       return;
     }
+    setIsErrorUpdateVideo(false);
     setEditUrl(result?.info?.secure_url);
   }
 
@@ -91,11 +68,23 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
   };
 
   const handleCreateLecture = () => {
-    setAddLecute(!addLecture);
-    if (newLectureName.trim() !== '') {
+    if (newLectureName.trim() === '') {
+      setIsErrorName(true);
+    } else {
+      setIsErrorName(false);
+    }
+    if (!url) {
+      setIsErrorVideo(true);
+    } else {
+      setIsErrorVideo(false);
+    }
+    if (newLectureName.trim() !== '' && url) {
       onLectureCreate(sectionName, newLectureName, url);
+      setAddLecute(!addLecture);
       setNewLectureName('');
       updateUrl();
+      setIsErrorName(false);
+      setIsErrorVideo(false);
     }
   };
 
@@ -123,6 +112,7 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
   }
 
   const EditLecture = (lecture) => {
+    console.log("lecture edit", lecture);
     setIsEditLecture(!isEditLecture);
     setOldLectureName(lecture.name);
     setOldLectureVideo(lecture.video);
@@ -133,14 +123,37 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
     setEditLectureName(e.target.value);
   };
   const handleUpdateLecture = () => {
+    if (editLectureName.trim() === '') {
+      setIsErrorUpdateName(true);
+    } else {
+      setIsErrorUpdateName(false);
+    }
+    if (!editUrl) {
+      setIsErrorUpdateVideo(true);
+    } else {
+      setIsErrorUpdateVideo(false);
+    }
     if (editLectureName.trim() !== '' && editUrl) {
       onLectureUpdate(sectionName, editLectureName, editUrl, oldLectureName, oldLectureVideo);
       setIsEditLecture(false);
       setEditLectureName("");
       setEditUrl();
+      setIsErrorUpdateName(false);
+      setIsErrorUpdateVideo(false);
     }
   }
-
+  const deleteLecture = (lecture) => {
+    setShowLectureModal(true);
+    setDeleteLectureData(lecture);
+  }
+  const handleDeleteLecture = () => {
+    onLectureDelete(sectionName, deleteLectureData.name, deleteLectureData.video);
+    setShowLectureModal(false);
+  }
+  const handleDeleteSection = () => {
+    onSectionDelete(sectionName);
+    setShowSectionModal(false);
+  }
   return (
     <div>
       <div className="flex flex-row my-5 items-center justify-between">
@@ -184,9 +197,19 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
             <IconPlus stroke={2} color="white"/>
             <p className="text-white">Add</p>
           </button>
-          <button className="bg-[#e95a5a] p-1 rounded-md">
-            <IconTrash stroke={2} color="white"/>
-          </button>
+          <div>
+            <button id="section" className="bg-[#e95a5a] p-1 rounded-md" onClick={() => setShowSectionModal(true)}>
+                <IconTrash stroke={2} color="white" />
+            </button>
+            <Modal 
+              showModal={showSectionModal} 
+              setShowModal={setShowSectionModal}
+              title={"Delete section?"}
+              type={"alert"}
+              description={`By deleting section, every lecture inside can be also deleted. This process can not be recovered.`}
+              handle={handleDeleteSection}
+              action={"Delete"}/>
+          </div>
         </div>
       </div>
       {addLecture && 
@@ -201,13 +224,13 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
             value={newLectureName} 
             className="focus:outline-none focus:ring-0 w-full" 
             onChange={handleLectureNameChange}/>
-          <span>120</span>
+          <span>{120 - newLectureName.length}</span>
         </div>
+        {isErrorName && <div className="text-[#d44343] font-bold my-2">OOPS! You need to input the lecture's name</div>}
         {url ? <div className="flex justify-between border border-black p-3 mb-2 items-center">
           <div><IconBrandYoutubeFilled className="mr-2" /></div>
           <input 
-            type="text" 
-            placeholder="Input your lecture name" 
+            type="text"
             maxLength={120} 
             defaultValue={url} 
             className="focus:outline-none focus:ring-0 w-full" />
@@ -224,6 +247,7 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
             </button>
           </span>
         </div> : <UploadWidget onUpload={handleOnUpload} />}
+        {isErrorVideo && <div className="text-[#d44343] font-bold my-2">OOPS! You need to upload the lecture's video</div>}
         <Button 
           color="black" 
           className="rounded-none hover:bg-violet-800" 
@@ -247,8 +271,9 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
             value={editLectureName} 
             className="focus:outline-none focus:ring-0 w-full" 
             onChange={handleEditLectureName}/>
-          <span>120</span>
+          <span>{120 - editLectureName.length}</span>
         </div>
+        {isErrorUpdateName && <div className="text-[#d44343] font-bold my-2">OOPS! You need to input the lecture's name</div>}
         {editUrl ? <div className="flex justify-between border border-black p-3 mb-2 items-center">
           <div><IconBrandYoutubeFilled className="mr-2" /></div>
           <input 
@@ -257,7 +282,7 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
             defaultValue={editUrl} 
             className="focus:outline-none focus:ring-0 w-full"/>
           <span className="flex flex-row">      
-            <Link target={"_blank"} to={url}>       
+            <Link target={"_blank"} to={editUrl}>       
               <button 
                 className="flex flex-row p-1 px-2 bg-[#241d6c] rounded-md mr-2">
                   <IconEye stroke={2} color="white" className="mr-2"/>
@@ -269,6 +294,7 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
             </button>
           </span>
         </div> : <UploadWidget onUpload={handleOnEditUpload} />}
+        {isErrorUpdateVideo && <div className="text-[#d44343] font-bold my-2">OOPS! You need to upload the lecture's video</div>}
         <Button 
           color="black" 
           className="rounded-none hover:bg-violet-800" 
@@ -306,12 +332,25 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
                   </Link>
                 </div>
               </div>            
-              <div>
+              <div className="flex flex-row items-center">
                 <button 
-                  className="py-1 px-5 border border-black rounded-md"
+                  className="py-1 px-5 border border-black rounded-md mr-2"
                   onClick={() => EditLecture(lecture)}>
                     <p className="font-bold text-[#752f93]">Edit</p>
                 </button>
+                <div>
+                  <button className="bg-[#e95a5a] p-1 rounded-md" onClick={() => {deleteLecture(lecture)}}>
+                    <IconTrash stroke={2} color="white" />
+                  </button>
+                  <Modal 
+                    showModal={showLectureModal} 
+                    setShowModal={setShowLectureModal}
+                    title={"Delete lecture?"}
+                    type={"warning"}
+                    description={`By deleting section, every lecture inside can be also deleted. This process can not be recovered.`}
+                    handle={() => handleDeleteLecture()}
+                    action={"Delete"}/>
+                </div>
               </div>
             </div>
           </div>
@@ -384,6 +423,17 @@ const CreateCourse = () => {
     setSections(updatedSections);
   }
 
+  const handleLectureDelete = (sectionName, lectureName) => {
+    const updatedSections = sections.map((section) => {
+      if (section.name === sectionName) {
+        const updatedLectures = section.lectures.filter((lecture) => lecture.name !== lectureName);
+        return { ...section, lectures: updatedLectures };
+      }
+      return section;
+    });
+    setSections(updatedSections);
+  };
+
   const handleSectionUpdate = (sectionId, newSectionName) => {
     // Create a new copy of sections array
     const updatedSections = [...sections];
@@ -392,6 +442,17 @@ const CreateCourse = () => {
     updatedSections[sectionId].name = newSectionName;
 
     // Update the state
+    setSections(updatedSections);
+  };
+
+  const handleSectionDelete = (sectionName) => {
+    const updatedSections = sections.map((section) => {
+      if (section.name === sectionName) {
+        // Clear lectures of the specified section
+        return { ...section, lectures: [] };
+      }
+      return section;
+    }).filter((section) => section.name !== sectionName); // Delete the specified section
     setSections(updatedSections);
   };
 
@@ -498,6 +559,8 @@ const CreateCourse = () => {
                       onLectureCreate={handleLectureCreate}
                       onSectionUpdate={handleSectionUpdate}
                       onLectureUpdate={handleLectureUpdate}
+                      onLectureDelete={handleLectureDelete}
+                      onSectionDelete={handleSectionDelete}
                     />
                   ))}
                 </div>
