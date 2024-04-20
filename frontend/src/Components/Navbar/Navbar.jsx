@@ -215,7 +215,6 @@ const courses = [
 
 const Navbar = () => {
 	const {userData} = useAuth();
-	console.log("instructor", userData.instructor);
 	const isLogged = userData !== null;
 	function classNames(...classes) {
 		return classes.filter(Boolean).join(' ');
@@ -333,7 +332,7 @@ const Navbar = () => {
 				{isLogged === true ? (
 					<div className={`flex items-center`}>
 						<ul>
-							{userData.instructor ? (
+							{userData?.instructor ? (
 								<li class='hover:text-purple-700 hide-teach-udemy'>
 									<Link to='/instructor/courses'>Instructor</Link>
 								</li>

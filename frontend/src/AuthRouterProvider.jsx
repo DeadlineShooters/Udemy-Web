@@ -13,6 +13,7 @@ import CourseDetail from './Pages/User/CourseLandingPage/CourseDetail.jsx';
 import Cart from './Pages/Cart/cart.jsx';
 import CoursesByCategory from './Pages/Discover/CoursesByCategory/coursesByCategory.jsx';
 import ProtectedRoutes from "./Components/Utils/AuthSecure.jsx";
+import Search from "./Pages/Discover/Search/search.jsx";
 
 //Student page
 import MyLearning from './Pages/User/MyCourses/Learning/myLearning.jsx';
@@ -29,6 +30,7 @@ import Login from './Pages/User/Authentication/Login.jsx';
 import HandlePopUpLogin from './Pages/User/Authentication/HandlePopUpLogin.jsx';
 
 //Instructor page
+import InstructorRegister from "./Pages/Instructor/InstructorProfile/InstructorBecome.jsx";
 import CourseDashBoard from './Pages/Instructor/ManageCourses/CourseDashboard.jsx';
 import Statistics from './Pages/Instructor/Statistics/Statistics.jsx';
 import CourseLandingPage from './Pages/Instructor/ManageCourses/CourseLandingPage.jsx';
@@ -37,8 +39,6 @@ import ManageCourseLayout from './Components/CourseManagement/ManageCourseLayout
 import Curriculum from './Pages/Instructor/ManageCourses/Curriculum.jsx';
 import QuestionAndAnswer from "./Pages/Instructor/QA.jsx";
 import CreateCourse from "./Pages/Instructor/ManageCourses/CreateCourse.jsx";
-import Search from "./Pages/Discover/Search/search.jsx";
-
 import InstructorProfile from "./Pages/Instructor/InstructorProfile/InstructorProfile.jsx";
 
 // import fonts
@@ -193,10 +193,16 @@ const router = createBrowserRouter([
 	{
 		path: '/instructor',
 		element: <ProtectedRoutes />,
-		children: [{
-			path: '',
-			element: <CourseDashboardLayout />,
-			children: [
+		children: [
+			{
+				path: 'become',
+				element: <InstructorRegister />,
+				
+			},
+			{
+				path: '',
+				element: <CourseDashboardLayout />,
+				children: [
 				{
 					path: 'courses',
 					element: <CourseDashBoard />,
