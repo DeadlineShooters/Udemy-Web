@@ -6,5 +6,6 @@ import user from "../../models/user.js";
 const router = express.Router();
 router.post("/edit-profile", accountController.editProfile);
 router.post("/change-password", accountController.changePassword);
+router.post("/become-instructor", accountController.becomeInstructor);
 
 export default router;

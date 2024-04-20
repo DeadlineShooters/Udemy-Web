@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import User from "../../models/user.js";
 import bcrypt from "bcrypt";
+import Instructor from "../../models/instructor.js";
 const saltRounds = 10;
 
 export const editProfile = async (req, res) => {
@@ -38,6 +39,34 @@ export const editProfile = async (req, res) => {
         // Handle any errors that occur during the process
         console.error("Error updating user profile:", error);
         res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+export const becomeInstructor = async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const newInstructor = new Instructor();
+        newInstructor.headline =  "",
+
+        await newInstructor.save();
+        const updatedUser = await User.findByIdAndUpdate(
+            userId, // Assuming req.user contains the authenticated user's information
+            { 
+                $set: { 
+                    instructor: newInstructor._id,
+                } 
+            },
+            { new: true } // Return the updated document
+        );
+        if (updatedUser) {
+            // If successful, send the updated user data as response
+            res.status(200).json(updatedUser);
+        } else {
+            // If user is not found, send a 404 Not Found response
+            res.status(404).json({ message: "User not found" });
+        }
+    } catch (error) {
+        console.log("Error", error)
     }
 }
 

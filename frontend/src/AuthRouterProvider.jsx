@@ -161,6 +161,11 @@ const router = createBrowserRouter([
 				element: <AccountSettings />,
 			},
 			{
+				path: 'instructor-become',
+				element: <InstructorRegister />,
+				
+			},
+			{
 				path: 'instructor-profile',
 				element: <InstructorProfile />,
 			},
@@ -194,33 +199,27 @@ const router = createBrowserRouter([
 		path: '/instructor',
 		element: <ProtectedRoutes />,
 		children: [
+		{
+			path: '',
+			element: <CourseDashboardLayout />,
+			children: [
 			{
-				path: 'become',
-				element: <InstructorRegister />,
-				
+				path: 'courses',
+				element: <CourseDashBoard />,
 			},
 			{
-				path: '',
-				element: <CourseDashboardLayout />,
-				children: [
-				{
-					path: 'courses',
-					element: <CourseDashBoard />,
-				},
-				{
-					path: 'statistics',
-					element: <Statistics />,
-				},
-				{
-					path: "qa",
-					element: <QuestionAndAnswer />,
-				},
-				{
-					path: 'reviews',
-					element: <Reviews />,
-				},
-			]
-		}],
+				path: 'statistics',
+				element: <Statistics />,
+			},
+			{
+				path: "qa",
+				element: <QuestionAndAnswer />,
+			},
+			{
+				path: 'reviews',
+				element: <Reviews />,
+			},
+		]}],
 	},
 	{
 		path: '/instructor/course/:courseId/manage',

@@ -338,7 +338,7 @@ const Navbar = () => {
 								</li>
 							) : (
 								<li className='hover:text-purple-700 hide-teach-udemy'>
-									<Link to='/instructor/become'>Teach on Udemy</Link>
+									<Link to='/user/instructor-become'>Teach on Udemy</Link>
 								</li>
 							)}
 							<li className='hover:text-purple-700 hide-my-learning'>
