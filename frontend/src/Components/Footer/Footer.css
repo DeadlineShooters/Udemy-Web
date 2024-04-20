@@ -1,0 +1,48 @@
+.navbar .logo {
+    width: 100px;
+}
+
+@media not all and (min-width: 960px) {
+    .detail .middle {
+        margin-left: 140px !important;
+        margin-right: 140px !important;
+    }
+}
+
+@media not all and (min-width: 888px) {
+    .detail .middle {
+        margin-left: 120px !important;
+        margin-right: 120px !important;
+    }
+}
+
+@media not all and (min-width: 848px) {
+    .detail .middle {
+        margin-left: 80px !important;
+        margin-right: 80px !important;
+    }
+}
+
+@media not all and (min-width: 769px) {
+    .general .detail .middle {
+        margin-left: 40px !important;
+        margin-right: 40px !important;
+    }
+}
+
+@media not all and (min-width: 700px) {
+    .general {
+        flex-direction: column !important;
+    }
+    .general .language {
+        margin-bottom: 40px !important;
+    }
+    .general .detail {
+        flex-direction: column !important;
+    }
+    .general .detail .middle {
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+        margin-bottom: 0px !important;
+    }
+}

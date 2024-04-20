@@ -4,6 +4,7 @@ import { RouterProvider, Outlet, createBrowserRouter, useLocation } from "react-
 import Navbar from './Components/Navbar/Navbar.jsx';
 import CourseNavbar from './Components/CourseNavBar/CourseNavBar.jsx';
 import Sidebar from './Components/Sidebar/sidebar.jsx';
+import Footer from "./Components/Footer/Footer.jsx";
 
 //General page
 import Home from './Pages/Discover/Home/Home.jsx';
@@ -50,7 +51,7 @@ const Layout = () => {
 		<>
 			<Navbar />
 			<Outlet />
-			{/* <Footer/>*/}
+			<Footer />
 		</>
 	);
 };
