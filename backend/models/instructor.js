@@ -5,6 +5,7 @@ const instructorSchema = mongoose.Schema({
     bio: {type: String, default: ""},
     totalReviews: {type: Number, default: 0},
     totalStudents: {type: Number, default: 0},
+    courseList: [{ type: Schema.Types.ObjectId, ref: "Course" }],
     wallet: { walletID: {type: String, default: ""}, walletName: {type: String, default: ""}},
 })
 
