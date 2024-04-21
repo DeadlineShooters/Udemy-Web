@@ -576,7 +576,7 @@ const CreateCourse = () => {
                             publicId={thumbNailId}
                             width="450"
                             height="250"
-                            crop="thumb"
+                            crop="fill"
                             className='border'
                           />
                         </Link>
@@ -585,7 +585,7 @@ const CreateCourse = () => {
                           cloudName={process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}
                           publicId="multiMediaUpload"
                           width="450"
-                          crop="fit"
+                          crop="fill"
                           className='border'
                         />
                       )}
