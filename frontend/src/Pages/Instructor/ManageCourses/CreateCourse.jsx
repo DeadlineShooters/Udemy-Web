@@ -15,6 +15,8 @@ import { Link, useNavigate } from "react-router-dom";
 import UploadWidget from "./UploadWidget";
 import Modal from "../../../Components/CourseManagement/Modal";
 import DynamicInput from "../../../Components/CourseManagement/DynamicInput";
+import { Image, Video } from 'cloudinary-react';
+import './CreateCourse.css'
 
 const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionUpdate, onLectureUpdate, onLectureDelete, onSectionDelete}) => {
   const [addLecture, setAddLecute] = useState(false);
@@ -363,24 +365,44 @@ const CreateCourse = () => {
   const [title, setTitle] = useState("");
   const [introduction, setIntroduction] = useState("");
   const [description, setDescription] = useState("");
-  const [thumbNail, setThumbNail] = useState();
+  const [thumbNailLink, setThumbNailLink] = useState();
+  const [thumbNailId, setThumbNailId] = useState();
+  const [promoVideoLink, setPromoVideoLink] = useState();
+  const [promoVideoId, setPromoVideoId] = useState();
   const [sections, setSections] = useState([]);
   const [addSection, setAddSection] = useState(false);
   const [newSectionName, setNewSectionName] = useState('');
 
-  const handleOnUpload = (error, result, widget) => {
+  const handleOnUploadThumbNail = (error, result, widget) => {
     if (error) {
       widget.close({
         quiet: true,
       });
       return;
     }
-    //setIsErrorVideo(false);
-    setThumbNail(result?.info?.secure_url);
+    setThumbNailId(result?.info?.public_id);
+    setThumbNailLink(result?.info?.secure_url);
   }
 
   const deleteThumbNail = () => {
-    setThumbNail();
+    setThumbNailId();
+    setThumbNailLink();
+  }
+
+  const handleOnUploadPromoVideo = (error, result, widget) => {
+    if (error) {
+      widget.close({
+        quiet: true,
+      });
+      return;
+    }
+    setPromoVideoId(result?.info?.public_id);
+    setPromoVideoLink(result?.info?.secure_url);
+  }
+
+  const deletePromoVideo = () => {
+    setPromoVideoId();
+    setPromoVideoLink();
   }
 
   const quillRef = useRef(); // Create a ref
@@ -475,7 +497,8 @@ const CreateCourse = () => {
       title: title, 
       introduction: introduction, 
       description: description, 
-      thumbNail: thumbNail,
+      thumbNail: thumbNailLink,
+      promotionalVideo: promoVideoLink,
       sections: sections
     }
     console.log(data);
@@ -528,28 +551,91 @@ const CreateCourse = () => {
                   </div>
                   <div className="form-group mb-5">
                     <Heading1>Course image</Heading1>
-                    {thumbNail ? <div className="flex justify-between border border-black p-3 mb-2 items-center">
-                    <div><IconBrandYoutubeFilled className="mr-2" /></div>
-                      <input 
-                        type="text"
-                        maxLength={120} 
-                        defaultValue={thumbNail} 
-                        className="focus:outline-none focus:ring-0 w-full" />
-                      <span className="flex flex-row">      
-                        <Link target={"_blank"} to={thumbNail}>       
-                          <button 
-                            className="flex flex-row p-1 px-2 bg-[#241d6c] rounded-md mr-2">
-                              <IconEye stroke={2} color="white" className="mr-2"/>
-                              <p className="font-bold text-white">Preview</p>
-                          </button>
+                    <div className="container flex flex-row justify-between">
+                      <div className="function">
+                        <p className="text mb-2 max-w-xl font-light mr-10">Upload your course image here. It must meet our course image quality standards to be accepted. Important guidelines: 450x250 pixels; .jpg or .png. No text on image.</p>
+                        {thumbNailLink ? 
+                        <div>
+                          <span className="flex flex-row">
+                            <button className="flex flex-row bg-[#331868] p-2 rounded-md mr-2" onClick={deleteThumbNail}>
+                              <IconTrash stroke={2} color="white"/>
+                              <p className="text-white">Crop Image</p>
+                            </button>
+                            <button className="flex flex-row bg-[#e95a5a] p-2 rounded-md" onClick={deleteThumbNail}>
+                              <IconTrash stroke={2} color="white"/>
+                              <p className="text-white">Delete Image</p>
+                            </button>
+                          </span>
+                        </div> : <UploadWidget onUpload={handleOnUploadThumbNail} type="image" />}
+                      </div>
+                      <div className="media">
+                        {thumbNailId ? (
+                        <Link target={"_blank"} to={thumbNailLink}>  
+                          <Image
+                            cloudName={process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}
+                            publicId={thumbNailId}
+                            width="450"
+                            height="250"
+                            crop="thumb"
+                            className='border'
+                          />
                         </Link>
-                        <button className="bg-[#e95a5a] p-1 rounded-md" onClick={deleteThumbNail}>
-                          <IconTrash stroke={2} color="white"/>
-                        </button>
-                      </span>
-                    </div> : <UploadWidget onUpload={handleOnUpload} type="image" />}
+                      ): ( 
+                        <Image
+                          cloudName={process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}
+                          publicId="multiMediaUpload"
+                          width="450"
+                          crop="fit"
+                          className='border'
+                        />
+                      )}
+                      </div>
+                    </div>
                   </div>
-                </div>
+                  <div className="form-group mb-5">
+                    <Heading1>Promotional Video</Heading1>
+                      <div className="container flex flex-row justify-between">
+                        <div className="function">
+                          <p className="text mb-2 max-w-xl font-light mr-10">Your promo video is a quick and compelling way for students to preview what they’ll learn in your course. Students considering the course are more likely to enroll if your promo video is well-made.</p>
+                          {promoVideoLink ? 
+                          <div>
+                            <span className="flex flex-row">
+                              <button className="flex flex-row bg-[#331868] p-2 rounded-md mr-2">
+                                <IconTrash stroke={2} color="white"/>
+                                <p className="text-white">Crop Video</p>
+                              </button>
+                              <button className="flex flex-row bg-[#e95a5a] p-2 rounded-md" onClick={deletePromoVideo}>
+                                <IconTrash stroke={2} color="white"/>
+                                <p className="text-white">Delete Video</p>
+                              </button>
+                            </span>
+                          </div> : <UploadWidget onUpload={handleOnUploadPromoVideo} type="video" />}
+                        </div>
+                        <div className="media">
+                          {promoVideoId ? (
+                          <Link target={"_blank"} to={promoVideoLink}>  
+                            <Video
+                              cloudName={process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}
+                              publicId={promoVideoId}
+                              width="450"
+                              crop="fill"
+                              controls
+                              className="border"
+                            />
+                          </Link>
+                        ): ( 
+                          <Image
+                            cloudName={process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}
+                            publicId="multiMediaUpload"
+                            width="450"
+                            crop="fit"
+                            className='border'
+                          />
+                        )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
               <div className="flex flex-row items-center justify-between">
                 <div>
                   <p className="text-3xl font-bold text-[#af39d3]">Course Content</p>

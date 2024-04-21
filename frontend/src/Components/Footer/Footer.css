@@ -2,35 +2,28 @@
     width: 100px;
 }
 
-@media not all and (min-width: 960px) {
+@media not all and (min-width: 1000px) {
     .detail .middle {
         margin-left: 140px !important;
         margin-right: 140px !important;
     }
 }
 
-@media not all and (min-width: 888px) {
+@media not all and (min-width: 920px) {
     .detail .middle {
         margin-left: 120px !important;
         margin-right: 120px !important;
     }
 }
 
-@media not all and (min-width: 848px) {
-    .detail .middle {
-        margin-left: 80px !important;
-        margin-right: 80px !important;
-    }
-}
-
-@media not all and (min-width: 769px) {
+@media not all and (min-width: 880px) {
     .general .detail .middle {
         margin-left: 40px !important;
         margin-right: 40px !important;
     }
 }
 
-@media not all and (min-width: 700px) {
+@media not all and (min-width: 720px) {
     .general {
         flex-direction: column !important;
     }
