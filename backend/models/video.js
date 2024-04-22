@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const videoSchema = mongoose.Schema({
     secureURL: {type: String},
-    publicURL: {type: String},
+    publicID: {type: String},
     type: {type: String},
     duration: {type: Number},
 });

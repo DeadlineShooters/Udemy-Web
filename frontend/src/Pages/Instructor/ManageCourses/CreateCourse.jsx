@@ -21,13 +21,17 @@ import './CreateCourse.css'
 const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionUpdate, onLectureUpdate, onLectureDelete, onSectionDelete}) => {
   const [addLecture, setAddLecute] = useState(false);
   const [newLectureName, setNewLectureName] = useState('');
-  const [url, updateUrl] = useState();
+  const [videoName, updateVideoName] = useState('');
+  const [editVideoName, setEditVideoName] = useState('');
+  const [secureURL, updateSecureUrl] = useState();
+  const [editSecureURL, setEditSecureURL] = useState();
+  const [publicID, updatePublicID] = useState();
+  const [editpublicID, setEditPublicID] = useState();
   const [error, updateError] = useState();
   const [isEditLecture, setIsEditLecture] = useState(false);
   const [oldLectureName, setOldLectureName] = useState("");
   const [oldLectureVideo, setOldLectureVideo] = useState("");
   const [editLectureName, setEditLectureName] = useState("");
-  const [editUrl, setEditUrl] = useState();
   const [deleteLectureData, setDeleteLectureData] = useState();
   const [showSectionModal, setShowSectionModal] = useState(false); // State for section modal
   const [showLectureModal, setShowLectureModal] = useState(false); // State for lecture modal
@@ -45,7 +49,9 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
       return;
     }
     setIsErrorVideo(false);
-    updateUrl(result?.info?.secure_url);
+    updateVideoName(result?.info?.original_filename);
+    updatePublicID(result?.info?.public_id);
+    updateSecureUrl(result?.info?.secure_url);
   }
 
   const handleOnEditUpload = (error, result, widget) => {
@@ -57,7 +63,8 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
       return;
     }
     setIsErrorUpdateVideo(false);
-    setEditUrl(result?.info?.secure_url);
+    setEditPublicID(result?.info?.public_id);
+    setEditSecureURL(result?.info?.secure_url);
   }
 
   const toggleAddLecture = () => {
@@ -74,16 +81,16 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
     } else {
       setIsErrorName(false);
     }
-    if (!url) {
+    if (!secureURL) {
       setIsErrorVideo(true);
     } else {
       setIsErrorVideo(false);
     }
-    if (newLectureName.trim() !== '' && url) {
-      onLectureCreate(sectionName, newLectureName, url);
+    if (newLectureName.trim() !== '' && secureURL) {
+      onLectureCreate(sectionName, newLectureName, secureURL, publicID);
       setAddLecute(!addLecture);
       setNewLectureName('');
-      updateUrl();
+      updateSecureUrl();
       setIsErrorName(false);
       setIsErrorVideo(false);
     }
@@ -105,9 +112,11 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
 
   const DeleteSelectVideo = () => {
     if (!isEditLecture) {
-      updateUrl();
+      updateSecureUrl();
+      updatePublicID();
     } else {
-      setEditUrl();
+      setEditSecureURL();
+      setEditPublicID();
     }
     //Handle delete image from cloudinary
   }
@@ -116,9 +125,10 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
     console.log("lecture edit", lecture);
     setIsEditLecture(!isEditLecture);
     setOldLectureName(lecture.name);
-    setOldLectureVideo(lecture.video);
+    setOldLectureVideo(lecture.video.secureURL);
     setEditLectureName(lecture.name);
-    setEditUrl(lecture.video);
+    setEditSecureURL(lecture.video.secureURL);
+    setEditPublicID(lecture.video.publicID);
   }
   const handleEditLectureName = (e) => {
     setEditLectureName(e.target.value);
@@ -129,16 +139,17 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
     } else {
       setIsErrorUpdateName(false);
     }
-    if (!editUrl) {
+    if (!editSecureURL) {
       setIsErrorUpdateVideo(true);
     } else {
       setIsErrorUpdateVideo(false);
     }
-    if (editLectureName.trim() !== '' && editUrl) {
-      onLectureUpdate(sectionName, editLectureName, editUrl, oldLectureName, oldLectureVideo);
+    if (editLectureName.trim() !== '' && editSecureURL) {
+      onLectureUpdate(sectionName, editLectureName, editSecureURL, editpublicID, oldLectureName, oldLectureVideo);
       setIsEditLecture(false);
       setEditLectureName("");
-      setEditUrl();
+      setEditSecureURL();
+      setEditPublicID();
       setIsErrorUpdateName(false);
       setIsErrorUpdateVideo(false);
     }
@@ -228,15 +239,15 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
           <span>{120 - newLectureName.length}</span>
         </div>
         {isErrorName && <div className="text-[#d44343] font-bold my-2">OOPS! You need to input the lecture's name</div>}
-        {url ? <div className="flex justify-between border border-black p-3 mb-2 items-center">
+        {videoName ? <div className="flex justify-between border border-black p-3 mb-2 items-center">
           <div><IconBrandYoutubeFilled className="mr-2" /></div>
           <input 
             type="text"
             maxLength={120} 
-            defaultValue={url} 
+            defaultValue={videoName} 
             className="focus:outline-none focus:ring-0 w-full" />
           <span className="flex flex-row">      
-            <Link target={"_blank"} to={url}>       
+            <Link target={"_blank"} to={secureURL}>       
               <button 
                 className="flex flex-row p-1 px-2 bg-[#241d6c] rounded-md mr-2">
                   <IconEye stroke={2} color="white" className="mr-2"/>
@@ -275,15 +286,15 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
           <span>{120 - editLectureName.length}</span>
         </div>
         {isErrorUpdateName && <div className="text-[#d44343] font-bold my-2">OOPS! You need to input the lecture's name</div>}
-        {editUrl ? <div className="flex justify-between border border-black p-3 mb-2 items-center">
+        {editSecureURL ? <div className="flex justify-between border border-black p-3 mb-2 items-center">
           <div><IconBrandYoutubeFilled className="mr-2" /></div>
           <input 
             type="text"
             maxLength={120} 
-            defaultValue={editUrl} 
+            defaultValue={editSecureURL} 
             className="focus:outline-none focus:ring-0 w-full"/>
           <span className="flex flex-row">      
-            <Link target={"_blank"} to={editUrl}>       
+            <Link target={"_blank"} to={editSecureURL}>       
               <button 
                 className="flex flex-row p-1 px-2 bg-[#241d6c] rounded-md mr-2">
                   <IconEye stroke={2} color="white" className="mr-2"/>
@@ -326,9 +337,9 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
                 </div>
                 <div className="flex flex-col">
                   <p className="w-full line-clamp-2">Lecture {index + 1}: {lecture.name}</p>
-                  <Link to={lecture.video} target="_blank">
+                  <Link to={lecture.video.secureURL} target="_blank">
                     <p className="text-gray-600 text-sm">
-                      Video
+                      Video: {videoName}
                     </p>
                   </Link>
                 </div>
@@ -369,6 +380,7 @@ const CreateCourse = () => {
   const [thumbNailId, setThumbNailId] = useState();
   const [promoVideoLink, setPromoVideoLink] = useState();
   const [promoVideoId, setPromoVideoId] = useState();
+  const [promoVideoDuration, setPromoVideoDuration] = useState();
   const [price, setPrice] = useState();
   const [sections, setSections] = useState([]);
   const [addSection, setAddSection] = useState(false);
@@ -397,6 +409,7 @@ const CreateCourse = () => {
       });
       return;
     }
+    setPromoVideoDuration(result?.info?.duration);
     setPromoVideoId(result?.info?.public_id);
     setPromoVideoLink(result?.info?.secure_url);
   }
@@ -434,12 +447,12 @@ const CreateCourse = () => {
     }
   };
 
-  const handleLectureCreate = (sectionName, lectureName, lectureVideo) => {
+  const handleLectureCreate = (sectionName, lectureName, lectureVideoLink, lectureVideoID) => {
     const updatedSections = sections.map((section) => {
       if (section.name === sectionName) {
         return { 
           ...section, 
-          lectures: [...section.lectures, { name: lectureName, video: lectureVideo }] 
+          lectures: [...section.lectures, { name: lectureName, video: {secureURL: lectureVideoLink, publicID: lectureVideoID}}] 
         };
       }
       return section;
@@ -447,12 +460,12 @@ const CreateCourse = () => {
     setSections(updatedSections);
   };
 
-  const handleLectureUpdate = (sectionName, lectureName, lectureVideo, oldLectureName, oldLectureVideo) => {
+  const handleLectureUpdate = (sectionName, lectureName, lectureVideoLink, lectureVideoID, oldLectureName, oldLectureVideo) => {
     const updatedSections = sections.map((section) => {
       if (section.name === sectionName) {
         let updatedLectures = section.lectures;
         const lectureIndex = updatedLectures.findIndex(lecture => lecture.name === oldLectureName);
-        updatedLectures[lectureIndex] = { name: lectureName, video: lectureVideo };
+        updatedLectures[lectureIndex] = { name: lectureName, video: {secureURL: lectureVideoLink, publicID: lectureVideoID} };
         return { ...section, lectures: updatedLectures };
       }
       return section;
@@ -499,7 +512,7 @@ const CreateCourse = () => {
       introduction: introduction, 
       description: description, 
       thumbNail: {secureURL: thumbNailLink, publicURL: thumbNailId},
-      promotionalVideo: {secureURL: promoVideoLink, publicURL: promoVideoId},
+      promotionalVideo: {secureURL: promoVideoLink, publicURL: promoVideoId, duration: promoVideoDuration},
       price: price,
       sections: sections
     }
