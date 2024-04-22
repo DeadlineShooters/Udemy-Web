@@ -369,6 +369,7 @@ const CreateCourse = () => {
   const [thumbNailId, setThumbNailId] = useState();
   const [promoVideoLink, setPromoVideoLink] = useState();
   const [promoVideoId, setPromoVideoId] = useState();
+  const [price, setPrice] = useState();
   const [sections, setSections] = useState([]);
   const [addSection, setAddSection] = useState(false);
   const [newSectionName, setNewSectionName] = useState('');
@@ -497,8 +498,9 @@ const CreateCourse = () => {
       title: title, 
       introduction: introduction, 
       description: description, 
-      thumbNail: thumbNailLink,
-      promotionalVideo: promoVideoLink,
+      thumbNail: {secureURL: thumbNailLink, publicURL: thumbNailId},
+      promotionalVideo: {secureURL: promoVideoLink, publicURL: promoVideoId},
+      price: price,
       sections: sections
     }
     console.log(data);
@@ -635,6 +637,35 @@ const CreateCourse = () => {
                         </div>
                       </div>
                     </div>
+                    <div className="form-group mb-5">
+                    <Heading1>Course Price</Heading1>
+                      <div className="container justify-between">
+                        <div className="function">
+                          <p className="text mb-2 max-w-xl font-light mr-10">Please select the currency and the price tier for your course. If you’d like to offer your course for free, it must have a total video length of less than 2 hours. Also, courses with practice tests can not be free.</p>
+                          <div className="price flex flex-row">
+                            <div className="currency flex flex-col mr-4">
+                              <span className='mr-2 font-bold'>Currency</span>
+                              <select className=" p-3 w-full text-md hover:bg-gray-200 border border-black rounded-lg">
+                                <option value="all">USD</option>
+                              </select>
+                            </div>
+                            <div className="flex flex-col">
+                              <span className='mr-2 font-bold'>Price Tier</span>
+                              <select className="tier p-3 w-full text-md hover:bg-gray-200 border border-black rounded-lg" onChange={(e) => setPrice(e.target.value)}>
+                                <option value="free">Free</option>
+                                <option value="19.99">$19.99 (Tier 1)</option>
+                                <option value="29.99">$29.99 (Tier 2)</option>
+                                <option value="54.99">$54.99 (Tier 3)</option>
+                                <option value="79.99">$79.99 (Tier 4)</option>
+                                <option value="109.99">$109.99 (Tier 5)</option>
+                                <option value="149.99">$149.99 (Tier 6)</option>
+                                <option value="199.99">$199.99 (Tier 7)</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
               <div className="flex flex-row items-center justify-between">
                 <div>
@@ -655,7 +686,8 @@ const CreateCourse = () => {
                     <span className="font-bold text-base normal-case">
                       Add
                     </span>
-                  </Button></div>
+                  </Button>
+                </div>
               </div>
               <div className="mt-6 border-t-2">
                 <div className="form-group mb-5">
