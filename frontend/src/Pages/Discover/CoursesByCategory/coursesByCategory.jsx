@@ -370,7 +370,7 @@ const CoursesByCategory = () => {
 							{filterCourses &&
 								filterCourses.map((course) => (
 									<div className='flex gap-4 pb-8 pt-4 '>
-										<img className='w-24 h-24 object-cover object-center md:w-60 md:h-fit' src={course.thumbNail.publicURL} alt='' />
+										<img className='w-24 h-24 object-cover object-center md:w-60 md:h-fit' src={course.thumbNail.secureURL} alt='' />
 										<div className='pr-24 relative flex flex-col gap-1 w-full '>
 											<h3 class='font-bold text-gray-900 line-clamp-2 leading-tight'>{course.name}</h3>
 											<span class='text-sm text-gray-700 font-medium'>{course.introduction}</span>

@@ -18,12 +18,12 @@ import VideoModal from "../../../Components/CourseManagement/VideoModal";
 import DynamicInput from "../../../Components/CourseManagement/DynamicInput";
 import { Image, Video } from 'cloudinary-react';
 import axios from 'axios';
-import './CreateCourse.css'
-import secureLocalStorage from "react-secure-storage";
+import './CreateCourse.css';
+import { useAuth } from '../../../AuthContextProvider.jsx';
+import { useForm } from 'react-hook-form';
 
 const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionUpdate, onLectureUpdate, onLectureDelete, onSectionDelete}) => {
   const [addLecture, setAddLecute] = useState(false);
-
   const [newLectureName, setNewLectureName] = useState('');
   const [videoName, setVideoName] = useState('');
   const [secureURL, setSecureUrl] = useState();
@@ -140,7 +140,6 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
   }
 
   const EditLecture = (lecture) => {
-    console.log("lecture edit", lecture);
     setIsEditLecture(!isEditLecture);
     setOldLectureName(lecture.name);
     setOldLectureVideo(lecture.video.secureURL);
@@ -409,6 +408,7 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
 };
 
 const CreateCourse = () => {
+  const {userData} = useAuth();
   const [savedCourse, setSavedCourse] = useState();
   useEffect(() => {
     const getSavedCourse = () => {
@@ -425,10 +425,13 @@ const CreateCourse = () => {
   //   preIntroduction: savedData.introduction ? savedData.introduction : "",
   // }
 
+  /* Fetch categories from the system */
+  const [categories, setCategories] = useState();
 
   const [title, setTitle] = useState("");
   const [introduction, setIntroduction] = useState("");
   const [description, setDescription] = useState("");
+  const [courseCat, setCourseCat] = useState("");
   const [thumbNail, setThumbNail] = useState({ secureURL: '', publicID: '' });
   const [promoVideoLink, setPromoVideoLink] = useState();
   const [promoVideoId, setPromoVideoId] = useState();
@@ -436,8 +439,32 @@ const CreateCourse = () => {
   const [price, setPrice] = useState();
   const [sections, setSections] = useState([]);
   const [totalLength, setTotalLength] = useState();
+  const [totalLecture, setTotalLecture] = useState();
   const [addSection, setAddSection] = useState(false);
   const [newSectionName, setNewSectionName] = useState('');
+
+  //Track any changes
+  const [fieldChanged, setFieldChanged] = useState(false);
+  const [showInformModal, setShowInformModal] = useState(false); // State for section modal
+
+
+  useEffect(() => {
+    const isFormChanged = title !== "" || introduction !== "" || description !== ""
+      setFieldChanged(isFormChanged);
+  }, [title, introduction, description, thumbNail, promoVideoLink, promoVideoId, promoVideoDuration, price, sections]);
+
+  useEffect(() => {
+		axios
+			.get('http://localhost:5000/courses/categories')
+			.then((response) => {
+				if (response.data.success) {
+					setCategories(response.data.categories);
+				}
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+			});
+	}, []);
 
   const handleOnUploadThumbNail = (error, result, widget) => {
     if (error) {
@@ -472,6 +499,7 @@ const CreateCourse = () => {
   const deletePromoVideo = () => {
     setPromoVideoId();
     setPromoVideoLink();
+    setPromoVideoDuration();
   }
 
   const quillRef = useRef(); // Create a ref
@@ -480,10 +508,22 @@ const CreateCourse = () => {
       quillRef.current.getEditor().root.dataset.placeholder = "Insert your course description";
     }
   }, []);
+
+  const checkUpdateField = () => {
+    if (fieldChanged) {
+      setShowInformModal(true);
+    }
+    else {
+      navigate("/instructor/courses");
+    }
+  }
+
   const navigate = useNavigate();
+
   const goToCourses = () => {
     navigate("/instructor/courses");
   };
+
   const onSave = () => {};
 
   const toggleAddSection = () => {
@@ -572,13 +612,16 @@ const CreateCourse = () => {
 
   useEffect(() => {
     const calculateCourseLength = () => {
-      let totalLength = 0;
+      let totalLecture = 0;
+      let totalLength = 0; // count duration in second
       sections.forEach((section) => {
         section.lectures.forEach((lecture) => {
-          // Add duration of each lecture to totalLength
-          totalLength += lecture.video.duration;
+          totalLecture += 1; // Add quantity of lecture of the section of the Course content
+          totalLength += lecture.video.duration; // Add duration of each lecture to totalLength
+          totalLength = Math.round(totalLength);
         });
       });
+      setTotalLecture(totalLecture);
       setTotalLength(totalLength);
     };
     const saveTempData = () => {
@@ -591,6 +634,7 @@ const CreateCourse = () => {
         price: price,
         sections: sections,
         totalSection: sections.length,
+        totalLecture: totalLecture,
         totalLength: totalLength,
       };
       localStorage.setItem('tempCourseData', JSON.stringify(data));
@@ -601,6 +645,7 @@ const CreateCourse = () => {
 
   const handleCreateCourse = async () => {
     const data = {
+      category: courseCat,
       title: title, 
       introduction: introduction, 
       description: description, 
@@ -609,7 +654,9 @@ const CreateCourse = () => {
       price: price,
       sections: sections,
       totalSection: sections.length,
+      totalLecture: totalLecture,
       totalLength: totalLength,
+      instructor: userData.instructor,
     }
     console.log(data);
     // try { 
@@ -617,9 +664,7 @@ const CreateCourse = () => {
     //   if (response.status === 200) {
 
     //     //After creating course, reset all field
-    //     setDescription('');
-    //     setIntroduction('');
-    //     setThumbNailLink('');
+    //     navigate("/instructor/courses", {replace: true});
     //     console.log(response.data); 
     //   }
     // } catch (error) {
@@ -630,10 +675,18 @@ const CreateCourse = () => {
     <div>
       <header className="bg-gray-900 py-5 px-8 border-b border-gray-200 flex gap-6 items-center justify-between">
         <div className="flex gap-6 items-center">
-            <button onClick={goToCourses}>
-            <FontAwesomeIcon icon={faChevronLeft} color="white" />
+            <button className="flex flex-row items-center" onClick={() => checkUpdateField()}>
+              <FontAwesomeIcon icon={faChevronLeft} color="white" className="mr-4" />
+              <span className="text-white hidden sm:block">Back to courses</span>
             </button>
-            <span className="text-white hidden sm:block">Back to courses</span>
+            <Modal 
+              showModal={showInformModal} 
+              setShowModal={setShowInformModal}
+              title={"Cancel Creating?"}
+              type={"alert"}
+              description={`You have some changes on the course creating draft. Any entered information will be deleted`}
+              handle={goToCourses}
+              action={"Go to Dashboard"}/>
         </div>
         <ButtonDefault text={"Save"} handleClick={onSave} />
       </header>
@@ -644,6 +697,24 @@ const CreateCourse = () => {
               <p className="text-lg font-md text-[#7b7b7b]">Course landing page & Instructor profile</p>
               <div className="my-6 border-y-2">
                 <div className="mt-6 "></div>
+                <div className="form-group mb-5">
+                  <Heading1>Course Category</Heading1>
+                    <div className="container justify-between">
+                      <div className="function">
+                        <div className="flex flex-col">
+                          <select className=" p-3 text-md border border-black" onChange={(e) => setCourseCat(e.target.value)}>
+                            <option value="none" disabled selected>Choose a category</option>
+                            {categories && 
+                              categories.map((category, index) => {
+                                return (
+                                  <option key={index} value={category._id}>{category.name}</option>
+                                )
+                            })}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <div className="form-group mb-5">
                     <Heading1>Course title</Heading1>
                     <div className="flex justify-between border border-black p-3">
@@ -652,7 +723,8 @@ const CreateCourse = () => {
                         placeholder="Input the course's title" 
                         maxLength={120} 
                         className="focus:outline-none focus:ring-0 w-full"
-                        onChange={(e) => setTitle(e.target.value)} />
+                        onChange={(e) => setTitle(e.target.value)}
+                        required/>
                       <span>{120 - title.length}</span>
                     </div>
                   </div>
@@ -664,7 +736,8 @@ const CreateCourse = () => {
                         placeholder="Input the course's introduction" 
                         maxLength={120} 
                         className="focus:outline-none focus:ring-0 w-full"
-                        onChange={(e) => setIntroduction(e.target.value)} />
+                        onChange={(e) => setIntroduction(e.target.value)}
+                        required />
                       <span>{120 - introduction.length}</span>
                     </div>
                   </div>
@@ -865,9 +938,6 @@ const CreateCourse = () => {
                 </div>
               </div>
               <div className="flex flex-row justify-end">
-                <Button color="white" className="rounded-none hover:bg-gray-100 border mr-2" style={{height: "48px"}} onClick={() => navigate("/instructor/course/create", {replace: true})}>
-                  <span className="font-bold text-base normal-case">Cancel</span>
-                </Button>
                 <Button color="purple" className="rounded-none hover:bg-violet-800" style={{height: "48px"}} onClick={() => handleCreateCourse()}>
                   <span className="font-bold text-base normal-case">Create Course</span>
                 </Button>

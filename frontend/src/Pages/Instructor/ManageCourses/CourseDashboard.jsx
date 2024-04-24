@@ -210,7 +210,7 @@ const CourseDashBoard = () => {
                     </div>
                   </div>
                   <button className="edit-cover absolute top-0 left-0 w-full h-full bg-white opacity-0 hover:opacity-90 flex items-center justify-center hover:cursor-pointer">
-                    <a href="/instructor/course/123/manage/curriculum"><p className="font-bold text-purple-500">Edit / manage course</p></a>
+                    <a href="/instructor/course/123/manage/basics"><p className="font-bold text-purple-500">Edit / manage course</p></a>
                   </button>
                 </div>
               </div>

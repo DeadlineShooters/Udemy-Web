@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import './MainNav.css';
 
 function MainNav() {
   // get course id from route params
@@ -7,6 +8,18 @@ function MainNav() {
   return (
     <nav>
       <ul className="flex flex-col gap-3">
+      <li>
+          <NavLink
+            to={`/instructor/course/${courseId}/manage/basics`}
+            className={({ isActive }) =>
+              isActive
+                ? "flex items-center gap-3 text-gray-800 bg-gray-50 border-l-4 border-black  font-medium py-3 px-6 transition-colors duration-300 rounded"
+                : "flex items-center gap-3 text-gray-600 font-medium py-3 px-6 transition-colors duration-300 hover:text-gray-800 hover:bg-gray-50 rounded"
+            }
+          >
+            <span>Landing Page</span>
+          </NavLink>
+        </li>
         <li>
           <NavLink
             to={`/instructor/course/${courseId}/manage/curriculum`}
@@ -17,18 +30,6 @@ function MainNav() {
             }
           >
             <span>Curriculum</span>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={`/instructor/course/${courseId}/manage/basics`}
-            className={({ isActive }) =>
-              isActive
-                ? "flex items-center gap-3 text-gray-800 bg-gray-50 border-l-4 border-black  font-medium py-3 px-6 transition-colors duration-300 rounded"
-                : "flex items-center gap-3 text-gray-600 font-medium py-3 px-6 transition-colors duration-300 hover:text-gray-800 hover:bg-gray-50 rounded"
-            }
-          >
-            <span>Course landing page</span>
           </NavLink>
         </li>
       </ul>

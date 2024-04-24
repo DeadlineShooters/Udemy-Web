@@ -13,18 +13,14 @@ export const createCourse = async (req, res) => {
         newCourse.name = data.title;
         newCourse.introduction = data.introduction;
         newCourse.description = data.description;
+        newCourse.category = data.category;
         newCourse.price = data.price;
         newCourse.sectionList = [];
         newCourse.totalSection = data.totalSection;
+        newCourse.totalLecture = data.totalLecture;
         newCourse.totalLength = data.totalLength;
-        
-        const newThumbNail = new Image({
-            secureURL : data.thumbNail.secureURL,
-            publicURl : data.thumbNail.publicURL,
-
-        });
-        const saveThumbNail = await newThumbNail.save();
-        newCourse.thumbNail = saveThumbNail._id;
+        newCourse.thumbNail = data.thumbNail;
+        newCourse.instructor = data.instructor;
 
         const newPromotionalVideo = new Video({
             secureURL : data.promotionalVideo.secureURL,
