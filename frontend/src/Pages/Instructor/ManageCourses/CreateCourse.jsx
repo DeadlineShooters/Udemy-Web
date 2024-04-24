@@ -19,6 +19,7 @@ import DynamicInput from "../../../Components/CourseManagement/DynamicInput";
 import { Image, Video } from 'cloudinary-react';
 import axios from 'axios';
 import './CreateCourse.css'
+import secureLocalStorage from "react-secure-storage";
 
 const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionUpdate, onLectureUpdate, onLectureDelete, onSectionDelete}) => {
   const [addLecture, setAddLecute] = useState(false);
@@ -408,16 +409,33 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
 };
 
 const CreateCourse = () => {
+  const [savedCourse, setSavedCourse] = useState();
+  useEffect(() => {
+    const getSavedCourse = () => {
+      const tempData = localStorage.getItem("tempCourseData");
+      if (tempData) {
+        setSavedCourse(JSON.parse(tempData));
+      }
+    }
+    getSavedCourse();
+  }, [])
+  console.log(savedCourse);
+  // const predefineData = {
+  //   preTitle: savedData.title ? savedData.title : "",
+  //   preIntroduction: savedData.introduction ? savedData.introduction : "",
+  // }
+
+
   const [title, setTitle] = useState("");
   const [introduction, setIntroduction] = useState("");
   const [description, setDescription] = useState("");
-  const [thumbNailLink, setThumbNailLink] = useState();
-  const [thumbNailId, setThumbNailId] = useState();
+  const [thumbNail, setThumbNail] = useState({ secureURL: '', publicID: '' });
   const [promoVideoLink, setPromoVideoLink] = useState();
   const [promoVideoId, setPromoVideoId] = useState();
   const [promoVideoDuration, setPromoVideoDuration] = useState();
   const [price, setPrice] = useState();
   const [sections, setSections] = useState([]);
+  const [totalLength, setTotalLength] = useState();
   const [addSection, setAddSection] = useState(false);
   const [newSectionName, setNewSectionName] = useState('');
 
@@ -428,13 +446,15 @@ const CreateCourse = () => {
       });
       return;
     }
-    setThumbNailId(result?.info?.public_id);
-    setThumbNailLink(result?.info?.secure_url);
+    setThumbNail(prevState => ({
+      ...prevState, 
+      publicID: result?.info?.public_id, 
+      secureURL: result?.info?.secure_url
+    }));
   }
 
   const deleteThumbNail = () => {
-    setThumbNailId();
-    setThumbNailLink();
+    setThumbNail({ secureURL: '', publicID: '' });
   }
 
   const handleOnUploadPromoVideo = (error, result, widget) => {
@@ -541,25 +561,70 @@ const CreateCourse = () => {
     setSections(updatedSections);
   };
 
+  const NumToTime = (num) => { 
+    let hours = Math.floor(num / 3600);
+    let minutes = Math.floor((num - (hours * 3600)) / 60);
+    let seconds = Math.round((num - (hours * 3600) - (minutes * 60)));
+    return hours.toString().padStart(2, '0') + ':' + 
+           minutes.toString().padStart(2, '0') + ':' + 
+           seconds.toString().padStart(2, '0');
+  }
+
+  useEffect(() => {
+    const calculateCourseLength = () => {
+      let totalLength = 0;
+      sections.forEach((section) => {
+        section.lectures.forEach((lecture) => {
+          // Add duration of each lecture to totalLength
+          totalLength += lecture.video.duration;
+        });
+      });
+      setTotalLength(totalLength);
+    };
+    const saveTempData = () => {
+      const data = {
+        title: title, 
+        introduction: introduction, 
+        description: description, 
+        thumbNail: thumbNail,
+        promotionalVideo: {secureURL: promoVideoLink, publicURL: promoVideoId, duration: promoVideoDuration},
+        price: price,
+        sections: sections,
+        totalSection: sections.length,
+        totalLength: totalLength,
+      };
+      localStorage.setItem('tempCourseData', JSON.stringify(data));
+    }
+    calculateCourseLength();
+    saveTempData();
+  }, [title, introduction, description, thumbNail, promoVideoLink, promoVideoId, promoVideoDuration, price, sections]);
+
   const handleCreateCourse = async () => {
     const data = {
       title: title, 
       introduction: introduction, 
       description: description, 
-      thumbNail: {secureURL: thumbNailLink, publicURL: thumbNailId},
+      thumbNail: thumbNail,
       promotionalVideo: {secureURL: promoVideoLink, publicURL: promoVideoId, duration: promoVideoDuration},
       price: price,
-      sections: sections
+      sections: sections,
+      totalSection: sections.length,
+      totalLength: totalLength,
     }
     console.log(data);
-    try { 
-      const response = await axios.post("http://localhost:5000/instructor/create-course", {data})
-      if (response.status === 200) {
-        console.log(response.data); 
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    // try { 
+    //   const response = await axios.post("http://localhost:5000/instructor/create-course", {data})
+    //   if (response.status === 200) {
+
+    //     //After creating course, reset all field
+    //     setDescription('');
+    //     setIntroduction('');
+    //     setThumbNailLink('');
+    //     console.log(response.data); 
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
   return (
     <div>
@@ -612,7 +677,7 @@ const CreateCourse = () => {
                     <div className="container flex flex-row justify-between">
                       <div className="function">
                         <p className="text mb-2 max-w-xl font-light mr-10">Upload your course image here. It must meet our course image quality standards to be accepted. Important guidelines: 450x250 pixels; .jpg or .png. No text on image.</p>
-                        {thumbNailLink ? 
+                        {thumbNail.publicID ? 
                         <div>
                           <span className="flex flex-row">
                             <button className="flex flex-row bg-[#331868] p-2 rounded-md mr-2">
@@ -627,11 +692,11 @@ const CreateCourse = () => {
                         </div> : <UploadWidget onUpload={handleOnUploadThumbNail} object="image" />}
                       </div>
                       <div className="media">
-                        {thumbNailId ? (
-                        <Link target={"_blank"} to={thumbNailLink}>  
+                        {thumbNail.publicID ? (
+                        <Link target={"_blank"} to={thumbNail.secureURL}>  
                           <Image
                             cloudName={process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}
-                            publicId={thumbNailId}
+                            publicId={thumbNail.publicID}
                             width="450"
                             height="250"
                             crop="fill"
@@ -726,11 +791,14 @@ const CreateCourse = () => {
               <div className="flex flex-row items-center justify-between">
                 <div>
                   <p className="text-3xl font-bold text-[#af39d3]">Course Content</p>
-                  <p className="text-lg text-[#7b7b7b]">
-                    {sections.length === 0 && "No section"}
-                    {sections.length === 1 && "1 section"}
-                    {sections.length > 1 && `${sections.length} sections`}
-                  </p>
+                  <div className="courseContent flex flex-row items-center">
+                    <p className="sectionLength text-lg text-[#7b7b7b] mr-10">
+                      {sections.length === 0 && "No section"}
+                      {sections.length === 1 && "1 section"}
+                      {sections.length > 1 && `${sections.length} sections`}
+                    </p>
+                    <p className="totalLength text-lg text-[#7b7b7b]">{NumToTime(totalLength)}</p>
+                  </div>
                 </div>
                 <div className="flex flex-row">
                   <Button 

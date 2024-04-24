@@ -22,7 +22,13 @@
     }
 }
 
-@media not all and (min-width: 600px) {
+@media not all and (min-width: 768px) {
+    .courseContent .sectionLength {
+        margin-right: 10px !important;
+    }
+}
+
+@media not all and (min-width: 670px) {
     .mainContainer {
         padding-left: 0px !important;
         padding-right: 0px !important;

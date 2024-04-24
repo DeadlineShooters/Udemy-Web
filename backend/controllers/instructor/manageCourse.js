@@ -15,7 +15,9 @@ export const createCourse = async (req, res) => {
         newCourse.description = data.description;
         newCourse.price = data.price;
         newCourse.sectionList = [];
-
+        newCourse.totalSection = data.totalSection;
+        newCourse.totalLength = data.totalLength;
+        
         const newThumbNail = new Image({
             secureURL : data.thumbNail.secureURL,
             publicURl : data.thumbNail.publicURL,
