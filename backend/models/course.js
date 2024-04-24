@@ -19,7 +19,7 @@ const courseSchema = mongoose.Schema({
     totalSection: {type: Number},
     totalLength: {type: Number},
     rating: {type: Number},
-    thumbNail: {type: Object},
+    thumbNail: {type: Schema.Types.ObjectId, ref: "Image" },
     status: {type: Boolean},
     createDate: {type: Date, default: Date.now()},
 })

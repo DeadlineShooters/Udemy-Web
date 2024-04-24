@@ -9,7 +9,7 @@ import ButtonDefault from "../../../Components/CourseFeedback/ButtonDefault";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { IconPlus, IconEdit, IconTrash, 
         IconCheck, IconAlertCircleFilled, IconClipboardText, 
-        IconBrandYoutubeFilled, IconEye } from '@tabler/icons-react';
+        IconBrandYoutubeFilled, IconEye, IconCrop } from '@tabler/icons-react';
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UploadWidget from "./UploadWidget";
@@ -17,6 +17,7 @@ import Modal from "../../../Components/CourseManagement/Modal";
 import VideoModal from "../../../Components/CourseManagement/VideoModal";
 import DynamicInput from "../../../Components/CourseManagement/DynamicInput";
 import { Image, Video } from 'cloudinary-react';
+import axios from 'axios';
 import './CreateCourse.css'
 
 const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionUpdate, onLectureUpdate, onLectureDelete, onSectionDelete}) => {
@@ -49,7 +50,7 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
   const [isErrorUpdateName, setIsErrorUpdateName] = useState(false);
   const [isErrorUpdateVideo, setIsErrorUpdateVideo] = useState(false);
 
-  const handleOnUpload = (error, result, widget) => {
+  const handleOnUpload = (error, result, widget, type) => {
     if (error) {
       updateError(error);
       widget.close({
@@ -57,24 +58,21 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
       });
       return;
     }
-    setIsErrorVideo(false);
-    setVideoName(result?.info?.original_filename);
-    setPublicID(result?.info?.public_id);
-    setSecureUrl(result?.info?.secure_url);
-    setVideoDuration(result?.info?.duration);
-  }
-
-  const handleOnEditUpload = (error, result, widget) => {
-    if (error) {
-      updateError(error);
-      widget.close({
-        quiet: true,
-      });
-      return;
+    console.log(result);
+    if (type === "upload") {
+      setIsErrorVideo(false);
+      setVideoName(result?.info?.original_filename);
+      setPublicID(result?.info?.public_id);
+      setSecureUrl(result?.info?.secure_url);
+      setVideoDuration(result?.info?.duration);
     }
-    setIsErrorUpdateVideo(false);
-    setEditPublicID(result?.info?.public_id);
-    setEditSecureURL(result?.info?.secure_url);
+    if (type === "update") {
+      setIsErrorUpdateVideo(false);
+      setEditVideoName(result?.info?.original_filename);
+      setEditPublicID(result?.info?.public_id);
+      setEditSecureURL(result?.info?.secure_url);
+      setEditVideoDuration(result?.info?.duration);
+    }
   }
 
   const toggleAddLecture = () => {
@@ -234,7 +232,7 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
           </button>
           <div>
             <button id="section" className="bg-[#e95a5a] p-1 rounded-md" onClick={() => setShowSectionModal(true)}>
-                <IconTrash stroke={2} color="white" />
+              <IconTrash stroke={2} color="white" />
             </button>
             <Modal 
               showModal={showSectionModal} 
@@ -271,19 +269,21 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
             className="focus:outline-none focus:ring-0 w-full" />
           <span className="flex flex-row">      
             <button 
-              className="flex flex-row p-1 px-2 bg-[#241d6c] rounded-md mr-2" onClick={() => setShowVideo(true)}>
+              className="flex flex-row p-1 px-2 bg-[#241d6c] rounded-md mr-2" 
+              onClick={() => setShowVideo(true)}>
                 <IconEye stroke={2} color="white" className="mr-2"/>
                 <p className="font-bold text-white">Preview</p>
             </button>
+            <VideoModal 
+              showVideoModal={showVideo} 
+              setShowVideoModal={setShowVideo}
+              VideoName={videoName}
+              VideoSrc={secureURL}/>
             <button className="bg-[#e95a5a] p-1 rounded-md" onClick={DeleteSelectVideo}>
               <IconTrash stroke={2} color="white"/>
             </button>
           </span>
-          <VideoModal 
-            showVideoModal={showVideo} 
-            setShowVideoModal={setShowVideo}
-            VideoSrc={secureURL}/>
-        </div> : <UploadWidget onUpload={handleOnUpload} type="video" />}
+        </div> : <UploadWidget onUpload={handleOnUpload} type="upload" object="video"/>}
         {isErrorVideo && <div className="text-[#d44343] font-bold my-2">OOPS! You need to upload the lecture's video</div>}
         <Button 
           color="black" 
@@ -317,20 +317,25 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
             type="text"
             maxLength={120} 
             defaultValue={editVideoName} 
-            className="focus:outline-none focus:ring-0 w-full"/>
+            className="focus:outline-none focus:ring-0 w-full"
+            disabled/>
           <span className="flex flex-row">      
-            <Link target={"_blank"} to={editSecureURL}>       
-              <button 
-                className="flex flex-row p-1 px-2 bg-[#241d6c] rounded-md mr-2">
-                  <IconEye stroke={2} color="white" className="mr-2"/>
-                  <p className="font-bold text-white">Preview</p>
-              </button>
-            </Link>
+          <button 
+              className="flex flex-row p-1 px-2 bg-[#241d6c] rounded-md mr-2" 
+              onClick={() => setShowVideo(true)}>
+                <IconEye stroke={2} color="white" className="mr-2"/>
+                <p className="font-bold text-white">Preview</p>
+            </button>
+            <VideoModal 
+              showVideoModal={showVideo} 
+              setShowVideoModal={setShowVideo}
+              VideoName={editVideoName}
+              VideoSrc={editSecureURL}/>
             <button className="bg-[#e95a5a] p-1 rounded-md" onClick={DeleteSelectVideo}>
               <IconTrash stroke={2} color="white"/>
             </button>
           </span>
-        </div> : <UploadWidget onUpload={handleOnEditUpload} type="video" />}
+        </div> : <UploadWidget onUpload={handleOnUpload} type="update" object="video"/>}
         {isErrorUpdateVideo && <div className="text-[#d44343] font-bold my-2">OOPS! You need to upload the lecture's video</div>}
         <Button 
           color="black" 
@@ -361,12 +366,17 @@ const Section = ({ sectionName, sectionId, lectures, onLectureCreate, onSectionU
                   <IconBrandYoutubeFilled className="w-[40px] h-[40px] mr-2" color="#52214f"/>
                 </div>
                 <div className="flex flex-col">
-                  <p className="w-full line-clamp-2">Lecture {index + 1}: {lecture.name}</p>
-                  <Link to={lecture.video.secureURL} target="_blank">
+                  <p className="flex w-full line-clamp-2">Lecture {index + 1}: {lecture.name}</p>
+                  <button className="flex" onClick={()=>setShowVideo(true)}>
                     <p className="text-gray-600 text-sm">
                       Video: {lecture.video.name}
                     </p>
-                  </Link>
+                  </button>
+                  <VideoModal 
+                    showVideoModal={showVideo} 
+                    setShowVideoModal={setShowVideo}
+                    VideoName={videoName}
+                    VideoSrc={lecture.video.secureURL}/>
                 </div>
               </div>            
               <div className="flex flex-row items-center">
@@ -531,7 +541,7 @@ const CreateCourse = () => {
     setSections(updatedSections);
   };
 
-  const handleCreateCourse = () => {
+  const handleCreateCourse = async () => {
     const data = {
       title: title, 
       introduction: introduction, 
@@ -542,6 +552,14 @@ const CreateCourse = () => {
       sections: sections
     }
     console.log(data);
+    try { 
+      const response = await axios.post("http://localhost:5000/instructor/create-course", {data})
+      if (response.status === 200) {
+        console.log(response.data); 
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
   return (
     <div>
@@ -554,7 +572,7 @@ const CreateCourse = () => {
         </div>
         <ButtonDefault text={"Save"} handleClick={onSave} />
       </header>
-        <div className="flex px-32 py-5 bg-gray-50">
+        <div className="mainContainer flex px-32 py-5 bg-gray-50">
           <main className="w-full shadow-xl bg-white">
             <DashboardHeaderTitle title={"Create Course"}>
               <p className="text-3xl font-bold text-[#af39d3]">Basic information</p>
@@ -597,8 +615,8 @@ const CreateCourse = () => {
                         {thumbNailLink ? 
                         <div>
                           <span className="flex flex-row">
-                            <button className="flex flex-row bg-[#331868] p-2 rounded-md mr-2" onClick={deleteThumbNail}>
-                              <IconTrash stroke={2} color="white"/>
+                            <button className="flex flex-row bg-[#331868] p-2 rounded-md mr-2">
+                              <IconCrop stroke={2} color="white"/>
                               <p className="text-white">Crop Image</p>
                             </button>
                             <button className="flex flex-row bg-[#e95a5a] p-2 rounded-md" onClick={deleteThumbNail}>
@@ -606,7 +624,7 @@ const CreateCourse = () => {
                               <p className="text-white">Delete Image</p>
                             </button>
                           </span>
-                        </div> : <UploadWidget onUpload={handleOnUploadThumbNail} type="image" />}
+                        </div> : <UploadWidget onUpload={handleOnUploadThumbNail} object="image" />}
                       </div>
                       <div className="media">
                         {thumbNailId ? (
@@ -641,7 +659,7 @@ const CreateCourse = () => {
                           <div>
                             <span className="flex flex-row">
                               <button className="flex flex-row bg-[#331868] p-2 rounded-md mr-2">
-                                <IconTrash stroke={2} color="white"/>
+                                <IconCrop stroke={2} color="white"/>
                                 <p className="text-white">Crop Video</p>
                               </button>
                               <button className="flex flex-row bg-[#e95a5a] p-2 rounded-md" onClick={deletePromoVideo}>
@@ -649,7 +667,7 @@ const CreateCourse = () => {
                                 <p className="text-white">Delete Video</p>
                               </button>
                             </span>
-                          </div> : <UploadWidget onUpload={handleOnUploadPromoVideo} type="video" />}
+                          </div> : <UploadWidget onUpload={handleOnUploadPromoVideo} object="video" />}
                         </div>
                         <div className="media">
                           {promoVideoId ? (
@@ -689,7 +707,7 @@ const CreateCourse = () => {
                             </div>
                             <div className="flex flex-col">
                               <span className='mr-2 font-bold'>Price Tier</span>
-                              <select className="tier p-3 w-full text-md hover:bg-gray-200 border border-black rounded-lg" onChange={(e) => setPrice(e.target.value)}>
+                              <select className="tier p-3 w-full text-md border border-black rounded-lg" onChange={(e) => setPrice(e.target.value)}>
                                 <option value="free">Free</option>
                                 <option value="19.99">$19.99 (Tier 1)</option>
                                 <option value="29.99">$29.99 (Tier 2)</option>

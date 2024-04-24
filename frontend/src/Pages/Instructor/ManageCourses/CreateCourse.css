@@ -23,6 +23,10 @@
 }
 
 @media not all and (min-width: 600px) {
+    .mainContainer {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
     .container .function .price {
         flex-direction: column !important;
     }

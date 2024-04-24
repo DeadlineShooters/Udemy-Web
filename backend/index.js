@@ -8,6 +8,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import accountRoute from "./routes/user/accountRoute.js"
 import courseRoute from './routes/course/courseRoute.js';
+import instructorRoute from './routes/instructor/instructorRoute.js';
 import cloudinary from "cloudinary";
 dotenv.config();
 
@@ -48,6 +49,7 @@ app.use(
 );
 app.use("/auth", authRoute);
 app.use("/user", accountRoute);
+app.use("/instructor", instructorRoute)
 app.use('/courses', courseRoute);
 
 app.listen(5000, () => {
