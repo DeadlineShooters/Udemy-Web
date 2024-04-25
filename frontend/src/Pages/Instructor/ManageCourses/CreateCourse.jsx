@@ -26,20 +26,6 @@ import Section from './HandleSections.jsx'
 const CreateCourse = () => {
   const {userData} = useAuth();
   const [savedCourse, setSavedCourse] = useState();
-  useEffect(() => {
-    const getSavedCourse = () => {
-      const tempData = localStorage.getItem("tempCourseData");
-      if (tempData) {
-        setSavedCourse(JSON.parse(tempData));
-      }
-    }
-    getSavedCourse();
-  }, [])
-  console.log(savedCourse);
-  // const predefineData = {
-  //   preTitle: savedData.title ? savedData.title : "",
-  //   preIntroduction: savedData.introduction ? savedData.introduction : "",
-  // }
 
   /* Fetch categories from the system */
   const [categories, setCategories] = useState();
@@ -60,14 +46,35 @@ const CreateCourse = () => {
   const [newSectionName, setNewSectionName] = useState('');
 
   //Track any changes
-  const [fieldChanged, setFieldChanged] = useState(false);
+  const [trackProgress, setTrackProgress] = useState(0);
   const [showInformModal, setShowInformModal] = useState(false); // State for section modal
+  const [showWarningModal, setShowWarningModal] = useState(false); // State for section modal
 
+  const calculateProgressRate = () => {
+    const filledVariables = [
+      title.trim(),
+      introduction.trim(),
+      description.trim(),
+      courseCat.trim(),
+      thumbNail.secureURL.trim(),
+      thumbNail.publicID.trim(),
+      promoVideoLink,
+      promoVideoId,
+      promoVideoDuration,
+      price,
+      sections.length > 0
+    ];
+    const totalVariables = filledVariables.length;
+    const filledCount = filledVariables.filter(variable => !!variable).length;
+    const progressRate = (filledCount / totalVariables) * 100;
+    return progressRate;
+  };
 
   useEffect(() => {
-    const isFormChanged = title !== "" || introduction !== "" || description !== ""
-      setFieldChanged(isFormChanged);
-  }, [title, introduction, description, thumbNail, promoVideoLink, promoVideoId, promoVideoDuration, price, sections]);
+    const progressRate = calculateProgressRate();
+    setTrackProgress(progressRate);
+  }, [title, introduction, description, courseCat, thumbNail, promoVideoLink, promoVideoId, promoVideoDuration, price, sections]);
+
 
   useEffect(() => {
 		axios
@@ -126,7 +133,7 @@ const CreateCourse = () => {
   }, []);
 
   const checkUpdateField = () => {
-    if (fieldChanged) {
+    if (trackProgress !== 0) {
       setShowInformModal(true);
     }
     else {
@@ -240,26 +247,17 @@ const CreateCourse = () => {
       setTotalLecture(totalLecture);
       setTotalLength(totalLength);
     };
-    const saveTempData = () => {
-      const data = {
-        title: title, 
-        introduction: introduction, 
-        description: description, 
-        thumbNail: thumbNail,
-        promotionalVideo: {secureURL: promoVideoLink, publicURL: promoVideoId, duration: promoVideoDuration},
-        price: price,
-        sections: sections,
-        totalSection: sections.length,
-        totalLecture: totalLecture,
-        totalLength: totalLength,
-      };
-      localStorage.setItem('tempCourseData', JSON.stringify(data));
-    }
     calculateCourseLength();
-    saveTempData();
-  }, [title, introduction, description, thumbNail, promoVideoLink, promoVideoId, promoVideoDuration, price, sections]);
+  }, [sections]);
 
-  const handleCreateCourse = async () => {
+  const handleCreateCourse = () => {
+    if (trackProgress !== 100) {
+      setShowWarningModal(true);
+    } else {
+      handleUploadCourse();
+    }
+  }
+  const handleUploadCourse = async () => {
     const data = {
       category: courseCat,
       title: title, 
@@ -273,20 +271,21 @@ const CreateCourse = () => {
       totalLecture: totalLecture,
       totalLength: totalLength,
       instructor: userData.instructor,
+      status: true,
     }
     console.log(data);
-    // try { 
-    //   const response = await axios.post("http://localhost:5000/instructor/create-course", {data})
-    //   if (response.status === 200) {
-
-    //     //After creating course, reset all field
-    //     navigate("/instructor/courses", {replace: true});
-    //     console.log(response.data); 
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try { 
+      const response = await axios.post("http://localhost:5000/instructor/create-course", {data})
+      if (response.status === 200) {
+        //After creating course, return the main page
+        navigate("/instructor/courses", {replace: true});
+        console.log(response.data); 
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
+
   return (
     <div>
       <header className="bg-gray-900 py-5 px-8 border-b border-gray-200 flex gap-6 items-center justify-between">
@@ -298,13 +297,12 @@ const CreateCourse = () => {
             <Modal 
               showModal={showInformModal} 
               setShowModal={setShowInformModal}
-              title={"Cancel Creating?"}
-              type={"alert"}
-              description={`You have some changes on the course creating draft. Any entered information will be deleted`}
+              title={"Return back?"}
+              type={"inform"}
+              description={`You have some changes on the course creating draft. Make sure if you to halt your journey of sharing`}
               handle={goToCourses}
               action={"Go to Dashboard"}/>
         </div>
-        <ButtonDefault text={"Save"} handleClick={onSave} />
       </header>
         <div className="mainContainer flex px-32 py-5 bg-gray-50">
           <main className="w-full shadow-xl bg-white">
@@ -554,9 +552,20 @@ const CreateCourse = () => {
                 </div>
               </div>
               <div className="flex flex-row justify-end">
+                <Button color="black" className="rounded-none hover:bg-violet-800 mr-2" style={{height: "48px"}}>
+                  <span className="font-bold text-base normal-case">Save as draft</span>
+                </Button>
                 <Button color="purple" className="rounded-none hover:bg-violet-800" style={{height: "48px"}} onClick={() => handleCreateCourse()}>
                   <span className="font-bold text-base normal-case">Create Course</span>
                 </Button>
+                <Modal 
+                  showModal={showWarningModal} 
+                  setShowModal={setShowWarningModal}
+                  title={"Create Failed"}
+                  type={"alert"}
+                  description={`You don't complete all fields needed for the course. Please complete it and try again ໒(⊙ᴗ⊙)७✎▤`}
+                  handle={setShowWarningModal}
+                  action={"OK"}/>
               </div>
             </DashboardHeaderTitle>
         </main>

@@ -30,20 +30,27 @@ export const signup = async (req, res) => {
     }
 }
 
-export const signin = async (req, res) => {{
+export const signin = async (req, res) => {
     try {
-        const {email, password} = req.body;
-        const userData = await User.findOne({email});
+        const { email, password } = req.body;
+        console.log(req.body);
+        
+        const userData = await User.findOne({ email });
+        console.log(userData);
+        
         if (userData) {
             const isMatchPassword = await bcrypt.compare(password, userData.hashedPassword);
+            
             if (isMatchPassword) {
-                return res.status(200).json({success: true, userData});
+                return res.status(200).json({ success: true, userData });
             } else {
-                return res.status(400).json({success: false});
+                return res.status(400).json({ success: false });
             }
+        } else {
+            return res.status(400).json({ success: false, message: "User not found" });
         }
     } catch (err) {
         console.log("Login error:", err);
-        res.status(500).json({ messages: "Login  failed" });
+        return res.status(500).json({ success: false, message: "Login failed" });
     }
-}}
+}

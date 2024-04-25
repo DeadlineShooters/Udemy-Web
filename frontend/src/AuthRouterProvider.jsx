@@ -48,11 +48,11 @@ import { useAuth } from "./AuthContextProvider.jsx";
 
 const Layout = () => {
 	return (
-		<>
+		<div>
 			<Navbar />
 			<Outlet />
 			<Footer />
-		</>
+		</div>
 	);
 };
 

@@ -79,7 +79,7 @@ const Login = () => {
     }
   }
   return (
-    <div className='flex flex-col w-full items-center pt-20 font-bold text-2xl'>
+    <div className='flex flex-col w-full items-center pt-20 font-bold text-2xl mb-28'>
       {isLoginGoogleFailed === true ? (
         <div className='px-5 py-2 mb-5 bg-red-300'>
           <p className='text-base'>Registered email must match Gmail. Try again!</p>

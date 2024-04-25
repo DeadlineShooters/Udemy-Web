@@ -7,7 +7,7 @@ const logo_light = 'https://res.cloudinary.com/dqxtf297o/image/upload/v171362728
 
 const Footer = () => {
   return (
-    <div className='flex w-full max-h-sm bg-[#2D2F31]'>
+    <footer className='flex w-full max-h-sm bg-[#2D2F31] items-end'>
         <div className='flex w-full flex-col mx-10 mt-12'>
             <div className='general flex flex-row justify-between'>
                 <div className='detail flex flex-row'>
@@ -79,7 +79,7 @@ const Footer = () => {
                 </div>
             </div>
         </div>
-    </div>
+    </footer>
   )
 }
 

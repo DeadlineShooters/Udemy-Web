@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { IconAlertTriangleFilled, IconAlertCircleFilled, IconX } from '@tabler/icons-react';
+import { IconAlertTriangleFilled, IconAlertCircleFilled, IconX, IconArrowBackUp } from '@tabler/icons-react';
 
 // fae651 - yellow  fa5151 - red
 export default function Modal({showModal, setShowModal, title, type, description, handle, action}) {
@@ -15,6 +15,7 @@ export default function Modal({showModal, setShowModal, title, type, description
                             <div className="flex flex-row items-center">
                                 {(type ==="alert") && <IconAlertCircleFilled color="#fa5151" className="mr-2"/>}
                                 {(type ==="warning") && <IconAlertTriangleFilled color="#fae651" className="mr-2"/>}
+                                {(type ==="inform") && <IconArrowBackUp color="#7b1d9d" className="mr-2"/>}
                                 <h3 className="text-2xl font-semibold">
                                     {title}
                                 </h3>
@@ -38,7 +39,7 @@ export default function Modal({showModal, setShowModal, title, type, description
                                 Cancel
                             </button>
                             <button
-                                className="bg-[#fa5151] text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                className={` ${type==="inform" ? "bg-[#7b1d9d]": "bg-[#fa5151]"}  text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
                                 type="button"
                                 onClick={() => handle()}>
                                 {action}

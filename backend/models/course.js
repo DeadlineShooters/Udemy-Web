@@ -18,10 +18,16 @@ const courseSchema = mongoose.Schema({
     totalLecture: {type: Number},
     totalSection: {type: Number},
     totalLength: {type: Number},
-    rating: {type: Number},
+    avgRating: {type: Number},
     thumbNail: {type: Object},
     status: {type: Boolean},
     createDate: {type: Date, default: Date.now()},
+    totalRevenue: { type: Number, default: 0 },
+    fiveStarCnt: { type: Number, default: 0 },
+    fourStarCnt: { type: Number, default: 0 },
+    threeStarCnt: { type: Number, default: 0 },
+    twoStarCnt: { type: Number, default: 0 },
+    oneStarCnt: { type: Number, default: 0 },
 })
 
 const Course = mongoose.model("Course", courseSchema);

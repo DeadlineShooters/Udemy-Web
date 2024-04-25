@@ -21,6 +21,7 @@ export const createCourse = async (req, res) => {
         newCourse.totalLength = data.totalLength;
         newCourse.thumbNail = data.thumbNail;
         newCourse.instructor = data.instructor;
+        newCourse.status = true;
 
         const newPromotionalVideo = new Video({
             secureURL : data.promotionalVideo.secureURL,
@@ -55,6 +56,18 @@ export const createCourse = async (req, res) => {
         }
         newCourse.save();
         return res.status(200).send({ success: true, message: "Course created successfully", course: newCourse});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getCourse = async (req, res) => {
+    try {
+        const {instructorID} = req.body;
+        const courseList = await Course.find({instructor: instructorID});
+        if (courseList) {
+            return res.status(200).send({ success: true, message: "Course list found successfully", course: courseList}); 
+        }
     } catch (error) {
         console.log(error);
     }

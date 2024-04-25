@@ -45,10 +45,10 @@ const Register = () => {
     }
   }
   return (
-    <div className='flex flex-col w-full items-center pt-20 font-bold text-2xl'>
+    <div className='flex flex-col w-full items-center pt-20 font-bold text-2xl mb-48'>
       {isRegisterFailed === true ? (
         <div className='px-5 py-2 mb-5 bg-red-300'>
-          <p className='text-base'>Your email has been existed. Try with another!</p>
+          <p className='text-base'>There is something wrong. Try again!</p>
         </div>
       ) : (
         ""

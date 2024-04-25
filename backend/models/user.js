@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import Course from "./course.js";
 
 const userSchema = new mongoose.Schema({
-    firstName: { type: String, required: true },
+    firstName: { type: String},
     lastName: { type: String, required: true },
     avatar: { secure_url: String, public_id: String },
     courseList: [{ type: Schema.Types.ObjectId, ref: "Course" }],

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link, useLocation } from "react-router-dom";
+import React, {useState, useEffect} from 'react';
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import './myLearning.css';
@@ -13,8 +13,18 @@ import archive from "../../../../Assets/archive.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import EditRatingButton from "../../../../Components/Feedback/EditRatingButton";
+import { useAuth } from '../../../../AuthContextProvider';
 
 const MyLearning = () => {
+  const {userData} = useAuth();
+  const [courseList, setCourseList] = useState([]);
+  useEffect(() => {
+    const getArchivedList = () => {
+      setCourseList(userData.courseList);
+    }
+    getArchivedList();
+  }, []);
+  const navigate = useNavigate();
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
@@ -69,7 +79,8 @@ const MyLearning = () => {
           </div>
       </div>
       <div className="lower-mylearning">
-        <div className="flex flex-row ml-auto justify-end items-center">
+        {courses ?
+        (<div><div className="flex flex-row ml-auto justify-end items-center">
           <div className="flex flex-row items-center px-5">
             <span className='mr-2'>Filter by:</span>
             <select className="p-2 text-md hover:bg-gray-200 border border-gray-400 rounded-lg">
@@ -155,24 +166,31 @@ const MyLearning = () => {
                         </Transition>
                       </Menu>
                     </div>
-                    <p className='text-lg md:text-lg font-bold'>{course.title}</p>
-                  </div>
-                  <div>
-                    <p className='text-slate-500 text-base mt-3'>{course.instructor}</p>
-                    <div className="w-full bg-gray-200 rounded-full h-2 mt-3 dark:bg-gray-700">
-                      <div className="bg-blue-600 h-2 rounded-full" style={{width: (course.progress * 100) + "%"}}></div>
+                      <p className='text-lg md:text-lg font-bold'>{course.title}</p>
                     </div>
+                    <div>
+                      <p className='text-slate-500 text-base mt-3'>{course.instructor}</p>
+                      <div className="w-full bg-gray-200 rounded-full h-2 mt-3 dark:bg-gray-700">
+                        <div className="bg-blue-600 h-2 rounded-full" style={{width: (course.progress * 100) + "%"}}></div>
+                      </div>
                       <div className="flex flex-row items-start justify-between mt-3">
-                      <p className='text-slate-500  text-sm'>{(course.progress.toPrecision(4) * 100)}% Complete</p>
+                        <p className='text-slate-500  text-sm'>{(course.progress.toPrecision(4) * 100)}% Complete</p>
                         {index !== 3 ? <EditRatingButton review={review} /> : <EditRatingButton />}
                       </div>
+                    </div>
                   </div>
                 </div>
               </div>
+              ))}
             </div>
-            ))}
           </div>
-        </div>
+          ) : (
+          <div className='flex flex-col items-center my-20'>
+            <h2 className='text-xl font-bold'>Explore a plethora of courses and expand your knowledge.</h2>
+            <h2 className='flex flex-row text-xl'><p className='text-[#5037b5] font-bold mr-2 underline hover:cursor-pointer' onClick={() => navigate("/")}>Visit Discover</p>to uncover new learning opportunities.</h2>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
