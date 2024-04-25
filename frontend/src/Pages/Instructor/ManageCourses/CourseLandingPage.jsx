@@ -17,15 +17,19 @@ import { useNavigate, useLocation } from "react-router-dom";
 import './CreateCourse.css'
 
 const CourseLandingPage = () => {
-  const [value, setValue] = useState("");
-  const [file, setFile] = useState(null);
-  const [thumbNail, setThumbNail] = useState({ secureURL: '', publicID: '' });
-  const [promoVideoLink, setPromoVideoLink] = useState();
+  const {state} = useLocation();
+  const course = state.courseData;
+  const [title, setTilte] = useState(course.name || "");
+  const [introduction, setIntroduction] = useState("");
+  const [description, setDescription] = useState( "");
+  const [thumbNail, setThumbNail] = useState( { secureURL: '', publicID: '' });
+  const [promoVideoLink, setPromoVideoLink] = useState("");
   const [promoVideoId, setPromoVideoId] = useState();
   const [promoVideoDuration, setPromoVideoDuration] = useState();
   const [price, setPrice] = useState();
   const [courseCat, setCourseCat] = useState("");
   const [categories, setCategories] = useState();
+
   const location = useLocation();
   let currentUrl = location.pathname;
   const replacedUrl = currentUrl.replace(/\/basics$/, '/curriculum');
@@ -109,15 +113,39 @@ const CourseLandingPage = () => {
         </div>
         <div className="form-group mb-5">
           <Heading1>Course title</Heading1>
-          <TextInput limit={60} placeholder={"Insert your course title"} />
+          <div className="flex justify-between border border-black p-3">
+            <input 
+              type="text" 
+              placeholder="Input the course's title" 
+              maxLength={120} 
+              className="focus:outline-none focus:ring-0 w-full"
+              onChange={(e) => setTilte(e.target.value)}
+              defaultValue={title}
+              required/>
+            <span>{120 - title.length}</span>
+          </div>
         </div>
         <div className="form-group mb-5">
-          <Heading1>Course subtitle</Heading1>
-          <TextInput limit={120} placeholder={"Insert your course subtitle"} />
+          <Heading1>Course introduction</Heading1>
+          <div className="flex justify-between border border-black p-3">
+            <input 
+              type="text" 
+              placeholder="Input the course's title" 
+              maxLength={120} 
+              className="focus:outline-none focus:ring-0 w-full"
+              onChange={(e) => setIntroduction(e.target.value)}
+              defaultValue={introduction}
+              required/>
+            <span>{120 - introduction.length}</span>
+          </div>
         </div>
         <div className="form-group mb-5">
           <Heading1>Course description</Heading1>
-          <ReactQuill theme="snow" value={value} onChange={setValue} placeholder="Insert your course description" />
+          <ReactQuill 
+            theme="snow" 
+            value={description} 
+            onChange={setDescription} 
+            placeholder="Insert your course description" />
         </div>
         <div className="form-group mb-5">
           <Heading1>Course image</Heading1>

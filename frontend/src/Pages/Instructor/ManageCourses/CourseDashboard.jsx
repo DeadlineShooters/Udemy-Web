@@ -43,7 +43,6 @@ const CourseDashBoard = () => {
     // Perform filtering logic based on selected filter
     // alert(filter)
   };
-
   const resource1 = {
     imgSrc: profileImage,
     title: "Create an Engaging Course",
@@ -68,6 +67,7 @@ const CourseDashBoard = () => {
     desciption: "Get exclusive tips and resources designed to help you launch your first course faster! Eligible instructors who publish their first course on time will receive a special bonus to celebrate. Start today!",
     getStartedUrl: '#',
   }
+  console.log("##", courses);
   return (
     <div className="flex w-full">
       <div className="md:w-16 h-screen"></div>
@@ -115,8 +115,8 @@ const CourseDashBoard = () => {
                       <div class="bg-blue-500 h-full w-1/2 "></div>
                     </div>
                   </div>
-                  <button className="edit-cover absolute top-0 left-0 w-full h-full bg-white opacity-0 hover:opacity-90 flex items-center justify-center hover:cursor-pointer">
-                    <a href="/instructor/course/123/manage/basics"><p className="font-bold text-purple-500">Edit / manage course</p></a>
+                  <button className="edit-cover absolute top-0 left-0 w-full h-full bg-white opacity-0 hover:opacity-90 flex items-center justify-center hover:cursor-pointer" onClick={() => navigate(`/instructor/course/${course._id}/manage/basics`, {state: {courseData: course}})}>
+                    <p className="font-bold text-purple-500">Edit / manage course</p>
                   </button>
                 </div>
               </div>
