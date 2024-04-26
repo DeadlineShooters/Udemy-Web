@@ -1,9 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
-import Image from './image.js';
-import Category from './category.js';
-import Instructor from './instructor.js';
-import Section from './section.js';
-import Video from './video.js';
+import videoSchema from './video.js';
+import imageSchema from './image.js';
 
 const courseSchema = mongoose.Schema({
     name: { type: String, require: true },
@@ -13,13 +10,13 @@ const courseSchema = mongoose.Schema({
     description: {type: String},
     price: { type: Number },
     sectionList: [{ type: Schema.Types.ObjectId, ref: "Section" }],
-    promotionalVideo: {type: Schema.Types.ObjectId, ref: "Video"},
+    promotionalVideo: videoSchema,
     category: {type: Schema.Types.ObjectId, ref: "Category" },
     totalLecture: {type: Number},
     totalSection: {type: Number},
     totalLength: {type: Number},
     avgRating: {type: Number},
-    thumbNail: {type: Object},
+    thumbNail: imageSchema,
     status: {type: Boolean},
     createDate: {type: Date, default: Date.now()},
     totalRevenue: { type: Number, default: 0 },

@@ -4,6 +4,7 @@ import Image from "../../models/image.js";
 import Video from "../../models/video.js";
 import Section from "../../models/section.js";
 import Lecture from "../../models/lecture.js";
+import videoSchema from "../../models/video.js";
 
 export const createCourse = async (req, res) => {
     try {
@@ -22,30 +23,17 @@ export const createCourse = async (req, res) => {
         newCourse.thumbNail = data.thumbNail;
         newCourse.instructor = data.instructor;
         newCourse.status = true;
-
-        const newPromotionalVideo = new Video({
-            secureURL : data.promotionalVideo.secureURL,
-            publicID : data.promotionalVideo.publicID,
-            duration: data.promotionalVideo.duration
-        });
-        newCourse.promotionalVideo = newPromotionalVideo;
-
+        newCourse.promotionalVideo = data.promotionalVideo;
+        
         for (const sectionData of data.sections) {
             const section = new Section({
                 name: sectionData.name,
                 lectureList: []
             });
             for (const lectureData  of sectionData.lectures) {
-                const newVideo = new Video({
-                    secureURL: lectureData.video.secureURL,
-                    publicID: lectureData.video.publicID,
-                    duration: lectureData.video.duration
-                })
-                const video = await newVideo.save();
-
                 const newLecture = new Lecture({
                     name: lectureData.name,
-                    video: video._id,
+                    video: lectureData.video,
                 })
                 const lecture = await newLecture.save();
                 section.lectureList.push(lecture._id);

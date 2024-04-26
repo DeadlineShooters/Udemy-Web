@@ -1,11 +1,12 @@
 import mongoose, { Schema } from "mongoose";
+import videoSchema from "./video.js";
 
 const lectureSchema = mongoose.Schema({
     sectionID: { type: Schema.Types.ObjectId, ref: "Section" },
     index: {type: Number},
     name: {type: String},
     content: {type: String},
-    video: {type: Schema.Types.ObjectId, ref: "Video"},
+    video: videoSchema,
     QA: [{type: Schema.Types.ObjectId, ref: "QA"}],
 })
 
