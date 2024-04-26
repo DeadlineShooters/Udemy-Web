@@ -3,6 +3,10 @@ import Course from "../../models/course.js";
 import Category from "../../models/category.js";
 import { Client } from "@elastic/elasticsearch";
 import dotenv from "dotenv";
+
+import Lecture from "../../models/lecture.js";
+import Section from "../../models/section.js";
+import User from "../../models/user.js";
 dotenv.config();
 
 const controller = {};
@@ -74,6 +78,46 @@ controller.search = async (req, res) => {
     res.json({ success: true, courses });
   } catch (error) {
     res.status(500).send(error);
+  }
+};
+
+controller.createCourse = async (req, res) => {
+  const { name, category } = req.body;
+
+  try {
+    const newCourse = new Course({
+      name,
+      category,
+    });
+
+    await newCourse.save();
+
+    res.status(201).json(newCourse);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+controller.getCourseById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    let courseDetails = await Course.findById(id).populate("sectionList").populate("instructor");
+    if (!courseDetails) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    courseDetails = courseDetails.toObject();
+    // Fetch the lectures for each section
+    for (let section of courseDetails.sectionList) {
+      section.lectures = await Lecture.find({ sectionID: section._id });
+    }
+
+    console.log(courseDetails.sectionList);
+
+    res.status(200).json(courseDetails);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
