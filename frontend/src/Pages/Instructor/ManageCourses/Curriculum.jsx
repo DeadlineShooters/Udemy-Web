@@ -6,33 +6,38 @@ import { Button } from "@material-tailwind/react";
 import { IconPlus, IconAlertCircleFilled } from '@tabler/icons-react';
 import './CreateCourse.css';
 import Section from './HandleSections.jsx';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import Modal from "../../../Components/CourseManagement/Modal.jsx";
 import axios from "axios";
+import { useCourse } from "../../../CourseContextProvider.jsx";
 
 const Curriculum = () => {
+  const { selectedCourse, setSelectedCourse } = useCourse();
   const [sections, setSections] = useState([]);
+  useEffect(() => {
+    const setCourseSection = () => {
+      if (selectedCourse && selectedCourse.sectionList) {
+        setSections(selectedCourse.sectionList);
+      }
+    }
+    setCourseSection();
+  }, [])
+
   const [totalLength, setTotalLength] = useState();
   const [totalLecture, setTotalLecture] = useState();
   const [addSection, setAddSection] = useState(false);
   const [newSectionName, setNewSectionName] = useState('');
-  const [fieldChanged, setFieldChanged] = useState(false);
   const [showInformModal, setShowInformModal] = useState(false); // State for section modal
+  const [trackProgress, setTrackProgress] = useState(0);
+  const [showWarningModal, setShowWarningModal] = useState(false); // State for section modal
 
+  const location = useLocation();
+  let currentUrl = location.pathname;
+  const replacedUrl = currentUrl.replace(/\/curriculum$/, '/basics');
+  
   const toggleAddSection = () => {
     setAddSection(!addSection);
   }
-
-  useEffect(() => {
-    const isFormChanged = !sections;
-    setFieldChanged(isFormChanged);
-  }, [sections]);
-
-  const quillRef = useRef(); // Create a ref
-  useEffect(() => {
-    if (quillRef.current != null) {
-      quillRef.current.getEditor().root.dataset.placeholder = "Insert your course description";
-    }
-  }, []);
 
   const navigate = useNavigate();
 
@@ -43,7 +48,7 @@ const Curriculum = () => {
   const handleSectionCreate = () => {
     setAddSection(!addSection);
     if (newSectionName.trim() !== '') {
-      setSections([...sections, { name: newSectionName, lectures: [] }]);
+      setSections([...sections, { name: newSectionName, lectureList: [] }]);
       setNewSectionName('');
     }
   };
@@ -53,7 +58,7 @@ const Curriculum = () => {
       if (section.name === sectionName) {
         return { 
           ...section, 
-          lectures: [...section.lectures, { name: lectureName, video: {secureURL: lectureVideoLink, publicID: lectureVideoID, duration: lectureVideoDuration, name: lectureVideoName}}] 
+          lectureList: [...section.lectureList, { name: lectureName, video: {secureURL: lectureVideoLink, publicID: lectureVideoID, duration: lectureVideoDuration, name: lectureVideoName}}] 
         };
       }
       return section;
@@ -64,10 +69,10 @@ const Curriculum = () => {
   const handleLectureUpdate = (sectionName, lectureName, lectureVideoLink, lectureVideoID, lectureVideoDuration, lectureVideoName, oldLectureName) => {
     const updatedSections = sections.map((section) => {
       if (section.name === sectionName) {
-        let updatedLectures = section.lectures;
+        let updatedLectures = section.lectureList;
         const lectureIndex = updatedLectures.findIndex(lecture => lecture.name === oldLectureName);
         updatedLectures[lectureIndex] = { name: lectureName, video: {secureURL: lectureVideoLink, publicID: lectureVideoID, duration: lectureVideoDuration, name: lectureVideoName} };
-        return { ...section, lectures: updatedLectures };
+        return { ...section, lectureList: updatedLectures };
       }
       return section;
     });
@@ -77,8 +82,8 @@ const Curriculum = () => {
   const handleLectureDelete = (sectionName, lectureName) => {
     const updatedSections = sections.map((section) => {
       if (section.name === sectionName) {
-        const updatedLectures = section.lectures.filter((lecture) => lecture.name !== lectureName);
-        return { ...section, lectures: updatedLectures };
+        const updatedLectures = section.lectureList.filter((lecture) => lecture.name !== lectureName);
+        return { ...section, lectureList: updatedLectures };
       }
       return section;
     });
@@ -100,7 +105,7 @@ const Curriculum = () => {
     const updatedSections = sections.map((section) => {
       if (section.name === sectionName) {
         // Clear lectures of the specified section
-        return { ...section, lectures: [] };
+        return { ...section, lectureList: [] };
       }
       return section;
     }).filter((section) => section.name !== sectionName); // Delete the specified section
@@ -121,7 +126,7 @@ const Curriculum = () => {
       let totalLecture = 0;
       let totalLength = 0; // count duration in second
       sections.forEach((section) => {
-        section.lectures.forEach((lecture) => {
+        section.lectureList.forEach((lecture) => {
           totalLecture += 1; // Add quantity of lecture of the section of the Course content
           totalLength += lecture.video.duration; // Add duration of each lecture to totalLength
           totalLength = Math.round(totalLength);
@@ -130,18 +135,50 @@ const Curriculum = () => {
       setTotalLecture(totalLecture);
       setTotalLength(totalLength);
     };
-    const saveTempData = () => {
-      const data = {
-        sections: sections,
-        totalSection: sections.length,
-        totalLecture: totalLecture,
-        totalLength: totalLength,
-      };
-      localStorage.setItem('tempSectionData', JSON.stringify(data));
-    }
     calculateCourseLength();
-    saveTempData();
   }, [sections]);
+
+  const calculateProgressRate = () => {
+    const filledVariables = [
+      sections.length > 0
+    ];
+    const totalVariables = filledVariables.length;
+    const filledCount = filledVariables.filter(variable => !!variable).length;
+    const progressRate = (filledCount / totalVariables) * 100;
+    return progressRate;
+  };
+
+  useEffect(() => {
+    const progressRate = calculateProgressRate();
+    setTrackProgress(progressRate);
+  }, [sections]);
+
+  const handleSaveCourse = () => {
+    if (trackProgress !== 100) {
+      setShowWarningModal(true);
+    } else {
+      handleUploadCourse();
+    }
+  }
+
+  const handleUploadCourse = async () => {
+    const data = {
+      instructor: selectedCourse.instructor,
+      section: sections,
+      status: true,
+    }
+    console.log("edit upload", data);
+    // try { 
+    //   const response = await axios.post("http://localhost:5000/instructor/create-course", {data})
+    //   if (response.status === 200) {
+    //     //After creating course, return the main page
+    //     navigate("/instructor/courses", {replace: true});
+    //     console.log(response.data); 
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  }
 
   const handleUpdateCourse = async () => {
     const data = {
@@ -153,7 +190,7 @@ const Curriculum = () => {
     }
     console.log(data);
     // try { 
-    //   const response = await axios.post("http://localhost:5000/instructor/create-course", {data})
+    //   const response = await axios.put("http://localhost:5000/instructor/create-course", {data})
     //   if (response.status === 200) {
 
     //     //After creating course, reset all field
@@ -232,7 +269,7 @@ const Curriculum = () => {
               key={index}
               sectionName={section.name}
               sectionId={index}
-              lectures={section.lectures}
+              lectures={section.lectureList}
               onLectureCreate={handleLectureCreate}
               onSectionUpdate={handleSectionUpdate}
               onLectureUpdate={handleLectureUpdate}
@@ -241,6 +278,22 @@ const Curriculum = () => {
             />
           ))}
         </div>
+      </div>
+      <div className="flex flex-row justify-end bottom-0 items-end align-bottom">
+        <Button color="black" className="rounded-none hover:bg-violet-800" style={{height: "48px"}} onClick={() => navigate(replacedUrl)}>
+          <span className="font-bold text-base normal-case">Go to Landing Page</span>
+        </Button>
+        <Button color="purple" className="rounded-none hover:bg-violet-800" style={{height: "48px"}} onClick={() => handleSaveCourse()}>
+          <span className="font-bold text-base normal-case">Save Course</span>
+        </Button>
+        <Modal 
+          showModal={showWarningModal} 
+          setShowModal={setShowWarningModal}
+          title={"Edit Failed"}
+          type={"alert"}
+          description={`You don't complete all fields needed for the course. Please complete it and try again ໒(⊙ᴗ⊙)७✎▤`}
+          handle={setShowWarningModal}
+          action={"OK"}/>
       </div>
     </DashboardHeaderTitle>
   );

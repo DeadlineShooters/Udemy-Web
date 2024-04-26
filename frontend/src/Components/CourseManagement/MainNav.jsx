@@ -1,10 +1,8 @@
-import { NavLink } from "react-router-dom";
+import { useParams , NavLink, useNavigate } from "react-router-dom";
 import './MainNav.css';
 
 function MainNav() {
-  // get course id from route params
-  // dummy course id:
-  const courseId = "123";
+  const { courseId } = useParams();
   return (
     <nav>
       <ul className="flex flex-col gap-3">

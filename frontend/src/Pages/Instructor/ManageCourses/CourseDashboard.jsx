@@ -7,9 +7,11 @@ import { IoMdSearch } from "react-icons/io";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import UserNav from "../../../Components/UserNav.jsx";
 import { useAuth } from "../../../AuthContextProvider.jsx";
+import { useCourse } from "../../../CourseContextProvider.jsx";
 import { useNavigate } from "react-router-dom";
 import StarRatings from "../../../Components/StarRatings.jsx";
 import axios from "axios";
+import './CourseDashboard.css';
 
 const profileImage =
 	"https://res.cloudinary.com/dk6q93ryt/image/upload/v1696217092/samples/smile.jpg";
@@ -22,6 +24,12 @@ const CourseDashBoard = () => {
   const [isHaveCourse, setHaveCourse] = useState(false);
   const [courses, setCourses] = useState([]);
   const navigate = useNavigate();
+  const { setSelectedCourse } = useCourse();
+
+  const handleCourseSelectionAndNav = (course) => {
+    navigate(`/instructor/course/${course._id}/manage/basics`)
+    setSelectedCourse(course);
+  };
 
   useEffect(() => {
     const getCourse = () => {
@@ -68,7 +76,6 @@ const CourseDashBoard = () => {
     desciption: "Get exclusive tips and resources designed to help you launch your first course faster! Eligible instructors who publish their first course on time will receive a special bonus to celebrate. Start today!",
     getStartedUrl: '#',
   }
-  console.log("##", courses);
   return (
     <div className="flex w-full">
       <div className="md:w-16 h-screen"></div>
@@ -111,17 +118,17 @@ const CourseDashBoard = () => {
                     {course.status === true ? (<p className="p-2 w-10 bg-black text-white font-bold text-xs">Live</p>): (<p className="font-bold text-xs">Draft</p>)}
                   </div>
                   {course.status === true ? (
-                    <div className="flex flex-row w-full justify-between px-28">
+                    <div className="courseDetails flex flex-row w-full justify-between px-28">
                       <div className="flex flex-row items-center">
                         <div className="flex flex-col">
                           <p className="text-xl font-bold">{course.totalStudent}</p>
-                          <p>Enrollments this month</p>
+                          <p className="line-clamp-1">Enrollments this month</p>
                         </div>
                       </div>
                       <div className="flex flex-row items-center">
                         <div className="flex flex-col">
                           <p className="text-xl font-bold">${course.totalRevenue.toString().padStart(2, '0')}</p>
-                          <p>Total Revenue</p>
+                          <p className="line-clamp-1">Total Revenue</p>
                         </div>
                       </div>
                       <div className="flex flex-row items-center">
@@ -130,7 +137,7 @@ const CourseDashBoard = () => {
                             <p className="text-xl font-bold mr-2">{course.avgRating || 0}</p>
                             <StarRatings rating={course.avgRating || 0}/>
                           </div>
-                          <p>Course rating</p>
+                          <p className="line-clamp-1">Course rating</p>
                         </div>
                       </div>
                     </div>
@@ -141,7 +148,7 @@ const CourseDashBoard = () => {
                         <div class="bg-blue-500 h-full w-1/2 "></div>
                       </div>
                   </div>)}
-                  <button className="edit-cover absolute top-0 left-0 w-full h-full bg-white opacity-0 hover:opacity-90 flex items-center justify-center hover:cursor-pointer" onClick={() => navigate(`/instructor/course/${course._id}/manage/basics`, {state: {courseData: course}})}>
+                  <button className="edit-cover absolute top-0 left-0 w-full h-full bg-white opacity-0 hover:opacity-90 flex items-center justify-center hover:cursor-pointer" onClick={() => handleCourseSelectionAndNav(course)}>
                     <p className="font-bold text-purple-500">Edit / manage course</p>
                   </button>
                 </div>

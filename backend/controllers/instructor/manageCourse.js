@@ -51,9 +51,30 @@ export const createCourse = async (req, res) => {
 export const getCourse = async (req, res) => {
     try {
         const {instructorID} = req.body;
-        const courseList = await Course.find({instructor: instructorID});
+        const courseList = await Course.find({instructor: instructorID}).populate({
+            path: "sectionList",
+            populate: "lectureList",
+        });
         if (courseList) {
             return res.status(200).send({ success: true, message: "Course list found successfully", course: courseList}); 
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const updateCourse = async (req, res) => {
+    try {
+        const {data} = req.body;
+        const {courseId} = req.params;
+        console.log("course edit: ", data);
+        console.log("Id", courseId);
+        const updatedCourse = await Course.findByIdAndUpdate(courseId, data, {new: true});
+        console.log("course after edit: ", updatedCourse);
+        if (updatedCourse) {
+            return res.status(200).send({ success: true, message: "Course updated successfully", course: updatedCourse});  
+        } else {
+            return res.status(400).send({ success: false, message: "Course updated failed", course: updatedCourse});  
         }
     } catch (error) {
         console.log(error);

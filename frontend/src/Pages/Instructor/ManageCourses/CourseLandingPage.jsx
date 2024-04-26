@@ -15,21 +15,53 @@ import { Image, Video } from 'cloudinary-react';
 import { Button } from "@material-tailwind/react";
 import { useNavigate, useLocation } from "react-router-dom";
 import './CreateCourse.css'
+import Modal from "../../../Components/CourseManagement/Modal";
+import { useCourse } from "../../../CourseContextProvider";
 
 const CourseLandingPage = () => {
-  const {state} = useLocation();
-  const course = state.courseData;
-  console.log("edit", course);
-  const [title, setTilte] = useState(course.name || "");
-  const [introduction, setIntroduction] = useState(course.introduction || "");
-  const [description, setDescription] = useState(course.description || "");
-  const [thumbNail, setThumbNail] = useState({secureURL: course.thumbNail.secureURL || '', publicID: course.thumbNail.publicID || '' });
-  const [promoVideoLink, setPromoVideoLink] = useState(course.promotionalVideo.secureURL || "");
-  const [promoVideoId, setPromoVideoId] = useState(course.promotionalVideo.publicID || "");
-  const [promoVideoDuration, setPromoVideoDuration] = useState(course.promotionalVideo.duration ||"");
-  const [price, setPrice] = useState(course.price || "none");
-  const [courseCat, setCourseCat] = useState();
+  const { selectedCourse } = useCourse();
+  const [courseId, setCourseId] = useState("");
+  const [instructor, setInstructor] = useState("");
+  const [title, setTilte] = useState("");
+  const [introduction, setIntroduction] = useState("");
+  const [description, setDescription] = useState("");
+  const [thumbNail, setThumbNail] = useState({secureURL: '', publicID: '' });
+  const [promoVideoLink, setPromoVideoLink] = useState("");
+  const [promoVideoId, setPromoVideoId] = useState("");
+  const [promoVideoDuration, setPromoVideoDuration] = useState("");
+  const [price, setPrice] = useState("none");
+  const [courseCat, setCourseCat] = useState("");
   const [categories, setCategories] = useState();
+
+  useEffect(() => {
+    if (selectedCourse) {
+      localStorage.setItem("course", JSON.stringify(selectedCourse));
+    }
+  }, [])
+  useEffect(() => {
+    const setSaveCourse = () => {
+      const savedCourse = localStorage.getItem('course');
+      if (savedCourse) {
+        const course = JSON.parse(savedCourse);
+        setCourseId(course._id);
+        setInstructor(course.instructor);
+        setTilte(course.name);
+        setIntroduction(course.introduction);
+        setDescription(course.description);
+        setThumbNail(course.thumbNail);
+        setPromoVideoLink(course.promotionalVideo.secureURL);
+        setPromoVideoId(course.promotionalVideo.publicID);
+        setPromoVideoDuration(course.promotionalVideo.duration);
+        setPrice(course.price);
+        setCourseCat(course.category);
+      }
+    }
+    setSaveCourse();
+  }, [])
+  //Track any changes
+  const [trackProgress, setTrackProgress] = useState(0);
+  const [showInformModal, setShowInformModal] = useState(false); // State for section modal
+  const [showWarningModal, setShowWarningModal] = useState(false); // State for section modal
 
   const location = useLocation();
   let currentUrl = location.pathname;
@@ -47,12 +79,13 @@ const CourseLandingPage = () => {
 				console.error('Error:', error);
 			});
 	}, []);
+
   useEffect(() => {
-    if (categories && course && course.category) {
-        const categoryName = categories.find(category => category._id === course.category)?.name;
+    if (categories && selectedCourse && selectedCourse.category) {
+        const categoryName = categories.find(category => category._id === selectedCourse.category)?.name;
         setCourseCat(categoryName);
     }
-  }, [categories, course]);
+  }, [categories, selectedCourse]);
 
   const handleOnUploadThumbNail = (error, result, widget) => {
     if (error) {
@@ -95,6 +128,64 @@ const CourseLandingPage = () => {
       quillRef.current.getEditor().root.dataset.placeholder = "Insert your course description";
     }
   }, []);
+
+  const calculateProgressRate = () => {
+    const filledVariables = [
+      title.trim(),
+      introduction.trim(),
+      description.trim(),
+      courseCat.trim(),
+      thumbNail.secureURL.trim(),
+      thumbNail.publicID.trim(),
+      promoVideoLink,
+      promoVideoId,
+      promoVideoDuration,
+      price,
+    ];
+    const totalVariables = filledVariables.length;
+    const filledCount = filledVariables.filter(variable => !!variable).length;
+    const progressRate = (filledCount / totalVariables) * 100;
+    return progressRate;
+  };
+    
+  useEffect(() => {
+    const progressRate = calculateProgressRate();
+    setTrackProgress(progressRate);
+    console.log(progressRate);
+  }, [title, introduction, description, courseCat, thumbNail, promoVideoLink, promoVideoId, promoVideoDuration, price]);
+
+  const handleCreateCourse = () => {
+    if (trackProgress !== 100) {
+      setShowWarningModal(true);
+    } else {
+      handleUploadCourse();
+    }
+  }
+
+  const handleUploadCourse = async () => {
+    const data = {
+      category: courseCat,
+      name: title, 
+      introduction: introduction, 
+      description: description, 
+      thumbNail: {secureURL: thumbNail.secureURL, publicID: thumbNail.publicID},
+      promotionalVideo: {secureURL: promoVideoLink, publicID: promoVideoId, duration: promoVideoDuration},
+      price: price,
+      instructor: instructor,
+      status: true,
+    }
+    console.log("edit upload", data);
+    try { 
+      const response = await axios.put(`http://localhost:5000/instructor/${courseId}/update-course`, {data})
+      if (response.status === 200) {
+        //After creating course, return the main page
+        //navigate("/instructor/courses", {replace: true});
+        console.log(response.data); 
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <DashboardHeaderTitle title={"Course landing page"}>
@@ -270,9 +361,17 @@ const CourseLandingPage = () => {
           <Button color="black" className="rounded-none hover:bg-violet-800" style={{height: "48px"}} onClick={() => navigate(replacedUrl)}>
             <span className="font-bold text-base normal-case">Go to Curriculum</span>
           </Button>
-          <Button color="purple" className="rounded-none hover:bg-violet-800" style={{height: "48px"}}>
-            <span className="font-bold text-base normal-case">Save</span>
+          <Button color="purple" className="rounded-none hover:bg-violet-800" style={{height: "48px"}} onClick={() => handleCreateCourse()}>
+            <span className="font-bold text-base normal-case">Save Course</span>
           </Button>
+          <Modal 
+            showModal={showWarningModal} 
+            setShowModal={setShowWarningModal}
+            title={"Create Failed"}
+            type={"alert"}
+            description={`You don't complete all fields needed for the course. Please complete it and try again ໒(⊙ᴗ⊙)७✎▤`}
+            handle={setShowWarningModal}
+            action={"OK"}/>
         </div>       
       </div>
     </DashboardHeaderTitle>

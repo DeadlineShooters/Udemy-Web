@@ -1,16 +1,19 @@
 import { json } from 'react-router-dom';
 import './App.css';
-import { AuthContextProvider } from './AuthContextProvider.jsx';
+import { AuthProvider } from './AuthContextProvider.jsx';
+import { CourseProvider } from './CourseContextProvider.jsx';
 import { AppRouterProvider } from './AuthRouterProvider.jsx';
 import { ToastContainer} from 'react-toastify';
 
 const App = () => {
   return (
     <div className="App">
-      <AuthContextProvider>
-        <ToastContainer/>
-        <AppRouterProvider/>
-      </AuthContextProvider>
+      <AuthProvider>
+        <CourseProvider>
+          <ToastContainer/>
+          <AppRouterProvider/>
+        </CourseProvider>
+      </AuthProvider>
     </div>
   );
 }

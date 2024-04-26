@@ -5,27 +5,20 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Button } from "@material-tailwind/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import ButtonDefault from "../../../Components/CourseFeedback/ButtonDefault";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import { IconPlus, IconEdit, IconTrash, 
-        IconCheck, IconAlertCircleFilled, IconClipboardText, 
-        IconBrandYoutubeFilled, IconEye, IconCrop } from '@tabler/icons-react';
+import { IconPlus, IconTrash, IconAlertCircleFilled, IconCrop } from '@tabler/icons-react';
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UploadWidget from "./UploadWidget";
 import Modal from "../../../Components/CourseManagement/Modal";
-import VideoModal from "../../../Components/CourseManagement/VideoModal";
-import DynamicInput from "../../../Components/CourseManagement/DynamicInput";
 import { Image, Video } from 'cloudinary-react';
 import axios from 'axios';
 import './CreateCourse.css';
 import { useAuth } from '../../../AuthContextProvider.jsx';
-import { useForm } from 'react-hook-form';
 import Section from './HandleSections.jsx'
 
 const CreateCourse = () => {
   const {userData} = useAuth();
-  const [savedCourse, setSavedCourse] = useState();
 
   /* Fetch categories from the system */
   const [categories, setCategories] = useState();
@@ -146,8 +139,6 @@ const CreateCourse = () => {
   const goToCourses = () => {
     navigate("/instructor/courses");
   };
-
-  const onSave = () => {};
 
   const toggleAddSection = () => {
     setAddSection(!addSection);

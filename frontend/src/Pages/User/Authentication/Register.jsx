@@ -5,6 +5,7 @@ import eyeClose from "../../../Assets/eye_close.png";
 import axios from "axios";
 import { useAuth } from '../../../AuthContextProvider';
 import { useForm } from 'react-hook-form';
+import secureLocalStorage from 'react-secure-storage';
 
 const Register = () => {
   const {setUser, setIsLogged} = useAuth();
@@ -35,7 +36,7 @@ const Register = () => {
         const {userData} = await response.data;
         setUser(userData);
         setIsLogged(true);
-        localStorage.setItem('user', JSON.stringify(userData));
+        secureLocalStorage.setItem('user', JSON.stringify(userData));
         navigate("/home", {replace: true});
       }
     } catch (err)
