@@ -16,7 +16,7 @@ const profileImage =
 
 const CourseDashBoard = () => {
   const { userData } = useAuth();
-  const instructorID = userData.instructor; 
+  const instructorID = userData._id; 
   const [selectedFilter, setSelectedFilter] = useState('');
   const [isHaveCourse, setHaveCourse] = useState(false);
   const [courses, setCourses] = useState([]);

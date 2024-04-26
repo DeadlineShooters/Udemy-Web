@@ -4,7 +4,7 @@ import imageSchema from './image.js';
 
 const courseSchema = mongoose.Schema({
     name: { type: String, require: true },
-    instructor: { type: Schema.Types.ObjectId, ref: "Instructor" },
+    instructor: { type: Schema.Types.ObjectId, ref: "User" },
     totalStudent: { type: Number, default: 0},
     introduction: { type: String },
     description: {type: String},

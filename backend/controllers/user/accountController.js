@@ -45,15 +45,16 @@ export const editProfile = async (req, res) => {
 export const becomeInstructor = async (req, res) => {
     try {
         const { userId } = req.body;
-        const newInstructor = new Instructor();
-        newInstructor.headline =  "",
-
-        await newInstructor.save();
         const updatedUser = await User.findByIdAndUpdate(
             userId, // Assuming req.user contains the authenticated user's information
             { 
                 $set: { 
-                    instructor: newInstructor._id,
+                    instructor: {
+                        headline: "",
+                        totalReviews: 0,
+                        totalStudents: 0,
+                        bio: ""
+                    },
                 } 
             },
             { new: true } // Return the updated document

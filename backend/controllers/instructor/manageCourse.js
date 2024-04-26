@@ -22,8 +22,8 @@ export const createCourse = async (req, res) => {
         newCourse.totalLength = data.totalLength;
         newCourse.thumbNail = data.thumbNail;
         newCourse.instructor = data.instructor;
-        newCourse.status = true;
         newCourse.promotionalVideo = data.promotionalVideo;
+        newCourse.status = true;
         
         for (const sectionData of data.sections) {
             const section = new Section({
@@ -51,7 +51,7 @@ export const createCourse = async (req, res) => {
 export const getCourse = async (req, res) => {
     try {
         const {instructorID} = req.body;
-        const courseList = await Course.find({instructor: instructorID}).populate('promotionalVideo');
+        const courseList = await Course.find({instructor: instructorID});
         if (courseList) {
             return res.status(200).send({ success: true, message: "Course list found successfully", course: courseList}); 
         }

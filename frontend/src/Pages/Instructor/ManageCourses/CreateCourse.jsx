@@ -270,7 +270,7 @@ const CreateCourse = () => {
       totalSection: sections.length,
       totalLecture: totalLecture,
       totalLength: totalLength,
-      instructor: userData.instructor,
+      instructor: userData._id,
       status: true,
     }
     console.log(data);
@@ -460,7 +460,8 @@ const CreateCourse = () => {
                             <div className="flex flex-col">
                               <span className='mr-2 font-bold'>Price Tier</span>
                               <select className="tier p-3 w-full text-md border border-black rounded-lg" onChange={(e) => setPrice(e.target.value)}>
-                                <option value="free">Free</option>
+                                <option value="none" selected disabled>Select price</option>
+                                <option value="0">Free</option>
                                 <option value="19.99">$19.99 (Tier 1)</option>
                                 <option value="29.99">$29.99 (Tier 2)</option>
                                 <option value="54.99">$54.99 (Tier 3)</option>

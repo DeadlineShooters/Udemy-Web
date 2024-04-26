@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import Course from "./course.js";
+import instructorSchema from "./instructor.js";
 
 const userSchema = new mongoose.Schema({
     firstName: { type: String},
@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     socialLinks: { web: {type: String, default: ""}, youtube: {type: String, default: ""}, facebook: {type: String, default: ""}},
     archivedCourse:  [{ type: Schema.Types.ObjectId, ref: "Course" }],
     cart: { type: Array },
-    instructor: { type: Schema.Types.ObjectId, ref: "Instructor" }
+    instructor: instructorSchema,
 })
 
 const User = mongoose.model("User", userSchema);
