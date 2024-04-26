@@ -1,10 +1,10 @@
 import fs from "fs";
 import mongoose from "mongoose";
 import course from "./models/course.js";
-import section from "./models/section.js";
+import Section from "./models/section.js";
 import dotenv from "dotenv";
 import { ObjectId } from "mongodb";
-import lecture from "./models/lecture.js";
+import Lecture from "./models/lecture.js";
 dotenv.config({ path: "../.env" });
 
 async function importSectionData() {
@@ -15,13 +15,13 @@ async function importSectionData() {
   const sections = JSON.parse(data);
 
   // Insert the data into the database
-  await section.insertMany(sections);
+  await Section.insertMany(sections);
   console.log("Section data inserted");
 }
 
 async function deleteSectionData() {
   // Delete the data from the database
-  await section.deleteMany({});
+  await Section.deleteMany({});
   console.log("Section data deleted");
 }
 
@@ -39,14 +39,14 @@ async function importLectureData() {
   }));
 
   // Insert the data into the database
-  await lecture.insertMany(lectures);
+  await Lecture.insertMany(lectures);
 
   console.log("Lecture data inserted");
 }
 
 async function deleteLectureData() {
   // Delete the data from the database
-  await lecture.deleteMany({});
+  await Lecture.deleteMany({});
   console.log("Lecture data deleted");
 }
 

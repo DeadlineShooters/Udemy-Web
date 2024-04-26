@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import lecture from "../models/lecture.js";
+import Lecture from "../models/lecture.js";
 import course from "../models/course.js";
-import section from "../models/section.js";
-import instructor from "../models/instructor.js";
+import Section from "../models/section.js";
+import User from "../models/user.js";
 
 const { Types } = mongoose;
 const controller = {};
@@ -36,7 +36,7 @@ controller.getCourseById = async (req, res) => {
     courseDetails = courseDetails.toObject();
     // Fetch the lectures for each section
     for (let section of courseDetails.sectionList) {
-      section.lectures = await lecture.find({ sectionID: section._id });
+      section.lectures = await Lecture.find({ sectionID: section._id });
     }
 
     console.log(courseDetails.sectionList);

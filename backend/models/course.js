@@ -1,10 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 import videoSchema from "./video.js";
 import imageSchema from "./image.js";
+import User from "./user.js";
+import Section from "./section.js";
+import Category from "./category.js";
 
 const courseSchema = mongoose.Schema({
   name: { type: String, require: true },
-  instructor: { type: Schema.Types.ObjectId, ref: "Instructor" },
+  instructor: { type: Schema.Types.ObjectId, ref: "User" },
   totalStudent: { type: Number },
   introduction: { type: String },
   price: { type: Number },
