@@ -2,7 +2,7 @@
   {
     "_id": "60d5ecb7b484193dd2b8b77b",
     "name": "Course 1",
-    "instructor": "65fbbd6e2eae6fe060e0a3ed",
+    "instructor": "662a157f0c4799100bbfd798",
     "totalStudent": 100,
     "introduction": "This is an introduction to Course 1",
     "price": 50000,
@@ -34,7 +34,7 @@
   {
     "_id": "60d5ecb7b484193dd2b8b781",
     "name": "Course 2",
-    "instructor": "65fbbd6e2eae6fe060e0a3ed",
+    "instructor": "662a157f0c4799100bbfd798",
     "totalStudent": 150,
     "introduction": "This is an introduction to Course 2",
     "price": 75000,

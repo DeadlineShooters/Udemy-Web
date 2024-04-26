@@ -2,7 +2,8 @@ import mongoose, { Schema } from "mongoose";
 
 const sectionSchema = mongoose.Schema({
   index: { type: Number },
-  title: { type: String },
+  name: { type: String },
+  lectureList: [{ type: Schema.Types.ObjectId, ref: "Lecture" }],
 });
 
 const Section = mongoose.model("Section", sectionSchema);

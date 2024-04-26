@@ -13,7 +13,6 @@ const controller = {};
 
 controller.courses = async (req, res) => {
   let { category } = req.query;
-  console.log("@@category: " + category);
   try {
     let courses;
     if (category) {
@@ -22,7 +21,7 @@ controller.courses = async (req, res) => {
     } else {
       courses = await Course.find().populate("category").populate("instructor");
     }
-    console.log(courses);
+    // console.log(courses);
     if (courses.length > 0) {
       res.json({ success: true, courses });
     } else {
@@ -101,6 +100,7 @@ controller.createCourse = async (req, res) => {
 controller.getCourseById = async (req, res) => {
   const { id } = req.params;
 
+  console.log("Get course with id " + id);
   try {
     let courseDetails = await Course.findById(id).populate("sectionList").populate("instructor");
     if (!courseDetails) {
@@ -109,11 +109,11 @@ controller.getCourseById = async (req, res) => {
 
     courseDetails = courseDetails.toObject();
     // Fetch the lectures for each section
-    for (let section of courseDetails.sectionList) {
-      section.lectures = await Lecture.find({ sectionID: section._id });
-    }
+    for (let i = 0; i < courseDetails.sectionList.length; i++) {
+      const populatedSection = await Section.findById(courseDetails.sectionList[i]._id).populate("lectureList");
 
-    console.log(courseDetails.sectionList);
+      courseDetails.sectionList[i].lectures = populatedSection.lectureList;
+    }
 
     res.status(200).json(courseDetails);
   } catch (error) {

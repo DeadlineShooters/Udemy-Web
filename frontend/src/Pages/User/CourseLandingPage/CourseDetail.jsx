@@ -1,6 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
+
 import "./CourseDetail.css"; // Importing a CSS file to style the component
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faExclamation, faCirclePlay, faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
@@ -11,7 +13,8 @@ import CourseReview from "../../../Components/CourseLandingPage/CourseReview";
 import HeartIcon from "../../../Components/CourseLandingPage/HeartIcon";
 import NotFound from "../../../Components/404/404";
 
-const CourseDetail = ({ courseId }) => {
+const CourseDetail = () => {
+  const { courseId } = useParams();
   const courseSections = [
     {
       title: "Introduction",
@@ -55,9 +58,6 @@ const CourseDetail = ({ courseId }) => {
 
   const [course, setCourse] = useState(null);
   const [error, setError] = useState(null);
-
-  // TODO: Delete this line
-  courseId = "60d5ecb7b484193dd2b8b781";
 
   console.log(process.env.REACT_APP_BACKEND_HOST);
 
@@ -126,7 +126,8 @@ const CourseDetail = ({ courseId }) => {
         </div>
         <div className="sidebar-container  sm:w-8/12 lg:w-3/12 shadow-lg sm:-translate-y-0 lg:-translate-y-1/2 bg-white lg:fixed lg:right-6">
           <button type="button" className="relative w-full h-full ">
-            <div
+            {/* TODO: uncomment this and change the url */}
+            {/* <div
               style={{
                 backgroundImage: `linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0)), url('https://cdn.discordapp.com/attachments/973498508793503745/1217696152044961852/2151486_095a_6.jpg?ex=6604f6ea&is=65f281ea&hm=2c883878c56eeeccff8c64f989924f67a38678a3e4254290d7c09392b68b6d86&')`,
                 backgroundSize: "cover",
@@ -134,7 +135,7 @@ const CourseDetail = ({ courseId }) => {
                 paddingBottom: "55%", // maintain aspect ratio (height is 75% of width)
                 backgroundPosition: "center", // center the background image
               }}
-            ></div>
+            ></div> */}
             <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
               <FontAwesomeIcon icon={faCirclePlay} />
             </span>
@@ -168,7 +169,7 @@ const CourseDetail = ({ courseId }) => {
 
           <div className="curriculum-container course-layout mb-5 ">
             {course.sectionList.map((section) => (
-              <Section key={section._id} title={section.title} lectures={section.lectures} isLastSection={section.index === course.sectionList.length - 1} />
+              <Section key={section._id} title={section.name} lectures={section.lectures} isLastSection={section.index === course.sectionList.length - 1} />
             ))}
           </div>
           <span className="price-number font-bold text-2xl text-slate-950">Description</span>
@@ -199,9 +200,7 @@ const CourseDetail = ({ courseId }) => {
             instructor_fullname={"Ozan Ilhan"}
             noStudents={"79,880"}
             noReviews={"21,207"}
-            profileImg={
-              "https://cdn.discordapp.com/attachments/973498508793503745/1218098368040013834/23365736_7d3b_2.png?ex=66066d82&is=65f3f882&hm=90ef9be9b62dec627753dd175ee5ae8d608b1e7e4e5ed62b0689f1b75f9bc4f7&"
-            }
+            profileImg={""}
           />
           <div className="border-b pb-2">
             <span className="price-number font-bold text-2xl text-slate-950">Student feedback</span>
