@@ -19,15 +19,16 @@ import './CreateCourse.css'
 const CourseLandingPage = () => {
   const {state} = useLocation();
   const course = state.courseData;
+  console.log("edit", course);
   const [title, setTilte] = useState(course.name || "");
-  const [introduction, setIntroduction] = useState("");
-  const [description, setDescription] = useState( "");
-  const [thumbNail, setThumbNail] = useState( { secureURL: '', publicID: '' });
-  const [promoVideoLink, setPromoVideoLink] = useState("");
-  const [promoVideoId, setPromoVideoId] = useState();
-  const [promoVideoDuration, setPromoVideoDuration] = useState();
-  const [price, setPrice] = useState();
-  const [courseCat, setCourseCat] = useState("");
+  const [introduction, setIntroduction] = useState(course.introduction || "");
+  const [description, setDescription] = useState(course.description || "");
+  const [thumbNail, setThumbNail] = useState({secureURL: course.thumbNail.secureURL || '', publicID: course.thumbNail.publicID || '' });
+  const [promoVideoLink, setPromoVideoLink] = useState(course.promotionalVideo.secureURL || "");
+  const [promoVideoId, setPromoVideoId] = useState(course.promotionalVideo.publicID || "");
+  const [promoVideoDuration, setPromoVideoDuration] = useState(course.promotionalVideo.duration ||"");
+  const [price, setPrice] = useState(course.price || "none");
+  const [courseCat, setCourseCat] = useState();
   const [categories, setCategories] = useState();
 
   const location = useLocation();
@@ -46,6 +47,12 @@ const CourseLandingPage = () => {
 				console.error('Error:', error);
 			});
 	}, []);
+  useEffect(() => {
+    if (categories && course && course.category) {
+        const categoryName = categories.find(category => category._id === course.category)?.name;
+        setCourseCat(categoryName);
+    }
+  }, [categories, course]);
 
   const handleOnUploadThumbNail = (error, result, widget) => {
     if (error) {
@@ -98,14 +105,11 @@ const CourseLandingPage = () => {
           <div className="container justify-between">
             <div className="function">
               <div className="flex flex-col">
-                <select className=" p-3 text-md border border-black" onChange={(e) => setCourseCat(e.target.value)}>
-                  <option value="none" disabled selected>Choose a category</option>
-                  {categories && 
-                    categories.map((category, index) => {
-                      return (
-                        <option key={index} value={category._id}>{category.name}</option>
-                      )
-                  })}
+                <select className="p-3 text-md border border-black" value={courseCat || 'none'} onChange={(e) => setCourseCat(e.target.value)}>
+                  <option value="none" disabled>Choose a category</option>
+                  {categories && categories.map((category, index) => (
+                    <option key={index} value={category._id}>{category.name}</option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -247,7 +251,7 @@ const CourseLandingPage = () => {
                 </div>
                 <div className="flex flex-col">
                   <span className='mr-2 font-bold'>Price Tier</span>
-                  <select className="tier p-3 w-full text-md border border-black rounded-lg" onChange={(e) => setPrice(e.target.value)}>
+                  <select className="tier p-3 w-full text-md border border-black rounded-lg" value={price || 'none'} onChange={(e) => setPrice(e.target.value)}>
                     <option value="free">Free</option>
                     <option value="19.99">$19.99 (Tier 1)</option>
                     <option value="29.99">$29.99 (Tier 2)</option>

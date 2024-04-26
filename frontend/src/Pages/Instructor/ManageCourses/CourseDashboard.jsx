@@ -8,6 +8,7 @@ import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import UserNav from "../../../Components/UserNav.jsx";
 import { useAuth } from "../../../AuthContextProvider.jsx";
 import { useNavigate } from "react-router-dom";
+import StarRatings from "../../../Components/StarRatings.jsx";
 import axios from "axios";
 
 const profileImage =
@@ -107,14 +108,39 @@ const CourseDashBoard = () => {
                 <div className="flex-1 border border-gray-400 p-2 flex relative">
                   <div className="content-block w-1/4 flex flex-col justify-between">
                     <p className="font-bold text-sm line-clamp-2">{course.name}</p>
-                    {course.status === true ? (<p className="font-bold text-xs">Live</p>): (<p className="font-bold text-xs">Draft</p>)}
+                    {course.status === true ? (<p className="p-2 w-10 bg-black text-white font-bold text-xs">Live</p>): (<p className="font-bold text-xs">Draft</p>)}
                   </div>
-                  <div className="w-3/4 flex items-center">
-                    <p className="flex-none text-xs mr-2 font-bold">Finish your course</p>
-                    <div class=" flex-1 bg-gray-300 h-2  overflow-hidden">
-                      <div class="bg-blue-500 h-full w-1/2 "></div>
+                  {course.status === true ? (
+                    <div className="flex flex-row w-full justify-between px-28">
+                      <div className="flex flex-row items-center">
+                        <div className="flex flex-col">
+                          <p className="text-xl font-bold">{course.totalStudent}</p>
+                          <p>Enrollments this month</p>
+                        </div>
+                      </div>
+                      <div className="flex flex-row items-center">
+                        <div className="flex flex-col">
+                          <p className="text-xl font-bold">${course.totalRevenue.toString().padStart(2, '0')}</p>
+                          <p>Total Revenue</p>
+                        </div>
+                      </div>
+                      <div className="flex flex-row items-center">
+                        <div className="flex flex-col">
+                          <div className="flex flex-row items-center">
+                            <p className="text-xl font-bold mr-2">{course.avgRating || 0}</p>
+                            <StarRatings rating={course.avgRating || 0}/>
+                          </div>
+                          <p>Course rating</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  ) : 
+                  (<div className="w-3/4 flex items-center">
+                    <p className="flex-none text-xs mr-2 font-bold">Finish your course</p>
+                      <div class=" flex-1 bg-gray-300 h-2  overflow-hidden">
+                        <div class="bg-blue-500 h-full w-1/2 "></div>
+                      </div>
+                  </div>)}
                   <button className="edit-cover absolute top-0 left-0 w-full h-full bg-white opacity-0 hover:opacity-90 flex items-center justify-center hover:cursor-pointer" onClick={() => navigate(`/instructor/course/${course._id}/manage/basics`, {state: {courseData: course}})}>
                     <p className="font-bold text-purple-500">Edit / manage course</p>
                   </button>

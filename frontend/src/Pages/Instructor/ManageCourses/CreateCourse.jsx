@@ -263,7 +263,7 @@ const CreateCourse = () => {
       title: title, 
       introduction: introduction, 
       description: description, 
-      thumbNail: thumbNail,
+      thumbNail: {secureURL: thumbNail.secureURL, publicID: thumbNail.publicID},
       promotionalVideo: {secureURL: promoVideoLink, publicURL: promoVideoId, duration: promoVideoDuration},
       price: price,
       sections: sections,
