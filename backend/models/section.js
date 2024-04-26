@@ -5,5 +5,5 @@ const sectionSchema = mongoose.Schema({
   title: { type: String },
 });
 
-const section = mongoose.model("Section", sectionSchema);
-export default section;
+const Section = mongoose.model("Section", sectionSchema);
+export default Section;

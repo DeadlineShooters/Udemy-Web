@@ -1,14 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 
 const instructorSchema = mongoose.Schema({
-    firstName: {type: String},
-    lastName: {type: String},
     headline: {type: String},
     totalReviews: {type: Number},
     totalStudents: {type: Number},
-    bio: {type: String},
+    bio: { type: String },
+    courseList: [{ type: Schema.Types.ObjectId, ref: "Course" }],
     wallet: { walletID: {type: String}, walletName: {type: String}},
 })
 
-const instructor = mongoose.model("Instructor", instructorSchema);
-export default instructor;
+const Instructor = mongoose.model("Instructor", instructorSchema);
+export default Instructor;

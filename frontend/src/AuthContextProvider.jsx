@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
+import  secureLocalStorage  from  "react-secure-storage";
 
 const AuthContext = createContext();
 
@@ -7,7 +8,7 @@ const AuthContextProvider = ({ children }) => {
     const [isLogged, setIsLogged] = useState(false);
     useEffect(() => {
         const getUserGoogleAuth = () => {
-            const storedUser = localStorage.getItem('user');
+            const storedUser = secureLocalStorage.getItem('user');
             if (storedUser) {
                 setUser(JSON.parse(storedUser));
                 setIsLogged(true);
@@ -32,7 +33,7 @@ const AuthContextProvider = ({ children }) => {
                 .then((resObject) => {
                     setUser(resObject.user);
                     setIsLogged(true);
-                    localStorage.setItem('user', JSON.stringify(resObject.user));
+                    secureLocalStorage.setItem('user', JSON.stringify(resObject.user));
                 })
                 .catch((err) => {
                     console.log("Error:", err);
@@ -41,7 +42,8 @@ const AuthContextProvider = ({ children }) => {
         };
         getUserGoogleAuth();
     }, [setUser, setIsLogged]);
-    const userData = JSON.parse(localStorage.getItem('user'));
+    const userData = JSON.parse(secureLocalStorage.getItem('user'));
+    console.log("User data from storage: ", userData);
     return (
         <AuthContext.Provider value={{ user, userData, isLogged, setUser, setIsLogged }}>
             {children}

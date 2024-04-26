@@ -1,10 +1,25 @@
 import { RouterProvider, Outlet, createBrowserRouter, useLocation } from "react-router-dom";
+
+//Component
 import Navbar from './Components/Navbar/Navbar.jsx';
 import CourseNavbar from './Components/CourseNavBar/CourseNavBar.jsx';
+import Sidebar from './Components/Sidebar/sidebar.jsx';
+
+//General page
 import Home from './Pages/Discover/Home/Home.jsx';
+import CourseContent from './Pages/Course/Content/Content.jsx';
+import NotFound from './Components/404/404.jsx';
+import CourseDetail from './Pages/User/CourseLandingPage/CourseDetail.jsx';
+import Cart from './Pages/Cart/cart.jsx';
+import CoursesByCategory from './Pages/Discover/CoursesByCategory/coursesByCategory.jsx';
+import ProtectedRoutes from "./Components/Utils/AuthSecure.jsx";
+
+//Student page
 import MyLearning from './Pages/User/MyCourses/Learning/myLearning.jsx';
 import Wishlist from './Pages/User/MyCourses/Wishlist/Wishlist.jsx';
 import Archived from './Pages/User/MyCourses/Archived/Archived.jsx';
+
+//User edit & settings page
 import PublicProfile from './Pages/User/ManageAccount/publicProfile.jsx';
 import EditProfile from './Pages/User/ManageAccount/editProfile.jsx';
 import AccountSettings from './Pages/User/ManageAccount/accountSettings.jsx';
@@ -12,22 +27,19 @@ import CloseAccount from './Pages/User/ManageAccount/closeAccount.jsx';
 import Register from './Pages/User/Authentication/Register.jsx';
 import Login from './Pages/User/Authentication/Login.jsx';
 import HandlePopUpLogin from './Pages/User/Authentication/HandlePopUpLogin.jsx';
-import CourseContent from './Pages/Course/Content/Content.jsx';
-import NotFound from './Components/404/404.jsx';
-import CourseDetail from './Pages/User/CourseLandingPage/CourseDetail.jsx';
+
+//Instructor page
 import CourseDashBoard from './Pages/Instructor/ManageCourses/CourseDashboard.jsx';
 import Statistics from './Pages/Instructor/Statistics/Statistics.jsx';
-import Sidebar from './Components/Sidebar/sidebar.jsx';
 import CourseLandingPage from './Pages/Instructor/ManageCourses/CourseLandingPage.jsx';
 import Reviews from './Pages/Instructor/Reviews.jsx';
 import ManageCourseLayout from './Components/CourseManagement/ManageCourseLayout.jsx';
 import Curriculum from './Pages/Instructor/ManageCourses/Curriculum.jsx';
-import Cart from './Pages/Cart/cart.jsx';
-import CoursesByCategory from './Pages/Discover/CoursesByCategory/coursesByCategory.jsx';
-import ProtectedRoutes from "./Components/Utils/AuthSecure.jsx";
+import QuestionAndAnswer from "./Pages/Instructor/QA.jsx";
+import CreateCourse from "./Pages/Instructor/ManageCourses/CreateCourse.jsx";
+import Search from "./Pages/Discover/Search/search.jsx";
 
 import InstructorProfile from "./Pages/Instructor/InstructorProfile/InstructorProfile.jsx";
-
 
 // import fonts
 import "./fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf";
@@ -121,8 +133,12 @@ const router = createBrowserRouter([
 		element: <Layout />,
 		children: [
 			{
-				path: 'category-name',
+				path: ':categoryId',
 				element: <CoursesByCategory />,
+			},
+			{
+				path: 'search',
+				element: <Search/>,
 			},
 		],
 	},
@@ -189,10 +205,10 @@ const router = createBrowserRouter([
 					path: 'statistics',
 					element: <Statistics />,
 				},
-				// {
-				//   path: "qa",
-				//   element: <QA />,
-				// },
+				{
+					path: "qa",
+					element: <QuestionAndAnswer />,
+				},
 				{
 					path: 'reviews',
 					element: <Reviews />,
@@ -207,15 +223,22 @@ const router = createBrowserRouter([
 			path: '',
 			element: <ManageCourseLayout />,
 			children: [
-				{
-					path: 'curriculum',
-					element: <Curriculum />,
-				},
-				{
-					path: 'basics',
-					element: <CourseLandingPage />,
-				},
-			],
+			{
+				path: 'curriculum',
+				element: <Curriculum />,
+			},
+			{
+				path: 'basics',
+				element: <CourseLandingPage />,
+			}],
+		}]
+	},
+	{
+		path: '/instructor/course/create',
+		element: <ProtectedRoutes />,
+		children: [{
+			path: '',
+			element: <CreateCourse/>,
 		}]
 	},
 ]);
