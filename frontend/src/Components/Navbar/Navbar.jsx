@@ -16,18 +16,7 @@ import { IconChevronLeft } from "@tabler/icons-react";
 import secureLocalStorage from "react-secure-storage";
 import axios from "axios";
 
-const categories = [
-  "Development",
-  "Business",
-  "Finance & Accounting",
-  "IT & Software",
-  "Office Productivity",
-  "Personal Development",
-  "Design",
-  "Marketing",
-  "Health & Fitness",
-  "Music",
-];
+const categories = ["Development", "Business", "Finance & Accounting", "IT & Software", "Office Productivity", "Personal Development", "Design", "Marketing", "Health & Fitness", "Music"];
 
 const subCategories = [
   [
@@ -121,33 +110,9 @@ const subCategories = [
     "Product Marketing",
     "Other Marketing",
   ],
-  [
-    "Fitness",
-    "General Health",
-    "Sports",
-    "Nutrition",
-    "Yoga",
-    "Mental Health",
-    "Dieting",
-    "Self Defense",
-    "Safety & First Aid",
-    "Dance",
-    "Meditation",
-    "Other Health & Fitness",
-  ],
+  ["Fitness", "General Health", "Sports", "Nutrition", "Yoga", "Mental Health", "Dieting", "Self Defense", "Safety & First Aid", "Dance", "Meditation", "Other Health & Fitness"],
   ["Instruments", "Production", "Music Fundamentals", "Vocal", "Music Techniques", "Music Software", "Other Music"],
-  [
-    "Engineering",
-    "Humanities",
-    "Math",
-    "Science",
-    "Online Education",
-    "Social Science",
-    "Language Learning",
-    "Teacher Training",
-    "Test Prep",
-    "Other Teaching & Academics",
-  ],
+  ["Engineering", "Humanities", "Math", "Science", "Online Education", "Social Science", "Language Learning", "Teacher Training", "Test Prep", "Other Teaching & Academics"],
 ];
 
 const courses = [
@@ -337,10 +302,7 @@ const Navbar = () => {
                 <img src={heart} alt="Wishlist" className="wishlist mx-4"></img>
               </button>
               {isWishlistDropdownOpen && (
-                <div
-                  id="dropdownSearch"
-                  className="z-9999 absolute top-[calc(100%-1rem)] mt-2 right-0 bg-white shadow-[0_0_0_1px_#d1d7dc,0_2px_4px_rgba(0,0,0,.08),0_4px_12px_rgba(0,0,0,.08)] w-80"
-                >
+                <div id="dropdownSearch" className="z-9999 absolute top-[calc(100%-1rem)] mt-2 right-0 bg-white shadow-[0_0_0_1px_#d1d7dc,0_2px_4px_rgba(0,0,0,.08),0_4px_12px_rgba(0,0,0,.08)] w-80">
                   <ul class="divide-y divide-gray-300 max-h-[32rem] pb-3 overflow-y-auto text-sm text-gray-700" aria-labelledby="dropdownSearchButton">
                     {courses.map((course) => (
                       <button class="flex flex-col items-center p-4" onClick={() => {}}>
@@ -380,10 +342,7 @@ const Navbar = () => {
                 <img src={cart} alt="Cart" className="cart mx-4"></img>
               </button>
               {isCartDropdownOpen && (
-                <div
-                  id="dropdownSearch"
-                  className="z-9999  absolute top-[calc(100%-1rem)] mt-2 right-0 bg-white shadow-[0_0_0_1px_#d1d7dc,0_2px_4px_rgba(0,0,0,.08),0_4px_12px_rgba(0,0,0,.08)] w-80"
-                >
+                <div id="dropdownSearch" className="z-9999  absolute top-[calc(100%-1rem)] mt-2 right-0 bg-white shadow-[0_0_0_1px_#d1d7dc,0_2px_4px_rgba(0,0,0,.08),0_4px_12px_rgba(0,0,0,.08)] w-80">
                   <ul class="divide-y divide-gray-300 max-h-[32rem] pb-3 overflow-y-auto text-sm text-gray-700" aria-labelledby="dropdownSearchButton">
                     {courses.map((course) => (
                       <button class="flex flex-col items-center p-4" onClick={() => {}}>
@@ -431,12 +390,7 @@ const Navbar = () => {
             <Menu as="div" className="user relative ml-4">
               <div>
                 <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:outline-none focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                  <img
-                    id="preview"
-                    src={createImageFromInitials(40, userData.firstName + " " + userData.lastName, getColor())}
-                    alt="profile-pic"
-                    className="avatar"
-                  />
+                  <img id="preview" src={createImageFromInitials(40, userData.firstName + " " + userData.lastName, getColor())} alt="profile-pic" className="avatar" />
                 </Menu.Button>
               </div>
               <Transition
@@ -521,12 +475,7 @@ const Navbar = () => {
         <div className={`sidebar md:hidden ${isTurnOnSideBar ? "open" : ""} border-r-2 shadow-xl`}>
           <div className="flex flex-row items-center bg-slate-50 py-2">
             <div className="flex rounded-full text-sm focus:ring-2 focus:outline-none focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 ml-5">
-              <img
-                id="preview"
-                src={createImageFromInitials(80, userData.firstName + " " + userData.lastName, getColor())}
-                alt="profile-pic"
-                className="avatar"
-              />
+              <img id="preview" src={createImageFromInitials(80, userData.firstName + " " + userData.lastName, getColor())} alt="profile-pic" className="avatar" />
             </div>
             <div className="flex flex-col ml-5">
               <p className="font-bold">Hi, {userData.firstName + " " + userData.lastName} </p>

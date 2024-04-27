@@ -10,11 +10,20 @@ import { useState } from "react";
 
 function EditRatingButton({ review }) {
   const [hover, setHover] = useState(false);
+
+  const handleMouseEnter = () => {
+    setHover(true);
+  };
+
+  const handleMouseLeave = () => {
+    setHover(false);
+  };
+
   return (
     <div>
       <Modal>
         {review ? (
-          <div className="flex flex-col items-end " onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+          <div className="flex flex-col items-end " onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <StarRatings rating={review.rating} />
 
             <span className="text-sm">

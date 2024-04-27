@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -12,34 +12,16 @@ import ProfileCard from "../../../Components/CourseLandingPage/ProfileCard";
 import CourseReview from "../../../Components/CourseLandingPage/CourseReview";
 import HeartIcon from "../../../Components/CourseLandingPage/HeartIcon";
 import NotFound from "../../../Components/404/404";
+import Modal from "../../../Components/Feedback/Modal";
+import PreviewModal from "./PreviewModal";
+import { createImageFromInitials } from "../../../Components/Utils/Utils.js";
+import { convertDecimal128ToNumber } from "../../../Components/Utils/Utils.js";
 
 const CourseDetail = () => {
+  const videoRef = useRef();
   const { courseId } = useParams();
-  const courseSections = [
-    {
-      title: "Introduction",
-      lectures: [
-        { title: "Why This Course?", duration: "02:50", isPreview: true },
-        { title: "Course Roadmap", duration: "03:07" },
-      ],
-    },
-    {
-      title: "Course Setup and Introduction to Software Testing",
-      lectures: [
-        { title: "Section Introduction", duration: "00:26" },
-        { title: "Working with Subtitles", duration: "01:11" },
-        { title: "Software Testing Overview", duration: "07:39" },
-      ],
-    },
-    {
-      title: "Deep Dive In Testing",
-      lectures: [
-        { title: "Understanding Unit Tests", duration: "05:12" },
-        { title: "Integration Testing Explained", duration: "04:45" },
-        { title: "The Importance of Mocking", duration: "03:30" },
-      ],
-    },
-  ];
+  const [course, setCourse] = useState(null);
+  const [error, setError] = useState(null);
 
   const reviews = [
     { id: 1, firstName: "Alice", lastName: "B", rating: 5, comment: "Great course! Very informative and well-structured." },
@@ -56,10 +38,15 @@ const CourseDetail = () => {
     { id: 12, firstName: "Lucas", lastName: "An", rating: 5, comment: "The course was challenging but rewarding. I learned a lot." },
   ];
 
-  const [course, setCourse] = useState(null);
-  const [error, setError] = useState(null);
-
   console.log(process.env.REACT_APP_BACKEND_HOST);
+
+  const handlePlayVideo = () => {
+    document.body.style.overflow = "hidden";
+    if (videoRef.current) {
+      videoRef.current.src = course.promotionalVideo.secureURL;
+      videoRef.current.play();
+    }
+  };
 
   function formatSecondsToHoursMinutesSeconds(seconds) {
     var hours = Math.floor(seconds / 3600);
@@ -98,12 +85,13 @@ const CourseDetail = () => {
   const formattedDate = `${date.toLocaleString("default", { month: "short" })} ${date.getDate()}, ${date.getFullYear()}`;
 
   return (
-    <div className="w-full h-full course-title-container">
+    <div className={`w-full h-full course-title-container`}>
+      {/* <video ref={videoRef} src={course.promotionalVideo.secureURL} style={{ display: "none" }} /> */}
       <div
         className="course-detail-container w-full lg:bg-course-title-bg-grey
-       lg:px-20 py-5 md:px-10 sm:px-5 sm:text-black lg:text-white sm:flex sm:flex-col sm:items-center lg:block "
+        lg:py-5 lg:px-20  md:px-10 sm:px-5 sm:text-black lg:text-white sm:flex sm:flex-col sm:items-center lg:block "
       >
-        <div id="short-description" className=" lg:w-1/2 relative left-0">
+        <div id="short-description" className=" relative left-0 lg:w-full lg:px-10">
           <h1 className="course-title font-bold text-3xl">{course.name}</h1>
           <br />
           <p className="course-description">{course.introduction}</p>
@@ -111,7 +99,7 @@ const CourseDetail = () => {
 
           <div className="course-rating flex items-center">
             <div className="text-amber-500 font-bold mr-1 text-sm">
-              <span>{course.avgRating}</span>
+              <span className="mr-1">{convertDecimal128ToNumber(course.avgRating)}</span>
               <FontAwesomeIcon icon={faStar} />
             </div>
             <a href="/" className="mr-3 text-violet-500 underline text-sm ">
@@ -124,30 +112,37 @@ const CourseDetail = () => {
             <span className="text-sm">Created date {formattedDate}</span>
           </p>
         </div>
-        <div className="sidebar-container  sm:w-8/12 lg:w-3/12 shadow-lg sm:-translate-y-0 lg:-translate-y-1/2 bg-white lg:fixed lg:right-6">
-          <button type="button" className="relative w-full h-full ">
-            {/* TODO: uncomment this and change the url */}
-            {/* <div
-              style={{
-                backgroundImage: `linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0)), url('https://cdn.discordapp.com/attachments/973498508793503745/1217696152044961852/2151486_095a_6.jpg?ex=6604f6ea&is=65f281ea&hm=2c883878c56eeeccff8c64f989924f67a38678a3e4254290d7c09392b68b6d86&')`,
-                backgroundSize: "cover",
-                width: "100%", // take full width of the parent
-                paddingBottom: "55%", // maintain aspect ratio (height is 75% of width)
-                backgroundPosition: "center", // center the background image
-              }}
-            ></div> */}
-            <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              <FontAwesomeIcon icon={faCirclePlay} />
-            </span>
-            <span className="absolute bottom-1 left-0 right-0 text-center font-bold text-white">Preview this course</span>
-          </button>
+        <div className={`sidebar-container  sm:w-8/12 lg:w-3/12 shadow-lg sm:-translate-y-0 lg:-translate-y-1/3 bg-white lg:fixed lg:right-6 `}>
+          <Modal>
+            <Modal.Open opens="view-course-preview">
+              <button type="button" className="relative w-full h-full" onClick={handlePlayVideo}>
+                <div
+                  style={{
+                    backgroundImage: `linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0)), url('${course.thumbNail.secureURL}')`,
+                    backgroundSize: "cover",
+                    width: "100%", // take full width of the parent
+                    paddingBottom: "55%", // maintain aspect ratio (height is 75% of width)
+                    backgroundPosition: "center", // center the background image
+                  }}
+                ></div>
+                <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                  <FontAwesomeIcon icon={faCirclePlay} size="2x" color="white" />
+                </span>
+                <span className="absolute bottom-1 left-0 right-0 text-center font-bold text-white">Preview this course</span>
+              </button>
+            </Modal.Open>
+            <Modal.Window name="view-course-preview">
+              <PreviewModal videoRef={videoRef} course={course} />
+            </Modal.Window>
+          </Modal>
+
           <div className="body-sidebar px-6 py-4">
             <div className="price mb-2 break-words text-black">
               <span className="money-unit font-bold lg:text-3xl sm:text-lg md:text-xl text-slate-900">đ</span>
               <span className="price-number font-bold lg:text-3xl sm:text-lg md:text-xl text-slate-900">{course.price.toLocaleString()}</span>
             </div>
             <div className="flex flex-row mb-2 buttons w-full justify-between ">
-              <button className="flex-5 w-full mr-2 py-2 h-12 text-sm xl:text-lg bg-purple-500 text-white rounded font-bold">Add to Cart</button>
+              <button className={`flex-5 w-full mr-2 py-2 h-12 text-sm xl:text-lg bg-purple-500 text-white rounded font-bold `}>Add to Cart</button>
               <HeartIcon wishlistState={true} />
             </div>
             <button className="w-full border border-black h-12 font-bold text-black">Buy now</button>
@@ -177,10 +172,9 @@ const CourseDetail = () => {
             <h1>Welcome to the Complete Software Testing Masterclass.</h1>
             <br />
             <p>
-              Learn software testing with this course and become a successful software tester/agile Tester. Obtain the core Mobile Testing, Backend testing, Web
-              testing, and Test Engineering skills, and learn JIRA, SQL, TestRail, TestGear, Confluence, Charles Proxy, and GitHub. By the end of this course,
-              you will have enough knowledge to get a job as a software tester or start working as a freelancer! We will also explain many testing platforms
-              where you can start earning money as a beta tester.
+              Learn software testing with this course and become a successful software tester/agile Tester. Obtain the core Mobile Testing, Backend testing, Web testing, and Test Engineering skills,
+              and learn JIRA, SQL, TestRail, TestGear, Confluence, Charles Proxy, and GitHub. By the end of this course, you will have enough knowledge to get a job as a software tester or start
+              working as a freelancer! We will also explain many testing platforms where you can start earning money as a beta tester.
             </p>
 
             <br />
@@ -190,17 +184,14 @@ const CourseDetail = () => {
             <br />
 
             <p>
-              The course includes over hours and hours of 1080P (HD) video tutorials with high-quality sound. All the videos are hand-edited and unnecessary
-              parts are removed. You will only learn "what you need to learn" to become successful!
+              The course includes over hours and hours of 1080P (HD) video tutorials with high-quality sound. All the videos are hand-edited and unnecessary parts are removed. You will only learn
+              "what you need to learn" to become successful!
             </p>
           </div>
           <span className="price-number font-bold text-2xl text-slate-950 ">Instructor</span>
           <ProfileCard
-            headline={"Senior Software Test Engineer and Educator"}
-            instructor_fullname={"Ozan Ilhan"}
-            noStudents={"79,880"}
-            noReviews={"21,207"}
-            profileImg={""}
+            instructor={course.instructor}
+            profileImg={course.instructor.avatar ? course.instructor.avatar.public_id : createImageFromInitials(160, course.instructor.firstName + " " + course.instructor.lastName)}
           />
           <div className="border-b pb-2">
             <span className="price-number font-bold text-2xl text-slate-950">Student feedback</span>
@@ -212,20 +203,22 @@ const CourseDetail = () => {
               </span>
 
               <div className="average flex flex-row justify-between items-center">
-                <span className="price-number font-bold text-3xl text-slate-950">4.5</span>
-                <FontAwesomeIcon icon={faStar} className="text-amber-500" />
+                <span className="price-number font-bold text-3xl text-slate-950">{convertDecimal128ToNumber(course.avgRating)}</span>
+                <FontAwesomeIcon icon={faStar} className="text-amber-500" size="lg" />
               </div>
             </div>
             <div class="rating-button-container flex flex-col h-full">
               <div className="rating-row flex flex-row">
                 <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">All</button>
-                <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">5 Stars - 15%</button>
-                <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">4 Stars - 25%</button>
+                <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">5 Stars - {course.fiveStarCnt}</button>
+                <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">4 Stars - {course.fourStarCnt}</button>
               </div>
               <div className="rating-row flex flex-row">
-                <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">3 Stars - 30%</button>
+                <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">3 Stars - {course.threeStarCnt}</button>
 
-                <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">1 Star - 10%</button>
+                <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">2 Stars -{course.twoStarCnt}</button>
+
+                <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">1 Star - {course.oneStarCnt}</button>
               </div>
             </div>
           </div>
