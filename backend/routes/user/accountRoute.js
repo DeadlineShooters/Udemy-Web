@@ -7,5 +7,5 @@ const router = express.Router();
 router.post("/edit-profile", accountController.editProfile);
 router.post("/change-password", accountController.changePassword);
 router.post("/become-instructor", accountController.becomeInstructor);
-
+router.get("/:userId/get-course", accountController.getCourse);
 export default router;

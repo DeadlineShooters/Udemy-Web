@@ -11,6 +11,7 @@ const UploadWidget = ({onUpload, type, object}) => {
         widgetRef.current = cloudinaryRef.current.createUploadWidget({
             cloudName: process.env.REACT_APP_CLOUDINARY_CLOUD_NAME,
             uploadPreset: process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET,
+            crop: true
         }, function(error, result) {
             if ((error || result.event === 'success') && typeof onUpload === 'function') {
                 onUpload(error, result, widgetRef, type);
