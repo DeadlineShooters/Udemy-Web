@@ -1,4 +1,3 @@
-import React from "react";
 import DashboardHeaderTitle from "../../../Components/DashboardHeaderTitle";
 import Heading1 from "../../../Components/CourseManagement/Heading1";
 import TextInput from "./TextInput";
@@ -16,8 +15,10 @@ import "./CreateCourse.css";
 import { Bounce, toast } from "react-toastify";
 import Modal from "../../../Components/CourseManagement/Modal";
 import { useCourse } from "../../../CourseContextProvider";
+import { useDispatch } from "react-redux";
 
 const CourseLandingPage = () => {
+  const dispatch = useDispatch();
   const { selectedCourse, setSelectedCourse } = useCourse();
   const [courseId, setCourseId] = useState("");
   const [instructor, setInstructor] = useState("");
@@ -33,6 +34,7 @@ const CourseLandingPage = () => {
   const [categories, setCategories] = useState();
 
   useEffect(() => {
+    dispatch({ type: "SET_CREATE_COURSE_HANDLER", payload: handleCreateCourse });
     if (selectedCourse) {
       localStorage.setItem("course", JSON.stringify(selectedCourse));
     }
@@ -365,9 +367,7 @@ const CourseLandingPage = () => {
           <Button color="black" className="rounded-none hover:bg-violet-800" style={{ height: "48px" }} onClick={() => navigate(replacedUrl)}>
             <span className="font-bold text-base normal-case">Go to Curriculum</span>
           </Button>
-          <Button color="purple" className="rounded-none hover:bg-violet-800" style={{ height: "48px" }} onClick={() => handleCreateCourse()}>
-            <span className="font-bold text-base normal-case">Save Course</span>
-          </Button>
+
           <Modal
             showModal={showWarningModal}
             setShowModal={setShowWarningModal}

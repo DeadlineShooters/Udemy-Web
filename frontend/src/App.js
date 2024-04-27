@@ -6,6 +6,8 @@ import { AuthProvider } from "./AuthContextProvider.jsx";
 import { CourseProvider } from "./CourseContextProvider.jsx";
 import { AppRouterProvider } from "./AuthRouterProvider.jsx";
 import { ToastContainer } from "react-toastify";
+import { Provider } from "react-redux";
+import store from "./reducers/store.js";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,16 +20,18 @@ const queryClient = new QueryClient({
 
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className="App">
-        <AuthProvider>
-          <CourseProvider>
-            <ToastContainer />
-            <AppRouterProvider />
-          </CourseProvider>
-        </AuthProvider>
-      </div>
-    </QueryClientProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <div className="App">
+          <AuthProvider>
+            <CourseProvider>
+              <ToastContainer />
+              <AppRouterProvider />
+            </CourseProvider>
+          </AuthProvider>
+        </div>
+      </QueryClientProvider>
+    </Provider>
   );
 };
 
