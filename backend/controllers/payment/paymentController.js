@@ -1,10 +1,14 @@
 import moongoose from 'mongoose';
 import User from '../../models/user.js';
+import crypto from 'crypto';
+import https from 'https';
+import Course from '../../models/course.js';
 
 const controller = {};
 
 controller.payment = async (request, response) => {
 	var userId = request.body.userId;
+	console.log(userId);
 	var amount = request.body.amount;
 	var partnerCode = 'MOMO';
 	var accessKey = 'F8BBA842ECF85';
@@ -12,7 +16,7 @@ controller.payment = async (request, response) => {
 	var requestId = partnerCode + new Date().getTime();
 	var orderId = requestId;
 	var orderInfo = 'pay with MoMo';
-	var redirectUrl = 'http://localhost:5000/customer/handlepayment';
+	var redirectUrl = 'http://localhost:5000/payment/handle-payment';
 	var ipnUrl = 'https://callback.url/notify';
 	// var ipnUrl = redirectUrl = "https://webhook.site/454e7b77-f177-4ece-8236-ddf1c26ba7f8";
 	var requestType = 'captureWallet';
@@ -106,18 +110,18 @@ controller.handlePayment = async (req, res) => {
 		let userId = req.query.extraData;
 		let user = await User.findById(userId);
 		if (user) {
-			user.cart.map(async courseId => {
+			user.cart.map(async (courseId) => {
 				let course = await Course.findById(courseId);
 				if (course) {
 					user.courseList.push(courseId);
 					await user.save();
-					course.totalStudent += 1
-					course.totalRevenue += course.price
-					await course.save()
+					course.totalStudent += 1;
+					course.totalRevenue += course.price;
+					await course.save();
 				} else {
 					console.log('No course found!');
 				}
-			})
+			});
 			user.cart = [];
 		} else {
 			console.log('No user found!');
