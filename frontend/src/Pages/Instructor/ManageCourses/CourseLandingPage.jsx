@@ -14,12 +14,13 @@ import { Link } from "react-router-dom";
 import { Image, Video } from 'cloudinary-react';
 import { Button } from "@material-tailwind/react";
 import { useNavigate, useLocation } from "react-router-dom";
-import './CreateCourse.css'
+import './CreateCourse.css';
+import { Bounce, toast } from 'react-toastify';
 import Modal from "../../../Components/CourseManagement/Modal";
 import { useCourse } from "../../../CourseContextProvider";
 
 const CourseLandingPage = () => {
-  const { selectedCourse } = useCourse();
+  const { selectedCourse, setSelectedCourse } = useCourse();
   const [courseId, setCourseId] = useState("");
   const [instructor, setInstructor] = useState("");
   const [title, setTilte] = useState("");
@@ -82,7 +83,7 @@ const CourseLandingPage = () => {
 
   useEffect(() => {
     if (categories && selectedCourse && selectedCourse.category) {
-        const categoryName = categories.find(category => category._id === selectedCourse.category)?.name;
+        const categoryName = categories.find(category => category._id === selectedCourse.category);
         setCourseCat(categoryName);
     }
   }, [categories, selectedCourse]);
@@ -134,7 +135,7 @@ const CourseLandingPage = () => {
       title.trim(),
       introduction.trim(),
       description.trim(),
-      courseCat.trim(),
+      courseCat,
       thumbNail.secureURL.trim(),
       thumbNail.publicID.trim(),
       promoVideoLink,
@@ -162,6 +163,20 @@ const CourseLandingPage = () => {
     }
   }
 
+  const successNotify = () => {
+    toast.success('Updated successfully!', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Bounce,
+    });
+  };
+
   const handleUploadCourse = async () => {
     const data = {
       category: courseCat,
@@ -178,15 +193,15 @@ const CourseLandingPage = () => {
     try { 
       const response = await axios.put(`http://localhost:5000/instructor/${courseId}/update-course`, {data})
       if (response.status === 200) {
-        //After creating course, return the main page
-        //navigate("/instructor/courses", {replace: true});
-        console.log(response.data); 
+        console.log("after", response.data.course);
+        successNotify();
+        setSelectedCourse(response.data.course);
+        localStorage.setItem("course", JSON.stringify(response.data.course));
       }
     } catch (error) {
       console.log(error);
     }
   }
-
   return (
     <DashboardHeaderTitle title={"Course landing page"}>
       <div className="mt-6 border-t-2">
@@ -196,7 +211,7 @@ const CourseLandingPage = () => {
           <div className="container justify-between">
             <div className="function">
               <div className="flex flex-col">
-                <select className="p-3 text-md border border-black" value={courseCat || 'none'} onChange={(e) => setCourseCat(e.target.value)}>
+                <select className="p-3 text-md border border-black" value={courseCat._id || 'none'} onChange={(e) => setCourseCat(e.target.value)}>
                   <option value="none" disabled>Choose a category</option>
                   {categories && categories.map((category, index) => (
                     <option key={index} value={category._id}>{category.name}</option>

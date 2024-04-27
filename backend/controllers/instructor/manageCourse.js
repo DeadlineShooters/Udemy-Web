@@ -69,7 +69,10 @@ export const updateCourse = async (req, res) => {
         const {courseId} = req.params;
         console.log("course edit: ", data);
         console.log("Id", courseId);
-        const updatedCourse = await Course.findByIdAndUpdate(courseId, data, {new: true});
+        const updatedCourse = await Course.findByIdAndUpdate(courseId, data, {new: true}).populate({
+            path: "sectionList",
+            populate: "lectureList",
+        });;
         console.log("course after edit: ", updatedCourse);
         if (updatedCourse) {
             return res.status(200).send({ success: true, message: "Course updated successfully", course: updatedCourse});  
@@ -78,5 +81,68 @@ export const updateCourse = async (req, res) => {
         }
     } catch (error) {
         console.log(error);
+    }
+}
+
+export const updateSection = async (req, res) => {
+    try {
+        const { data } = req.body;
+        const { courseId } = req.params;
+
+        // Create an array to hold the IDs of the newly created sections
+        const sectionIds = [];
+
+        // Iterate over the sections in the data and create/update them
+        for (const sectionData of data.sectionList) {
+            // Create an array to hold the IDs of the lectures within the section
+            const lectureIds = [];
+
+            // Iterate over the lectures in the section data and create/update them
+            for (const lectureData of sectionData.lectureList) {
+                // If the lecture has an ID, update it; otherwise, create a new one
+                if (lectureData._id) {
+                    const updatedLecture = await Lecture.findByIdAndUpdate(lectureData._id, lectureData, { new: true });
+                    lectureIds.push(updatedLecture._id);
+                } else {
+                    const newLecture = new Lecture(lectureData);
+                    const savedLecture = await newLecture.save();
+                    lectureIds.push(savedLecture._id);
+                }
+            }
+
+            // Update the lectureList of the section with the IDs of the newly created or updated lectures
+            const sectionWithLectures = { ...sectionData, lectureList: lectureIds };
+
+            // If the section has an ID, update it; otherwise, create a new one
+            if (sectionWithLectures._id) {
+                const updatedSection = await Section.findByIdAndUpdate(sectionWithLectures._id, sectionWithLectures, { new: true });
+                sectionIds.push(updatedSection._id);
+            } else {
+                const newSection = new Section(sectionWithLectures);
+                const savedSection = await newSection.save();
+                sectionIds.push(savedSection._id);
+            }
+        }
+
+        // Update the course with the updated sectionList
+        const updatedCourse = await Course.findByIdAndUpdate(
+            courseId,
+            { sectionList: sectionIds },
+            { new: true }
+        ).populate({
+            path: "sectionList",
+            populate: "lectureList",
+        });
+
+        console.log("course after edit: ", updatedCourse);
+        
+        if (updatedCourse) {
+            return res.status(200).send({ success: true, message: "Course updated successfully", course: updatedCourse });  
+        } else {
+            return res.status(400).send({ success: false, message: "Course update failed", course: updatedCourse });  
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({ success: false, message: "Internal server error" });
     }
 }

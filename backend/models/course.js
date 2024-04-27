@@ -15,7 +15,7 @@ const courseSchema = mongoose.Schema({
     totalLecture: {type: Number},
     totalSection: {type: Number},
     totalLength: {type: Number},
-    avgRating: {type: Number},
+    avgRating: {type: Number, default: 0.00},
     thumbNail: imageSchema,
     status: {type: Boolean},
     createDate: {type: Date, default: Date.now()},

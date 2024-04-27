@@ -10,18 +10,46 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Modal from "../../../Components/CourseManagement/Modal.jsx";
 import axios from "axios";
 import { useCourse } from "../../../CourseContextProvider.jsx";
+import { Bounce, toast } from 'react-toastify';
 
 const Curriculum = () => {
   const { selectedCourse, setSelectedCourse } = useCourse();
+  const [courseId, setCourseId] = useState("");
+  const [instructor, setInstructor] = useState("");
   const [sections, setSections] = useState([]);
+
   useEffect(() => {
-    const setCourseSection = () => {
-      if (selectedCourse && selectedCourse.sectionList) {
-        setSections(selectedCourse.sectionList);
+    const getSaveCourse = () => {
+      const savedCourse = localStorage.getItem('course');
+      if (savedCourse) {
+        const course = JSON.parse(savedCourse);
+        setCourseId(course._id);
+        setInstructor(course.instructor);
+        setSections(course.sectionList);
       }
     }
-    setCourseSection();
+    getSaveCourse();
   }, [])
+
+  useEffect(() => {
+    const saveCourse = () => {
+      const savedCourse = JSON.parse(localStorage.getItem('course'));
+      let tempCourse;
+      if (sections.length > 0) {
+        tempCourse = {
+          ...savedCourse,
+          sectionList: sections,
+        };
+      } else {
+        // If sections is empty, retain the previous sections in localStorage
+        tempCourse = {
+          ...savedCourse,
+        };
+      }
+      localStorage.setItem("course", JSON.stringify(tempCourse));
+    };
+    saveCourse();
+  }, [sections]);
 
   const [totalLength, setTotalLength] = useState();
   const [totalLecture, setTotalLecture] = useState();
@@ -161,45 +189,41 @@ const Curriculum = () => {
     }
   }
 
+  const successNotify = () => {
+    toast.success('Updated successfully!', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Bounce,
+    });
+  };
+  
   const handleUploadCourse = async () => {
     const data = {
-      instructor: selectedCourse.instructor,
-      section: sections,
-      status: true,
-    }
-    console.log("edit upload", data);
-    // try { 
-    //   const response = await axios.post("http://localhost:5000/instructor/create-course", {data})
-    //   if (response.status === 200) {
-    //     //After creating course, return the main page
-    //     navigate("/instructor/courses", {replace: true});
-    //     console.log(response.data); 
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  }
-
-  const handleUpdateCourse = async () => {
-    const data = {
-      sections: sections,
+      instructor: instructor,
+      sectionList: sections,
       totalSection: sections.length,
       totalLecture: totalLecture,
       totalLength: totalLength,
-      //instructor: userData.instructor,
+      status: true,
     }
-    console.log(data);
-    // try { 
-    //   const response = await axios.put("http://localhost:5000/instructor/create-course", {data})
-    //   if (response.status === 200) {
-
-    //     //After creating course, reset all field
-    //     navigate("/instructor/courses", {replace: true});
-    //     console.log(response.data); 
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    console.log("edit upload", data);
+    try { 
+      const response = await axios.put(`http://localhost:5000/instructor/${courseId}/update-section`, {data})
+      if (response.status === 200) {
+        console.log("after", response.data.course);
+        successNotify();
+        setSelectedCourse(response.data.course);
+        localStorage.setItem("course", JSON.stringify(response.data.course));
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
   return (
     <DashboardHeaderTitle title={"Curriculum"}>
