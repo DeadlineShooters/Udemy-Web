@@ -64,7 +64,7 @@ const CourseDetail = () => {
     return <Spinner />;
   }
 
-  if (isLoading) return <Spinner />;
+  // if (isLoading) return <Spisnner />;
 
   if (error) {
     return <NotFound />;
