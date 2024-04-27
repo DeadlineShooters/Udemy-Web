@@ -219,6 +219,7 @@ const CourseContent = () => {
   };
   const [QAlistOfLecture, setQAlistOfLecture] = useState();
   const handleQAClick = () => {
+    setQAlistOfLecture({title: "ayyy", description: "hmmm"})
     localNavigate(window.location.pathname + '#QA');
   };
   return (
