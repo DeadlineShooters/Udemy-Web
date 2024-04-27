@@ -2,7 +2,8 @@ import { json } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import "./App.css";
-import { AuthContextProvider } from "./AuthContextProvider.jsx";
+import { AuthProvider } from "./AuthContextProvider.jsx";
+import { CourseProvider } from "./CourseContextProvider.jsx";
 import { AppRouterProvider } from "./AuthRouterProvider.jsx";
 import { ToastContainer } from "react-toastify";
 
@@ -19,10 +20,10 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="App">
-        <AuthContextProvider>
+        <AuthProvider>
           <ToastContainer />
           <AppRouterProvider />
-        </AuthContextProvider>
+        </AuthProvider>
       </div>
     </QueryClientProvider>
   );

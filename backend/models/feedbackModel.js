@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import feedbackResponseSchema from "./FeedbackResponse.js";
+import feedbackResponseSchema from "./feedbackResponse.js";
 
 const feedbackSchema = mongoose.Schema({
   courseID: { type: Schema.Types.ObjectId, ref: "Course" },

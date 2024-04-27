@@ -196,8 +196,8 @@ const Home = () => {
                 </span>
                 <Carousel containerClass="" itemClass="m-2 itemClassHome" responsive={responsive}>
                   {courses[category.name].map((course) => (
-                    <a class="" href={`course/${course._id}`}>
-                      <img class="" src={course.thumbNail.publicURL} alt="" />
+                    <div class="">
+                      <img class="" src={course.thumbNail.secureURL} alt="" />
                       <div class="flex flex-col gap-1 pt-1.5">
                         <h3 class="font-bold text-gray-900 line-clamp-2 leading-tight">{course.name}</h3>
                         <p class="text-xs truncate text-gray-500">
@@ -213,16 +213,16 @@ const Home = () => {
                         </div>
                         <div class="flex items-center space-x-2">
                           <span class="font-bold text-gray-900 ">
-                            <span class="underline">đ</span>
+                            <span>$</span>
                             {(course.price * 0.8).toLocaleString()}
                           </span>
                           <span class="text-gray-500 line-through">
-                            <span class="underline">đ</span>
+                            <span>$</span>
                             {course.price.toLocaleString()}
                           </span>
                         </div>
                       </div>
-                    </a>
+                    </div>
                   ))}
                 </Carousel>
               </div>

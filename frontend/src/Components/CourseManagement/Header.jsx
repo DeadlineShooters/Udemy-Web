@@ -14,8 +14,6 @@ export default function Header() {
   };
 
   const onSave = () => {};
-  const showSaveButton = !location.pathname.endsWith("curriculum");
-
   return (
     <header className="bg-gray-900 py-5 px-8 border-b border-gray-200 flex gap-6 items-center justify-between">
       <div className="flex gap-6 items-center">
@@ -25,7 +23,7 @@ export default function Header() {
         <span className="text-white hidden sm:block">Back to courses</span>
         <span className="text-white text-xl font-bold">{course_name}</span>
       </div>
-      {showSaveButton && <ButtonDefault text={"Save"} handleClick={onSave} />}
+      <ButtonDefault text={"Save"} handleClick={onSave}/>
     </header>
   );
 }
