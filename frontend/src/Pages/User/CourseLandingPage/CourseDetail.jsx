@@ -13,30 +13,20 @@ import CourseReview from "../../../Components/CourseLandingPage/CourseReview";
 import HeartIcon from "../../../Components/CourseLandingPage/HeartIcon";
 import NotFound from "../../../Components/404/404";
 import Modal from "../../../Components/Feedback/Modal";
+import Spinner from "../../../Components/Spinner.jsx";
 import PreviewModal from "./PreviewModal";
 import { createImageFromInitials } from "../../../Components/Utils/Utils.js";
 import { convertDecimal128ToNumber } from "../../../Components/Utils/Utils.js";
+import { useFeedbacks } from "../../../Components/Feedback/useFeedbacks.js";
+import Pagination from "../../../Components/Pagination.jsx";
 
 const CourseDetail = () => {
   const videoRef = useRef();
   const { courseId } = useParams();
   const [course, setCourse] = useState(null);
   const [error, setError] = useState(null);
-
-  const reviews = [
-    { id: 1, firstName: "Alice", lastName: "B", rating: 5, comment: "Great course! Very informative and well-structured." },
-    { id: 2, firstName: "Bob", lastName: "B", rating: 4, comment: "I learned a lot, especially appreciated the hands-on exercises." },
-    { id: 3, firstName: "Charlie", lastName: "B", rating: 5, comment: "Instructors were knowledgeable and helpful." },
-    { id: 4, firstName: "Zara", lastName: "B", rating: 5, comment: "Excellent content, I would highly recommend this course to others." },
-    { id: 5, firstName: "Mia", lastName: "B", rating: 4, comment: "The course was well-organized and easy to follow." },
-    { id: 6, firstName: "Noah", lastName: "B", rating: 5, comment: "Fantastic course! I gained a lot of valuable knowledge." },
-    { id: 7, firstName: "Oliver", lastName: "B", rating: 4, comment: "Good course overall, though I wish there were more practice exercises." },
-    { id: 8, firstName: "Sophia", lastName: "B", rating: 5, comment: "The course exceeded my expectations. I learned a lot in a short amount of time." },
-    { id: 9, firstName: "Ava", lastName: "B", rating: 4, comment: "The course content was relevant and up-to-date." },
-    { id: 10, firstName: "Ethan", lastName: "B", rating: 5, comment: "The instructors were very responsive and helpful." },
-    { id: 11, firstName: "Isabella", lastName: "A", rating: 4, comment: "I enjoyed the course and would recommend it to others." },
-    { id: 12, firstName: "Lucas", lastName: "An", rating: 5, comment: "The course was challenging but rewarding. I learned a lot." },
-  ];
+  const { feedbacks, isLoading, count } = useFeedbacks();
+  console.log("isloading: " + isLoading);
 
   console.log(process.env.REACT_APP_BACKEND_HOST);
 
@@ -70,12 +60,14 @@ const CourseDetail = () => {
       });
   }, [courseId]);
 
-  if (error) {
-    return <NotFound />;
+  if (!course) {
+    return <Spinner />;
   }
 
-  if (!course) {
-    return <div>Loading...</div>;
+  if (isLoading) return <Spinner />;
+
+  if (error) {
+    return <NotFound />;
   }
 
   // Convert the createDate string to a Date object
@@ -89,9 +81,9 @@ const CourseDetail = () => {
       {/* <video ref={videoRef} src={course.promotionalVideo.secureURL} style={{ display: "none" }} /> */}
       <div
         className="course-detail-container w-full lg:bg-course-title-bg-grey
-        lg:py-5 lg:px-20  md:px-10 sm:px-5 sm:text-black lg:text-white sm:flex sm:flex-col sm:items-center lg:block "
+        lg:py-5 lg:px-20 sm:mt-5 sm:mb-5 sm:px-5 sm:text-black lg:text-white sm:flex sm:flex-col sm:items-center lg:block"
       >
-        <div id="short-description" className=" relative left-0 lg:w-full lg:px-10">
+        <div id="short-description" className=" relative lg:px-10 w-full px-6 sm:mb-5">
           <h1 className="course-title font-bold text-3xl">{course.name}</h1>
           <br />
           <p className="course-description">{course.introduction}</p>
@@ -102,7 +94,7 @@ const CourseDetail = () => {
               <span className="mr-1">{convertDecimal128ToNumber(course.avgRating)}</span>
               <FontAwesomeIcon icon={faStar} />
             </div>
-            <a href="/" className="mr-3 text-violet-500 underline text-sm ">
+            <a href="#reviews" className="mr-3 text-violet-500 underline text-sm text-purple-200">
               ({course.oneStarCnt + course.twoStarCnt + course.threeStarCnt + course.fiveStarCnt + course.fourStarCnt} ratings)
             </a>
             <span className="text-sm">{course.totalStudent} students</span>
@@ -112,7 +104,7 @@ const CourseDetail = () => {
             <span className="text-sm">Created date {formattedDate}</span>
           </p>
         </div>
-        <div className={`sidebar-container  sm:w-8/12 lg:w-3/12 shadow-lg sm:-translate-y-0 lg:-translate-y-1/3 bg-white lg:fixed lg:right-6 `}>
+        <div className={`sidebar-container  sm:w-8/12 lg:w-3/12 lg:shadow-lg sm:shadow-md sm:-translate-y-0 lg:-translate-y-1/3 bg-white lg:fixed lg:right-6  `}>
           <Modal>
             <Modal.Open opens="view-course-preview">
               <button type="button" className="relative w-full h-full" onClick={handlePlayVideo}>
@@ -151,7 +143,7 @@ const CourseDetail = () => {
       </div>
 
       <div className="course-details-outermost-container lg:py-5 lg:px-20 flex items-center px-6">
-        <div className="course-info-container lg:w-7/12 sm:10/12 md:px-10 sm:px-1">
+        <div className="course-info-container lg:w-7/12 sm:10/12 md:px-10 ">
           <span className="price-number font-bold text-2xl text-slate-950 ">Course content</span>
           <div className="content-description mt-5">
             <span className="price-number text-sm text-slate-950 ">{course.totalSection}</span>
@@ -193,41 +185,46 @@ const CourseDetail = () => {
             instructor={course.instructor}
             profileImg={course.instructor.avatar ? course.instructor.avatar.public_id : createImageFromInitials(160, course.instructor.firstName + " " + course.instructor.lastName)}
           />
-          <div className="border-b pb-2">
-            <span className="price-number font-bold text-2xl text-slate-950">Student feedback</span>
-          </div>
-          <div className="star-filter flex h-1/5 items-center my-3 ">
-            <div className="average-container h-full flex flex-col justify-between mr-5 ">
-              <span className="text-gray-500 font-bold text-lg w-1/4" id="average-text">
-                Average
-              </span>
 
-              <div className="average flex flex-row justify-between items-center">
-                <span className="price-number font-bold text-3xl text-slate-950">{convertDecimal128ToNumber(course.avgRating)}</span>
-                <FontAwesomeIcon icon={faStar} className="text-amber-500" size="lg" />
+          {count > 0 && (
+            <div id="reviews">
+              <div className="border-b pb-2">
+                <span className="price-number font-bold text-2xl text-slate-950">Student feedback</span>
+              </div>
+              <div className="star-filter flex h-1/5 items-center my-3 ">
+                <div className="average-container h-full flex flex-col justify-between mr-5 ">
+                  <span className="text-gray-500 font-bold text-lg w-1/4" id="average-text">
+                    Average
+                  </span>
+
+                  <div className="average flex flex-row justify-between items-center">
+                    <span className="price-number font-bold text-3xl text-slate-950">{convertDecimal128ToNumber(course.avgRating)}</span>
+                    <FontAwesomeIcon icon={faStar} className="text-amber-500" size="lg" />
+                  </div>
+                </div>
+                <div class="rating-button-container flex flex-col h-full">
+                  <div className="rating-row flex flex-row">
+                    <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">All</button>
+                    <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">5 Stars - {course.fiveStarCnt}</button>
+                    <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">4 Stars - {course.fourStarCnt}</button>
+                  </div>
+                  <div className="rating-row flex flex-row">
+                    <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">3 Stars - {course.threeStarCnt}</button>
+
+                    <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">2 Stars -{course.twoStarCnt}</button>
+
+                    <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">1 Star - {course.oneStarCnt}</button>
+                  </div>
+                </div>
+              </div>
+              <div id="reviews-container">
+                {feedbacks.map((review, index) => (
+                  <CourseReview key={index} review={review} />
+                ))}
+                <Pagination count={count} />
               </div>
             </div>
-            <div class="rating-button-container flex flex-col h-full">
-              <div className="rating-row flex flex-row">
-                <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">All</button>
-                <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">5 Stars - {course.fiveStarCnt}</button>
-                <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">4 Stars - {course.fourStarCnt}</button>
-              </div>
-              <div className="rating-row flex flex-row">
-                <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">3 Stars - {course.threeStarCnt}</button>
-
-                <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">2 Stars -{course.twoStarCnt}</button>
-
-                <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">1 Star - {course.oneStarCnt}</button>
-              </div>
-            </div>
-          </div>
-          <div id="reviews-container">
-            {reviews.map((review, index) => (
-              <CourseReview key={index} review={review} />
-            ))}
-            <button className="w-full border border-black py-2 font-bold text-black text-sm">Show more reviews</button>
-          </div>
+          )}
         </div>
       </div>
     </div>

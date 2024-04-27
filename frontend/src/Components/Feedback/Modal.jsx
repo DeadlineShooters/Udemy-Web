@@ -88,20 +88,7 @@ function Window({ children, name }) {
   const ref = useOutsideClick(close);
 
   if (name !== openName) return null;
-  // else return null;
 
-  // return createPortal(
-  //   <Overlay>
-  //     <StyledModal ref={ref}>
-  //       <Button onClick={close}>
-  //         <FontAwesomeIcon icon={faXmark} />
-  //       </Button>
-
-  //       {/* <div>{cloneElement(children, { onCloseModal: close })}</div> */}
-  //     </StyledModal>
-  //   </Overlay>,
-  //   document.body
-  // );
   console.dir(document.body);
   if (typeof document !== "undefined") {
     return createPortal(

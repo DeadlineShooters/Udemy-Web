@@ -7,7 +7,7 @@ const ProfileCard = ({ instructor }) => {
   return (
     <div className="bg-white   mb-5">
       <div>
-        <a href={"/user/ozan-ilha"} className="text-xl font-bold text-purple-800 underline">
+        <a href={`/user/${instructor._id}`} className="text-xl font-bold text-purple-800 underline">
           {instructor.firstName + " " + instructor.lastName}
         </a>
 
