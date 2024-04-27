@@ -21,8 +21,10 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <div className="App">
         <AuthProvider>
-          <ToastContainer />
-          <AppRouterProvider />
+          <CourseProvider>
+            <ToastContainer />
+            <AppRouterProvider />
+          </CourseProvider>
         </AuthProvider>
       </div>
     </QueryClientProvider>
