@@ -102,3 +102,35 @@ export const changePassword = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 }
+
+export const getCourse = async (req, res) => {
+    try {
+        const {userId} = req.params; // Assuming the user ID is passed as a parameter
+        // Find the user by ID and populate the courseList with fully populated course documents
+        const user = await User.findById(userId).populate({
+            path: 'courseList',
+            populate: {
+                path: 'course',
+                model: 'Course',
+                populate: {
+                    path: 'instructor',
+                    model: 'User',
+                }
+            },
+        });
+        console.log("user here: ", user);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        // Extract courseList from user document
+        const courseList = user.courseList;
+        if (courseList) {
+            return res.status(200).send({ success: true, message: "Course list found successfully", courseList: courseList });  
+        } else {
+            return res.status(400).send({ success: false, message: "Course list found failed"});  
+        }
+    } catch (error) {
+        console.error('Error fetching course list:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}

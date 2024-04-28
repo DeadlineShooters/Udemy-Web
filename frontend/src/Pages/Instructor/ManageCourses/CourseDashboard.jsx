@@ -46,7 +46,7 @@ const CourseDashBoard = () => {
 			});
     }
     getCourse();
-  }, [])
+  }, [courses])
   const handleFilterSelect = (filter) => {
     setSelectedFilter(filter);
     // Perform filtering logic based on selected filter
