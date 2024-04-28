@@ -9,6 +9,8 @@ import dotenv from "dotenv";
 import accountRoute from "./routes/user/accountRoute.js"
 import courseRoute from './routes/course/courseRoute.js';
 import paymentRoute from './routes/payment/paymentRoute.js';
+import cartRoute from './routes/user/cartRoute.js';
+import wishlistRoute from './routes/user/wishlistRoute.js';
 import cloudinary from "cloudinary";
 dotenv.config();
 
@@ -51,6 +53,8 @@ app.use("/auth", authRoute);
 app.use("/user", accountRoute);
 app.use('/courses', courseRoute);
 app.use('/payment', paymentRoute);
+app.use('/cart', cartRoute);
+app.use('/wishlist', wishlistRoute);
 
 app.listen(5000, () => {
 	console.log('Server is running');

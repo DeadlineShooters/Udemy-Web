@@ -8,7 +8,6 @@ const controller = {};
 
 controller.payment = async (request, response) => {
 	var userId = request.body.userId;
-	console.log(userId);
 	var amount = request.body.amount;
 	var partnerCode = 'MOMO';
 	var accessKey = 'F8BBA842ECF85';
@@ -22,7 +21,6 @@ controller.payment = async (request, response) => {
 	var requestType = 'captureWallet';
 	var extraData = userId;
 	amount = amount.toString();
-	console.log(amount);
 
 	var rawSignature =
 		'accessKey=' +
@@ -105,7 +103,6 @@ controller.payment = async (request, response) => {
 };
 
 controller.handlePayment = async (req, res) => {
-	console.log(req.query);
 	if (req.query.resultCode == 0) {
 		let userId = req.query.extraData;
 		let user = await User.findById(userId);
