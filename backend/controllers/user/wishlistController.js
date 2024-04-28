@@ -40,7 +40,7 @@ controller.removeFromWishlist = async (req, res) => {
 		if (user) {
 			let courseIndex = user.wishList.findIndex((course) => course._id.toString() === courseId);
 			if (courseIndex > -1) {
-				let removedCourse = user.cart.splice(courseIndex, 1);
+				let removedCourse = user.wishList.splice(courseIndex, 1);
 				await user.save();
 				res.json({ success: true, removedCourse: removedCourse[0] });
 			} else {
