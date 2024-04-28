@@ -15,34 +15,35 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import EditRatingButton from "../../../../Components/Feedback/EditRatingButton";
 import { IconDotsVertical } from '@tabler/icons-react';
 import { useAuth } from '../../../../AuthContextProvider';
+import {useCourse} from '../../../../CourseContextProvider';
 import axios from "axios";
 
 const MyLearning = () => {
   const {userData} = useAuth();
   const userId = userData._id;
   const [courseList, setCourseList] = useState([]);
+  const [detailCourse, setDetailCourse] = useState();
+  const {setSelectedCourse} = useCourse();
 
   useEffect(() => {
     const getCourse = () => {
-      axios.get(`http://localhost:5000/user/${userId}/get-course`)
-			.then((response) => {
-				if (response.data.success) {
-          setCourseList(response.data.courseList);
-				}
-			})
-			.catch((error) => {
-				console.error('Error:', error);
-			});
-    }
+      axios.get(`http://localhost:5000/user/${userId}/get-course/all`)
+        .then((response) => {
+          if (response.data.success) {
+            setCourseList(response.data.courseList);
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+      });
+    };
     getCourse();
-  }, [])
-
-  useEffect(() => {
-    const getArchivedList = () => {
-      setCourseList(userData.courseList);
-    }
-    getArchivedList();
   }, []);
+  
+  useEffect(() => {
+    console.log(courseList);
+  }, [courseList]);
+
   const navigate = useNavigate();
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -51,6 +52,21 @@ const MyLearning = () => {
     rating: 4,
     feedback: "Very thorough course with many quizzes for you to test your knowledge",
   };
+
+  const courseContentNavigation = (course) => {
+    axios.get(`http://localhost:5000/user/${userId}/get-course/${course._id}/detail`)
+    .then((response) => {
+      if (response.data.success) {
+        console.log("course get", response.data.course);
+        setDetailCourse(response.data.course);
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+    setSelectedCourse(course);
+    navigate(`/course/${course.slugName}/learn/:videoId#overview`);
+  }
 
   return (
     <div>
@@ -105,10 +121,8 @@ const MyLearning = () => {
               <div class="bg-white lg:w-1/4 md:w-1/3 w-60 pb-8 px-2">
                 <div className='relative'>
                   <img class="" src={oneCourse.course.thumbNail.secureURL} alt="" />
-                  <div className='overflow-hidden absolute top-0 left-0 opacity-0 hover:opacity-100'>
-                    <a href='/course/:courseId/learn/:videoId'>
-                      <img className='h-full object-cover w-full' src={course_overlay} alt='course placeholder' />
-                    </a>
+                  <div className='overflow-hidden absolute top-0 left-0 opacity-0 hover:opacity-100' onClick={() => courseContentNavigation(oneCourse.course)}>
+                    <img className='h-full object-cover w-full' src={course_overlay} alt='course placeholder' />
                   </div>
                   <div className='rounded-md absolute top-0 right-0 mt-2 mr-2 w-12 h-12'>
                       <Menu as="div" className="relative ml-6">

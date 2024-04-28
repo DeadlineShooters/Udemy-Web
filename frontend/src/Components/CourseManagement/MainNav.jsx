@@ -2,13 +2,13 @@ import { useParams , NavLink, useNavigate } from "react-router-dom";
 import './MainNav.css';
 
 function MainNav() {
-  const { courseId } = useParams();
+  const { courseSlug } = useParams();
   return (
     <nav>
       <ul className="flex flex-col gap-3">
       <li>
           <NavLink
-            to={`/instructor/course/${courseId}/manage/basics`}
+            to={`/instructor/course/${courseSlug}/manage/basics`}
             className={({ isActive }) =>
               isActive
                 ? "flex items-center gap-3 text-gray-800 bg-gray-50 border-l-4 border-black  font-medium py-3 px-6 transition-colors duration-300 rounded"
@@ -20,7 +20,7 @@ function MainNav() {
         </li>
         <li>
           <NavLink
-            to={`/instructor/course/${courseId}/manage/curriculum`}
+            to={`/instructor/course/${courseSlug}/manage/curriculum`}
             className={({ isActive }) =>
               isActive
                 ? "flex items-center gap-3 text-gray-800 bg-gray-50 border-l-4 border-black font-medium py-3 px-6 transition-colors duration-300 rounded"

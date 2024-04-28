@@ -1,10 +1,8 @@
 import mongoose, { model } from "mongoose";
 import Course from "../../models/course.js";
-import Image from "../../models/image.js";
-import Video from "../../models/video.js";
 import Section from "../../models/section.js";
 import Lecture from "../../models/lecture.js";
-import videoSchema from "../../models/video.js";
+import createCourseSlug from "../../utils/slugGenerate.js";
 
 export const createCourse = async (req, res) => {
     try {
@@ -23,6 +21,7 @@ export const createCourse = async (req, res) => {
         newCourse.thumbNail = data.thumbNail;
         newCourse.instructor = data.instructor;
         newCourse.promotionalVideo = data.promotionalVideo;
+        newCourse.slugName = createCourseSlug(data.title);
         newCourse.status = true;
         
         for (const sectionData of data.sections) {
@@ -31,7 +30,16 @@ export const createCourse = async (req, res) => {
                 lectureList: []
             });
             for (const lectureData  of sectionData.lectures) {
+                // Get the highest index value for lectures in the section
+                const maxIndex = await Lecture.aggregate([
+                    { $group: { _id: null, maxIndex: { $max: "$index" } } }
+                ]);
+        
+                // Calculate the new index for the lecture
+                const newIndex = (maxIndex.length > 0) ? maxIndex[0].maxIndex + 1 : 1;
+
                 const newLecture = new Lecture({
+                    index: newIndex,
                     name: lectureData.name,
                     video: lectureData.video,
                 })
@@ -69,10 +77,14 @@ export const updateCourse = async (req, res) => {
         const {courseId} = req.params;
         console.log("course edit: ", data);
         console.log("Id", courseId);
+        
         const updatedCourse = await Course.findByIdAndUpdate(courseId, data, {new: true}).populate({
             path: "sectionList",
             populate: "lectureList",
-        });;
+        });
+        const newSlug = createCourseSlug(data.name);
+        updatedCourse.slugName = newSlug;
+        await updatedCourse.save();
         console.log("course after edit: ", updatedCourse);
         if (updatedCourse) {
             return res.status(200).send({ success: true, message: "Course updated successfully", course: updatedCourse});  
@@ -105,6 +117,11 @@ export const updateSection = async (req, res) => {
                     lectureIds.push(updatedLecture._id);
                 } else {
                     const newLecture = new Lecture(lectureData);
+                    const maxIndex = await Lecture.aggregate([
+                        { $group: { _id: null, maxIndex: { $max: "$index" } } }
+                    ]);
+                    const newIndex = (maxIndex.length > 0) ? maxIndex[0].maxIndex + 1 : 1;
+                    newLecture.index = newIndex;
                     const savedLecture = await newLecture.save();
                     lectureIds.push(savedLecture._id);
                 }
@@ -146,3 +163,4 @@ export const updateSection = async (req, res) => {
         return res.status(500).send({ success: false, message: "Internal server error" });
     }
 }
+

@@ -223,7 +223,7 @@ const router = createBrowserRouter([
 		]}],
 	},
 	{
-		path: '/instructor/course/:courseId/manage',
+		path: '/instructor/course/:courseSlug/manage',
 		element: <ProtectedRoutes />,
 		children: [{
 			path: '',

@@ -1,7 +1,8 @@
-import mongoose from "mongoose";
+import mongoose, { model } from "mongoose";
 import User from "../../models/user.js";
 import bcrypt from "bcrypt";
 import Instructor from "../../models/instructor.js";
+import Course from "../../models/course.js";
 const saltRounds = 10;
 
 export const editProfile = async (req, res) => {
@@ -118,16 +119,40 @@ export const getCourse = async (req, res) => {
                 }
             },
         });
-        console.log("user here: ", user);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
         // Extract courseList from user document
         const courseList = user.courseList;
+        console.log("course list", courseList);
         if (courseList) {
             return res.status(200).send({ success: true, message: "Course list found successfully", courseList: courseList });  
         } else {
             return res.status(400).send({ success: false, message: "Course list found failed"});  
+        }
+    } catch (error) {
+        console.error('Error fetching course list:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+export const getOneCourse = async (req, res) => {
+    try {
+        const {courseId} = req.params; // Assuming the user ID is passed as a parameter
+        // Find the user by ID and populate the courseList with fully populated course documents
+        const course = await Course.findById(courseId).populate({
+            path: 'sectionList',
+            model: 'Section',
+            populate: {
+                path: 'lectureList',
+                model: 'Lecture',
+            }
+        });
+        console.log("user get course here: ", course);
+        if (course) {
+            return res.status(200).send({ success: true, message: "Course found successfully", course: course });  
+        } else {
+            return res.status(400).send({ success: false, message: "Course found failed"});  
         }
     } catch (error) {
         console.error('Error fetching course list:', error);

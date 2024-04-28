@@ -255,7 +255,7 @@ const CreateCourse = () => {
       introduction: introduction, 
       description: description, 
       thumbNail: {secureURL: thumbNail.secureURL, publicID: thumbNail.publicID},
-      promotionalVideo: {secureURL: promoVideoLink, publicURL: promoVideoId, duration: promoVideoDuration},
+      promotionalVideo: {secureURL: promoVideoLink, publicID: promoVideoId, duration: promoVideoDuration},
       price: price,
       sections: sections,
       totalSection: sections.length,
