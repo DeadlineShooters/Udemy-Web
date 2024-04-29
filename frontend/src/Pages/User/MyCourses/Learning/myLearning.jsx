@@ -54,18 +54,25 @@ const MyLearning = () => {
   };
 
   const courseContentNavigation = (course) => {
+    // step 1: fetch selected course with detail section list, lecture list from server
     axios.get(`http://localhost:5000/user/${userId}/get-course/${course._id}/detail`)
     .then((response) => {
       if (response.data.success) {
         console.log("course get", response.data.course);
         setDetailCourse(response.data.course);
+        // Get the recent lecture ID from local storage
+        let recentVideoId = localStorage.getItem('recentVideoId');
+        // If no recent video ID is found, set it to the first lecture ID
+        if (!recentVideoId && response.data.course.sectionList.length > 0) {
+          recentVideoId = response.data.course.sectionList[0].lectureList[0].index;
+          localStorage.setItem('recentVideoId', recentVideoId);
+        }
+        navigate(`/course/${response.data.course.slugName}/learn/${recentVideoId}#overview`);
       }
     })
     .catch((error) => {
       console.error('Error:', error);
     });
-    setSelectedCourse(course);
-    navigate(`/course/${course.slugName}/learn/:videoId#overview`);
   }
 
   return (
