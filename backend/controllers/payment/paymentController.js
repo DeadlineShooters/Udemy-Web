@@ -4,6 +4,8 @@ import crypto from 'crypto';
 import https from 'https';
 import Course from '../../models/course.js';
 import Transaction from '../../models/transaction.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const controller = {};
 
@@ -11,8 +13,8 @@ controller.payment = async (request, response) => {
 	var userId = request.body.userId;
 	var amount = request.body.amount;
 	var partnerCode = 'MOMO';
-	var accessKey = 'F8BBA842ECF85';
-	var secretkey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
+	var accessKey = process.env.ACCESS_KEY;
+	var secretkey = process.env.SECRET_KEY;
 	var requestId = partnerCode + new Date().getTime();
 	var orderId = requestId;
 	var orderInfo = 'pay with MoMo';
