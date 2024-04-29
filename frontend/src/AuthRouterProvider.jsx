@@ -187,7 +187,7 @@ const router = createBrowserRouter([
 		],
 	},
 	{
-		path: '/course/:courseId/learn/:videoId',
+		path: '/course/:courseSlug/learn/:lectureIndex',
 		element: <CourseLayout />,
 		children: [
 			{

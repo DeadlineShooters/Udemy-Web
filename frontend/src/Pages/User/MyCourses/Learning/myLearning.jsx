@@ -53,26 +53,24 @@ const MyLearning = () => {
     feedback: "Very thorough course with many quizzes for you to test your knowledge",
   };
 
-  const courseContentNavigation = (course) => {
-    // step 1: fetch selected course with detail section list, lecture list from server
-    axios.get(`http://localhost:5000/user/${userId}/get-course/${course._id}/detail`)
-    .then((response) => {
-      if (response.data.success) {
-        console.log("course get", response.data.course);
-        setDetailCourse(response.data.course);
-        // Get the recent lecture ID from local storage
-        let recentVideoId = localStorage.getItem('recentVideoId');
-        // If no recent video ID is found, set it to the first lecture ID
-        if (!recentVideoId && response.data.course.sectionList.length > 0) {
-          recentVideoId = response.data.course.sectionList[0].lectureList[0].index;
-          localStorage.setItem('recentVideoId', recentVideoId);
+  const courseContentNavigation = async (course) => {
+    await axios.get(`http://localhost:5000/user/${userId}/get-course/${course._id}/detail`)
+      .then((response) => {
+        if (response.data.success) {
+          setSelectedCourse(response.data.course);
+          const recentVideoId = Object.keys(JSON.parse(localStorage.getItem('selectLecture')))[0];
+          if (!recentVideoId) {
+            const newRecentVideoId = response.data.course.sectionList[0].lectureList[0].index;
+            localStorage.setItem('selectLecture', newRecentVideoId);
+            navigate(`/course/${response.data.course.slugName}/learn/${newRecentVideoId}#overview`, {state: {course: response.data.course}});
+          } else {
+            navigate(`/course/${response.data.course.slugName}/learn/${recentVideoId}#overview`, {state: {course: response.data.course}});
+          }
         }
-        navigate(`/course/${response.data.course.slugName}/learn/${recentVideoId}#overview`);
-      }
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   }
 
   return (
@@ -177,7 +175,7 @@ const MyLearning = () => {
                   <h3 class="font-bold text-gray-900 line-clamp-2 leading-tight">{oneCourse.course.name}</h3>
                   <p class="text-xs truncate text-gray-500">{oneCourse.course.instructor.firstName + " " + oneCourse.course.instructor.lastName}</p>     
                 </div>
-                {oneCourse.progress === 0 ? (
+                {oneCourse.progress > 0 ? (
                   <div>
                     <div className="w-full bg-gray-200 rounded-full h-1 mt-3 dark:bg-gray-700">
                       <div className="bg-blue-600 h-[2px] rounded-full" style={{width: (oneCourse.progress * 100) + "%"}}></div>

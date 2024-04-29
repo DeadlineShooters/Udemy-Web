@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { Link, useLocation } from "react-router-dom";
@@ -9,9 +9,20 @@ import star from "../../Assets/star.png";
 import share from "../../Assets/share.png";
 import archive from "../../Assets/archive.png";
 import CircleProgressBar from '../Utils/ProgressBar';
-
+import { useCourse } from '../../CourseContextProvider';
 const CourseNavbar = () => {
-  let courseName = "Software design for begginers (2024)"; //Handle retrieve user data later
+  const {selectedCourse} = useCourse();
+  const [courseName, setCourseName] = useState(selectedCourse ? selectedCourse.name : "");
+
+  useEffect(() => {
+    const getLatestCourse = () => {
+      const storedCourses = JSON.parse(localStorage.getItem('storedCourses'));
+      console.log("retrieve course:", storedCourses);
+      setCourseName(storedCourses.name);
+    }
+    getLatestCourse();
+  }, []);
+
   const progress = 50;
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')

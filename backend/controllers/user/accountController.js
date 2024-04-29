@@ -3,6 +3,7 @@ import User from "../../models/user.js";
 import bcrypt from "bcrypt";
 import Instructor from "../../models/instructor.js";
 import Course from "../../models/course.js";
+import Lecture from "../../models/lecture.js";
 const saltRounds = 10;
 
 export const editProfile = async (req, res) => {
@@ -138,8 +139,7 @@ export const getCourse = async (req, res) => {
 
 export const getOneCourse = async (req, res) => {
     try {
-        const {courseId} = req.params; // Assuming the user ID is passed as a parameter
-        // Find the user by ID and populate the courseList with fully populated course documents
+        const {courseId} = req.params;
         const course = await Course.findById(courseId).populate({
             path: 'sectionList',
             model: 'Section',
@@ -147,12 +147,27 @@ export const getOneCourse = async (req, res) => {
                 path: 'lectureList',
                 model: 'Lecture',
             }
-        });
+        }).populate({path: "instructor", model: "User"});;
         console.log("user get course here: ", course);
         if (course) {
             return res.status(200).send({ success: true, message: "Course found successfully", course: course });  
         } else {
             return res.status(400).send({ success: false, message: "Course found failed"});  
+        }
+    } catch (error) {
+        console.error('Error fetching course list:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+export const getExactLecture = async (req, res) => {
+    try {
+        const {lectureIndex} = req.body;
+        const lecture = await Lecture.find({index: lectureIndex});
+        if (lecture) {
+            return res.status(200).send({ success: true, message: "Lecture found successfully", lecture: lecture });  
+        } else {
+            return res.status(400).send({ success: false, message: "Lecture found failed"});  
         }
     } catch (error) {
         console.error('Error fetching course list:', error);
