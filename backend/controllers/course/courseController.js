@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import Course from '../../models/course.js';
 import Category from '../../models/category.js';
+import User from '../../models/user.js';
 import { Client } from '@elastic/elasticsearch';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -17,7 +18,6 @@ controller.courses = async (req, res) => {
 		} else {
 			courses = await Course.find().populate('category').populate('instructor');
 		}
-		console.log(courses)
 		if (courses.length > 0) {
 			res.json({ success: true, courses });
 		} else {
@@ -38,6 +38,63 @@ controller.categories = async (req, res) => {
 			res.json({ success: false });
 		}
 	} catch (error) {
+		res.status(500).send(error);
+	}
+};
+
+controller.isEnrolled = async (req, res) => {
+	var { userId, courseId } = req.body;
+	try {
+		let user = await User.findById(userId);
+		if (user) {
+			if (user.courseList.includes(courseId)) {
+				res.json({ success: true });
+			} else {
+				res.json({ success: false, message: 'No course found!' });
+			}
+		} else {
+			res.json({ success: false, message: 'No user found!' });
+		}
+	} catch (error) {
+		console.log(error);
+		res.status(500).send(error);
+	}
+};
+
+controller.isCarted = async (req, res) => {
+	var { userId, courseId } = req.body;
+	try {
+		let user = await User.findById(userId);
+		if (user) {
+			if (user.cart.includes(courseId)) {
+				res.json({ success: true });
+			} else {
+				res.json({ success: false, message: 'No course found!' });
+			}
+		} else {
+			res.json({ success: false, message: 'No user found!' });
+		}
+	} catch (error) {
+		console.log(error);
+		res.status(500).send(error);
+	}
+};
+
+controller.isWishlisted = async (req, res) => {
+	var { userId, courseId } = req.body;
+	try {
+		let user = await User.findById(userId);
+		if (user) {
+			if (user.wishList.includes(courseId)) {
+				res.json({ success: true });
+			} else {
+				res.json({ success: false, message: 'No course found!' });
+			}
+		} else {
+			res.json({ success: false, message: 'No user found!' });
+		}
+	} catch (error) {
+		console.log(error);
 		res.status(500).send(error);
 	}
 };

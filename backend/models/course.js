@@ -1,6 +1,9 @@
 import mongoose, { Schema } from 'mongoose';
 import videoSchema from './video.js';
 import imageSchema from './image.js';
+import User from './user.js';
+import Section from './section.js';
+import Category from './category.js';
 
 const courseSchema = mongoose.Schema({
     name: { type: String, require: true },
@@ -28,5 +31,5 @@ const courseSchema = mongoose.Schema({
     oneStarCnt: { type: Number, default: 0 },
 })
 
-const Course = mongoose.model("Course", courseSchema);
+const Course = mongoose.model('Course', courseSchema);
 export default Course;

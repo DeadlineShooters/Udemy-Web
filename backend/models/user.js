@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
         facebook: { type: String, default: "" }
     },
     archivedCourse: [{ type: Schema.Types.ObjectId, ref: "Course" }],
-    cart: { type: Array },
+    cart: [{ type: Schema.Types.ObjectId, ref: "Course" }],
     instructor: instructorSchema,
 }); 
 
