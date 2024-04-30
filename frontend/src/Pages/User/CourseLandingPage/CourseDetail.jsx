@@ -34,7 +34,6 @@ const CourseDetail = () => {
     console.log("feedbacks: ", feedbacks);
   }
 
-  console.log("in view: " + isFooterInView);
   console.log("isloading: " + isLoading);
 
   console.log(process.env.REACT_APP_BACKEND_HOST);

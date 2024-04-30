@@ -19,17 +19,17 @@ const CourseReview = ({ review }) => {
             alignItems: "center",
           }}
         >
-          <span className="text-white text-md font-bold">{review.firstName[0] + review.lastName[0]}</span>
+          <span className="text-white text-md font-bold">{review.userID.firstName[0] + review.userID.lastName[0]}</span>
         </div>
 
         <div className="flex flex-col">
-          <span className="text-black text-md font-bold">{review.firstName + " " + review.lastName[0]}</span>
+          <span className="text-black text-md font-bold">{review.userID.firstName + " " + review.userID.lastName[0] + "."}</span>
           <StarRatings rating={review.rating} />
         </div>
 
-        <h3 className="text-lg font-bold">{review.courseName}</h3>
+        {/* <h3 className="text-lg font-bold">{review.courseName}</h3> */}
       </div>
-      <p>{review.comment}</p>
+      <p>{review.feedback}</p>
       <div className="mt-2"></div>
     </div>
   );

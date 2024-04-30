@@ -12,15 +12,16 @@ export function useFeedbacks(courseID) {
   const page = !searchParams.get("page") ? 1 : Number(searchParams.get("page")); // default is first page
 
   // QUERY
-  const {
-    isLoading,
-    data: { data: feedbacks, count } = {},
-    error,
-  } = useQuery({
+  const { isLoading, data, error } = useQuery({
     queryKey: ["feedbacks", page],
-    queryFn: () => axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${courseID}?&page=${page}`).then((res) => res.data),
+    queryFn: () =>
+      axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${courseID}?page=${page}`).then((res) => {
+        console.log("Data in use feedback", res.data);
+        return res.data;
+      }),
   });
 
+  const { feedbacks, count } = data || {};
   // PRE-FETCHING
   const pageCount = Math.ceil(count / PAGE_SIZE);
 

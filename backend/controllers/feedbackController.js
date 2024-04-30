@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 const controller = {};
 
-controller.getFeedback = async (req) => {
+controller.getFeedback = async (req, res) => {
   const { courseID } = req.params;
   const { page = 1 } = req.query; // default is first page if not provided
 
@@ -17,14 +17,14 @@ controller.getFeedback = async (req) => {
   const query = { courseID: new mongoose.Types.ObjectId(courseID) }; // retrieves documents where courseID matches
 
   try {
-    const data = await Feedback.find(query).skip(skip).limit(PAGE_SIZE).exec();
+    const feedbacks = await Feedback.find(query).skip(skip).limit(PAGE_SIZE).populate("userID").exec();
 
     const count = await Feedback.countDocuments(query);
 
-    return { data, count };
+    res.json({ feedbacks, count }); // Send the response
   } catch (error) {
     console.log("Error in getFeedback:", error);
-    throw new Error("Feedback could not be loaded");
+    res.status(500).send("Feedback could not be loaded"); // Send an error response
   }
 };
 
