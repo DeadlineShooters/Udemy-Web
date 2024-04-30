@@ -1,6 +1,7 @@
 import Feedback from "../models/feedbackModel.js";
 import { PAGE_SIZE } from "../utils/constants.js";
 import Course from "../models/course.js";
+import mongoose from "mongoose";
 
 const controller = {};
 
@@ -13,7 +14,7 @@ controller.getFeedback = async (req) => {
   console.log("Get feedback for course " + courseID);
 
   // QUERY
-  const query = { courseID }; // retrieves documents where courseID matches
+  const query = { courseID: new mongoose.Types.ObjectId(courseID) }; // retrieves documents where courseID matches
 
   try {
     const data = await Feedback.find(query).skip(skip).limit(PAGE_SIZE).exec();

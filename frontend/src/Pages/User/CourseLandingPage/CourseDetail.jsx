@@ -30,6 +30,10 @@ const CourseDetail = () => {
   const { feedbacks, isLoading, count } = useFeedbacks(courseId);
   const { isFooterInView } = useContext(ScrollContext);
 
+  if (!isLoading) {
+    console.log("feedbacks: ", feedbacks);
+  }
+
   console.log("in view: " + isFooterInView);
   console.log("isloading: " + isLoading);
 
@@ -69,7 +73,7 @@ const CourseDetail = () => {
     return <Spinner />;
   }
 
-  // if (isLoading) return <Spisnner />;
+  if (isLoading) return <Spinner />;
 
   if (error) {
     return <NotFound />;
@@ -137,14 +141,26 @@ const CourseDetail = () => {
 
           <div className="body-sidebar px-6 py-4">
             <div className="price mb-2 break-words text-black">
-              <span className="money-unit font-bold lg:text-3xl sm:text-lg md:text-xl text-slate-900">đ</span>
-              <span className="price-number font-bold lg:text-3xl sm:text-lg md:text-xl text-slate-900">{course.price.toLocaleString()}</span>
+              {course.price === 0 ? (
+                <span className="font-bold lg:text-3xl sm:text-lg md:text-xl text-slate-900">Free</span>
+              ) : (
+                <>
+                  <span className="money-unit font-bold lg:text-3xl sm:text-lg md:text-xl text-slate-900">$</span>
+                  <span className="price-number font-bold lg:text-3xl sm:text-lg md:text-xl text-slate-900">{course.price.toLocaleString()}</span>
+                </>
+              )}
             </div>
-            <div className="flex flex-row mb-2 buttons w-full justify-between ">
-              <button className={`flex-5 w-full mr-2 py-2 h-12 text-sm xl:text-lg bg-purple-500 text-white rounded font-bold `}>Add to Cart</button>
-              <HeartIcon wishlistState={true} />
-            </div>
-            <button className="w-full border border-black h-12 font-bold text-black">Buy now</button>
+            {course.price === 0 ? (
+              <button className="w-full border border-black h-12 font-bold text-black">Enroll now</button>
+            ) : (
+              <>
+                <div className="flex flex-row mb-2 buttons w-full justify-between ">
+                  <button className={`flex-5 w-full mr-2 py-2 h-12 text-sm xl:text-lg bg-purple-500 text-white rounded font-bold `}>Add to Cart</button>
+                  <HeartIcon wishlistState={true} />
+                </div>
+                <button className="w-full border border-black h-12 font-bold text-black">Buy now</button>
+              </>
+            )}
           </div>
         </div>
       </div>
