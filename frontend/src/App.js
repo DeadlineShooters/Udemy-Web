@@ -7,6 +7,8 @@ import { CourseProvider } from "./CourseContextProvider.jsx";
 import { AppRouterProvider } from "./AuthRouterProvider.jsx";
 import { ToastContainer } from "react-toastify";
 import { Provider } from "react-redux";
+import { CartProvider } from "./CartRouterProvider.js";
+import { WishlistProvider } from "./CartRouterProvider.js";
 import store from "./reducers/store.js";
 
 const queryClient = new QueryClient({
@@ -24,10 +26,14 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <div className="App">
           <AuthProvider>
-            <CourseProvider>
-              <ToastContainer />
-              <AppRouterProvider />
-            </CourseProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <CourseProvider>
+                  <ToastContainer />
+                  <AppRouterProvider />
+                </CourseProvider>
+              </WishlistProvider>
+            </CartProvider>
           </AuthProvider>
         </div>
       </QueryClientProvider>

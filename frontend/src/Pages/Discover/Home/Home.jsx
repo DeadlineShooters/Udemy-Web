@@ -1,17 +1,19 @@
 import React, { useState, useRef, useEffect } from "react";
 import Carousel from "react-multi-carousel";
+import { Link } from "react-router-dom";
+
 import axios from "axios";
 import "react-multi-carousel/lib/styles.css";
 import "./Home.css";
 
 const responsive = {
   xl: {
-    breakpoint: { max: 3000, min: 1140 },
+    breakpoint: { max: 3000, min: 1280 },
     items: 5,
     slidesToSlide: 4,
   },
   lg: {
-    breakpoint: { max: 1140, min: 960 },
+    breakpoint: { max: 1280, min: 960 },
     items: 4,
     slidesToSlide: 3,
   },
@@ -196,33 +198,41 @@ const Home = () => {
                 </span>
                 <Carousel containerClass="" itemClass="m-2 itemClassHome" responsive={responsive}>
                   {courses[category.name].map((course) => (
-                    <a class="" href={`course/${course._id}`}>
-                      <img class="" src={course.thumbNail.secureURL} alt="" />
-                      <div class="flex flex-col gap-1 pt-1.5">
-                        <h3 class="font-bold text-gray-900 line-clamp-2 leading-tight">{course.name}</h3>
-                        <p class="text-xs truncate text-gray-500">
-                          {course.instructor.firstName} {course.instructor.lastName}
-                        </p>
-                        <div class="flex gap-1 items-center">
-                          <span class="text-gray-900 font-bold text-sm">{course.avgRating}</span>
-                          <div class="flex gap-0.5">{RenderStars({ rating: course.avgRating })}</div>
-                          <span class="text-gray-500 font-medium text-xs inline-block align-middle">({course.totalStudent.toLocaleString()})</span>
-                        </div>
-                        <div class="text-gray-500 text-xs align-middle">
-                          {course.totalLength} total hours • {course.totalLecture} lectures
-                        </div>
-                        <div class="flex items-center space-x-2">
-                          <span class="font-bold text-gray-900 ">
-                            <span>$</span>
-                            {(course.price * 0.8).toLocaleString()}
-                          </span>
-                          <span class="text-gray-500 line-through">
-                            <span>$</span>
-                            {course.price.toLocaleString()}
-                          </span>
+                    <Link to={`/course/${course._id}`}>
+                      <div class="">
+                        <img class="object-cover object-center h-img-carousel w-full" src={course.thumbNail.secureURL} alt="" />
+                        <div class="flex flex-col gap-1 pt-1.5">
+                          <h3 class="h-10 font-bold text-gray-900 line-clamp-2 leading-tight">{course.name}</h3>
+                          <p class="text-xs truncate text-gray-500">
+                            {course.instructor.firstName} {course.instructor.lastName}
+                          </p>
+                          <div class="flex gap-1 items-center">
+                            <span class="text-gray-900 font-bold text-sm">{course.avgRating}</span>
+                            <div class="flex gap-0.5">{RenderStars({ rating: course.avgRating })}</div>
+                            <span class="text-gray-500 font-medium text-xs inline-block align-middle">({course.totalStudent.toLocaleString()})</span>
+                          </div>
+                          <div class="text-gray-500 text-xs align-middle">
+                            {course.totalLength} total hours • {course.totalLecture} lectures
+                          </div>
+                          <div class="flex items-center space-x-2">
+                            {course.price === 0 ? (
+                              <span class="font-bold text-gray-900 ">Free</span>
+                            ) : (
+                              <>
+                                <span class="font-bold text-gray-900 ">
+                                  <span class="underline">đ</span>
+                                  {(course.price * 0.8).toLocaleString()}
+                                </span>
+                                <span class="text-gray-500 line-through">
+                                  <span class="underline">đ</span>
+                                  {course.price.toLocaleString()}
+                                </span>
+                              </>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </a>
+                    </Link>
                   ))}
                 </Carousel>
               </div>

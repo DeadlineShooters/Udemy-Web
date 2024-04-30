@@ -1,8 +1,12 @@
 import React from "react";
 import { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-
+import { useParams, Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../../../AuthContextProvider.jsx";
+import { useCart } from "../../../CartRouterProvider.js";
+import { useWishlist } from "../../../CartRouterProvider.js";
 import "./CourseDetail.css"; // Importing a CSS file to style the component
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faExclamation, faCirclePlay, faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
@@ -29,6 +33,80 @@ const CourseDetail = () => {
   const [error, setError] = useState(null);
   const { feedbacks, isLoading, count } = useFeedbacks(courseId);
   const { isFooterInView } = useContext(ScrollContext);
+  const { userData } = useAuth();
+  const [isFocused, setIsFocused] = useState(false);
+  const { cart, setCart } = useCart();
+  const { wishlist, setWishlist } = useWishlist();
+
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [isCarted, setIsCarted] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const userId = userData._id;
+
+  const toggleFocus = () => {
+    setIsFocused(!isFocused);
+  };
+
+  const addToCart = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/cart/add-to-cart", {
+        userId,
+        courseId,
+      });
+      if (response.data.success) {
+        setIsCarted(true);
+        setCart((oldCart) => [...oldCart, response.data.course]);
+        toast.success("Course added to cart successfully");
+      } else {
+        toast.error("Failed to add course to cart");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Error adding course to cart");
+    }
+  };
+
+  const removeFromCart = async () => {
+    const userId = JSON.parse(localStorage.getItem("user"))._id;
+    try {
+      const response = await axios.post("http://localhost:5000/cart/remove-from-cart", {
+        userId,
+        courseId,
+      });
+      if (response.data.success) {
+        setIsCarted(false);
+        setCart((oldCart) => oldCart.filter((course) => course._id !== courseId));
+        toast.success("Course removed from cart successfully");
+      } else {
+        toast.error("Failed to remove course from cart");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Error adding course from cart");
+    }
+  };
+
+  const handleWishlist = async () => {
+    const userId = JSON.parse(localStorage.getItem("user"))._id;
+    const url = isWishlisted ? "http://localhost:5000/wishlist/remove-from-wishlist" : "http://localhost:5000/wishlist/add-to-wishlist";
+    try {
+      const response = await axios.post(url, { userId, courseId });
+      if (response.data.success) {
+        setIsWishlisted(!isWishlisted);
+        setWishlist((oldWishlist) => (isWishlisted ? oldWishlist.filter((course) => course._id !== courseId) : [...oldWishlist, response.data.course]));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleCart = () => {
+    if (isCarted) {
+      removeFromCart();
+    } else {
+      addToCart();
+    }
+  };
 
   if (!isLoading) {
     console.log("feedbacks: ", feedbacks);
@@ -53,20 +131,74 @@ const CourseDetail = () => {
     return hours + "h" + minutes + "m" + seconds + "s";
   }
 
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_HOST}/courses/${courseId}`)
-      .then((response) => {
-        setCourse(response.data);
-      })
-      .catch((error) => {
-        if (error.response && error.response.status === 404) {
-          setError("Course not found");
-        } else {
-          console.error("Error:", error);
+  useEffect(
+    () => async () => {
+      await axios
+        .get(`${process.env.REACT_APP_BACKEND_HOST}/courses/${courseId}`)
+        .then((response) => {
+          setCourse(response.data);
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 404) {
+            setError("Course not found");
+          } else {
+            console.error("Error:", error);
+          }
+        });
+    },
+    [courseId]
+  );
+
+  useEffect(
+    () => async () => {
+      try {
+        const response = await axios.post("http://localhost:5000/courses/is-enrolled", {
+          userId: userData._id,
+          courseId,
+        });
+        if (response.data.success) {
+          setIsEnrolled(true);
         }
-      });
-  }, [courseId]);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    },
+    []
+  );
+
+  useEffect(
+    () => async () => {
+      try {
+        const response = await axios.post("http://localhost:5000/courses/is-carted", {
+          userId: userData._id,
+          courseId,
+        });
+        if (response.data.success) {
+          setIsCarted(true);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    },
+    [isWishlisted]
+  );
+
+  useEffect(
+    () => async () => {
+      try {
+        const response = await axios.post("http://localhost:5000/courses/is-wishlisted", {
+          userId: userData._id,
+          courseId,
+        });
+        if (response.data.success) {
+          setIsWishlisted(true);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    },
+    [isCarted]
+  );
 
   if (!course) {
     return <Spinner />;
@@ -88,7 +220,6 @@ const CourseDetail = () => {
 
   return (
     <div className={`w-full h-full course-title-container`}>
-      {/* <video ref={videoRef} src={course.promotionalVideo.secureURL} style={{ display: "none" }} /> */}
       <div
         className="course-detail-container w-full lg:bg-course-title-bg-grey
         lg:py-5 lg:px-20 sm:mt-5 sm:mb-5 sm:px-5 sm:text-black lg:text-white sm:flex sm:flex-col sm:items-center lg:block "
@@ -149,15 +280,25 @@ const CourseDetail = () => {
                 </>
               )}
             </div>
-            {course.price === 0 ? (
+            {isEnrolled ? (
+              <Link to={`/course/${courseId}`} className="flex items-center justify-center block w-full border bg-black h-12 font-bold text-white">
+                Go to Course
+              </Link>
+            ) : course.price === 0 ? (
               <button className="w-full border border-black h-12 font-bold text-black">Enroll now</button>
             ) : (
               <>
                 <div className="flex flex-row mb-2 buttons w-full justify-between ">
-                  <button className={`flex-5 w-full mr-2 py-2 h-12 text-sm xl:text-lg bg-purple-500 text-white rounded font-bold `}>Add to Cart</button>
-                  <HeartIcon wishlistState={true} />
+                  <button className="flex-5 w-full mr-2 py-2 h-12 text-sm xl:text-lg bg-purple-500 text-white rounded font-bold" onClick={handleCart}>
+                    {isCarted ? "Remove from Cart" : "Add to Cart"}
+                  </button>
+                  <button className="border  border-black w-12 h-12" onClick={handleWishlist}>
+                    <FontAwesomeIcon icon={isWishlisted ? solidHeart : regularHeart} className="text-black " size="lg" />
+                  </button>
                 </div>
-                <button className="w-full border border-black h-12 font-bold text-black">Buy now</button>
+                <Link to="/cart" className="flex items-center justify-center block w-full border border-black h-12 font-bold text-black">
+                  Buy now
+                </Link>
               </>
             )}
           </div>

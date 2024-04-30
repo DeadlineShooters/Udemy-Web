@@ -6,7 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
 import logo from "../../Assets/Udemy_logo.png";
 import heart from "../../Assets/heart.png";
-import cart from "../../Assets/cart.png";
+import cartIcon from "../../Assets/cart.png";
 import { getColor, createImageFromInitials } from "../Utils/Utils.js";
 import { useAuth } from "../../AuthContextProvider.jsx";
 import { IconMenu2 } from "@tabler/icons-react";
@@ -15,105 +15,7 @@ import { Menu as MenuMT, MenuHandler, MenuList, MenuItem } from "@material-tailw
 import { IconChevronLeft } from "@tabler/icons-react";
 import secureLocalStorage from "react-secure-storage";
 import axios from "axios";
-
-const categories = ["Development", "Business", "Finance & Accounting", "IT & Software", "Office Productivity", "Personal Development", "Design", "Marketing", "Health & Fitness", "Music"];
-
-const subCategories = [
-  [
-    "Web Development",
-    "Data Science",
-    "Mobile Development",
-    "Programming Languages",
-    "Game Development",
-    "Database Design & Development",
-    "Software Testing",
-    "Software Engineering",
-    "Software Development Tools",
-    "No-Code Development",
-  ],
-  [
-    "Entrepreneurship",
-    "Communication",
-    "Management",
-    "Sales",
-    "Business Strategy",
-    "Operations",
-    "Project Management",
-    "Business Law",
-    "Business Analytics & Intelligence",
-    "Human Resources",
-    "Industry",
-    "E-Commerce",
-    "Media",
-    "Real Estate",
-    "Other Business",
-  ],
-  [
-    "Accounting & Bookkeeping",
-    "Compliance",
-    "Cryptocurrency & Blockchain",
-    "Economics",
-    "Finance",
-    "Finance Cert & Exam Prep",
-    "Financial Modeling & Analysis",
-    "Investing & Trading",
-    "Money Management Tools",
-    "Taxes",
-    "Other Finance & Accounting",
-  ],
-  ["IT certifications", "Network & Security", "Hardware", "Operating Systems & Servers", "Other IT & Software"],
-  ["Microsoft", "Apple", "Google", "SAP", "Oracle", "Other Office Productivity"],
-  [
-    "Personal Transformation",
-    "Productivity",
-    "Leadership",
-    "Personal Finance",
-    "Career Development",
-    "Parenting & Relationships",
-    "Happiness",
-    "Religion & Spirituality",
-    "Personal Brand Building",
-    "Creativity",
-    "Influence",
-    "Self Esteem",
-    "Stress Management",
-    "Memory & Study Skills",
-    "Motivation",
-    "Other Personal Development",
-  ],
-  [
-    "Web Design",
-    "Graphic Design & Illustration",
-    "Design Tools",
-    "User Experience",
-    "Game Design",
-    "Design Thinking",
-    "3D & Animation",
-    "Fashion",
-    "Architectural Design",
-    "Interior Design",
-    "Other Design",
-  ],
-  [
-    "Digital Marketing",
-    "Search Engine Optimization",
-    "Social Media Marketing",
-    "Branding",
-    "Marketing Fundamentals",
-    "Analytics & Automation",
-    "Public Relations",
-    "Advertising",
-    "Video & Mobile Marketing",
-    "Content Marketing",
-    "Growth Hacking",
-    "Affiliate Marketing",
-    "Product Marketing",
-    "Other Marketing",
-  ],
-  ["Fitness", "General Health", "Sports", "Nutrition", "Yoga", "Mental Health", "Dieting", "Self Defense", "Safety & First Aid", "Dance", "Meditation", "Other Health & Fitness"],
-  ["Instruments", "Production", "Music Fundamentals", "Vocal", "Music Techniques", "Music Software", "Other Music"],
-  ["Engineering", "Humanities", "Math", "Science", "Online Education", "Social Science", "Language Learning", "Teacher Training", "Test Prep", "Other Teaching & Academics"],
-];
+import { useCart } from "../../CartRouterProvider.js";
 
 const courses = [
   {
@@ -180,6 +82,7 @@ const courses = [
 
 const Navbar = () => {
   const { userData } = useAuth();
+  const { cart } = useCart();
   const isLogged = userData !== null;
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -191,6 +94,7 @@ const Navbar = () => {
   const [isTurnOnSideBar, setTurnOnSideBar] = useState(false);
   const sideBarToggle = () => {
     setTurnOnSideBar(!isTurnOnSideBar);
+    console.log(isTurnOnSideBar);
   };
   const [isWishlistDropdownOpen, setWishlistDropdownOpen] = useState(false);
   const toggleWishlistDropdown = () => {
@@ -214,14 +118,29 @@ const Navbar = () => {
     navigate(`/courses/search?query=${searchQuery}`);
   };
 
+  const [categories, setCategories] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/courses/categories")
+      .then((response) => {
+        if (response.data.success) {
+          setCategories(response.data.categories);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
+
   return (
     <div className="header">
       <div className="navbar justify-between">
-        <div className="flex items-center lg-max:w-full">
+        <div className="flex items-center">
           <button type="button" className="md:hidden" onClick={sideBarToggle}>
             <IconMenu2 stroke={2} />
           </button>
-          <div className="logo-udemy justify-center">
+          <div className="logo-udemy">
             <Link to="/">
               <img src={logo} alt="" className="logo"></img>
             </Link>
@@ -231,26 +150,27 @@ const Navbar = () => {
               <MenuHandler>
                 <div className="cursor-pointer py-4">Categories</div>
               </MenuHandler>
-              <MenuList className="min-h-[40rem] w-64 top-16 z-9999">
-                {categories.map((category, ind) => (
-                  <MenuMT placement="right-start" allowHover offset={12}>
-                    <MenuHandler className="flex items-center justify-between">
-                      <MenuItem>
-                        <a href="/courses/category-name" className="text-gray-900 hover:text-[#5624d0] w-full py-1">
-                          {category}
-                        </a>
-                        <ChevronRightIcon strokeWidth={2.5} className={`h-3.5 w-3.5 `} />
-                      </MenuItem>
-                    </MenuHandler>
-                    <MenuList className="min-h-[40rem] w-64 top-16">
-                      {subCategories[ind].map((subCategory) => (
+              <MenuList className="min-h-[40rem] w-64 top-20 z-9999">
+                {categories &&
+                  categories.map((category, ind) => (
+                    <MenuMT placement="right-start" allowHover offset={12}>
+                      <MenuHandler className="flex items-center justify-between">
                         <MenuItem>
-                          <div className="text-gray-900 hover:text-[#5624d0] w-full py-1">{subCategory}</div>
+                          <a href={`/courses/${category.id}`} className="text-gray-900 hover:text-[#5624d0] w-full py-1">
+                            {category.name}
+                          </a>
+                          <ChevronRightIcon strokeWidth={2.5} className={`h-3.5 w-3.5 `} />
                         </MenuItem>
-                      ))}
-                    </MenuList>
-                  </MenuMT>
-                ))}
+                      </MenuHandler>
+                      <MenuList className="min-h-[40rem] w-64 top-20">
+                        {category.subCategories.map((subCategory) => (
+                          <MenuItem>
+                            <div className="text-gray-900 hover:text-[#5624d0] w-full py-1">{subCategory}</div>
+                          </MenuItem>
+                        ))}
+                      </MenuList>
+                    </MenuMT>
+                  ))}
               </MenuList>
             </MenuMT>
           </ul>
@@ -285,14 +205,12 @@ const Navbar = () => {
         {isLogged === true ? (
           <div className={`flex items-center`}>
             <ul>
-              {userData?.instructor ? (
+              {userData.instructor !== null ? (
                 <li class="hover:text-purple-700 hide-teach-udemy">
                   <Link to="/instructor/courses">Instructor</Link>
                 </li>
               ) : (
-                <li className="hover:text-purple-700 hide-teach-udemy">
-                  <Link to="/user/instructor-become">Teach on Udemy</Link>
-                </li>
+                <li className="hover:text-purple-700 hide-teach-udemy">Teach on Udemy</li>
               )}
               <li className="hover:text-purple-700 hide-my-learning">
                 <Link to="/home/my-courses/learning">My learning</Link>
@@ -340,45 +258,48 @@ const Navbar = () => {
             </div>
             <div className="relative" onMouseEnter={toggleCartDropdown} onMouseLeave={toggleCartDropdown}>
               <button id="dropdownSearchButton" className="flex items-center py-4 my-2" type="button">
-                <img src={cart} alt="Cart" className="cart mx-4"></img>
+                <img src={cartIcon} alt="Cart" className="cart mx-4"></img>
               </button>
               {isCartDropdownOpen && (
                 <div id="dropdownSearch" className="z-9999  absolute top-[calc(100%-1rem)] mt-2 right-0 bg-white shadow-[0_0_0_1px_#d1d7dc,0_2px_4px_rgba(0,0,0,.08),0_4px_12px_rgba(0,0,0,.08)] w-80">
                   <ul class="divide-y divide-gray-300 max-h-[32rem] pb-3 overflow-y-auto text-sm text-gray-700" aria-labelledby="dropdownSearchButton">
-                    {courses.map((course) => (
-                      <button class="flex flex-col items-center p-4" onClick={() => {}}>
-                        <div className="flex items-center">
-                          <div class="flex-shrink-0">
-                            <img class="object-cover object-center w-16 h-16" src={course.image} alt="" />
-                          </div>
-                          <div class="ps-3 flex flex-col gap-0.5">
-                            <div class="text-gray-900 font-bold text-sm text-left line-clamp-2">{course.name}</div>
-                            <div class="text-gray-900 text-xs text-left line-clamp-1">{course.instructor}</div>
-                            <div class="flex gap-2">
-                              <span class="font-bold text-gray-900 ">
-                                <span class="underline">đ</span>
-                                {course.discountedPrice.toLocaleString()}
-                              </span>
-                              <span class="text-gray-700 line-through">
-                                <span class="underline">đ</span>
-                                {course.originalPrice.toLocaleString()}
-                              </span>
+                    {cart &&
+                      cart.map((course) => (
+                        <button class="flex flex-col items-center p-4" onClick={() => {}}>
+                          <div className="flex items-center">
+                            <div class="flex-shrink-0">
+                              <img class="object-cover object-center w-16 h-16" src={course.thumbNail.secureURL} alt="" />
+                            </div>
+                            <div class="ps-3 flex flex-col gap-0.5">
+                              <div class="text-gray-900 font-bold text-sm text-left line-clamp-2">{course.name}</div>
+                              <div class="text-gray-900 text-xs text-left line-clamp-1">
+                                {course.instructor.firstName} {course.instructor.lastName}
+                              </div>
+                              <div class="flex gap-2">
+                                <span class="font-bold text-gray-900 ">
+                                  <span class="underline">đ</span>
+                                  {(course.price * 0.8).toLocaleString()}
+                                </span>
+                                <span class="text-gray-700 line-through">
+                                  <span class="underline">đ</span>
+                                  {course.price.toLocaleString()}
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </button>
-                    ))}
+                        </button>
+                      ))}
                   </ul>
                   <div className="sticky bottom-0 w-full bg-white shadow-[0_-2px_4px_rgba(0,0,0,.08),0_-4px_12px_rgba(0,0,0,.08)] p-4">
                     <div class="flex gap-2 items-center mb-2">
                       <span class="font-bold text-gray-900 text-xl">
                         <span>Total: </span>
                         <span class="underline">đ</span>
-                        {courses.reduce((acc, course) => acc + course.discountedPrice, 0).toLocaleString()}
+                        {cart && cart.reduce((acc, course) => acc + course.price * 0.8, 0).toLocaleString()}
                       </span>
                       <span class="text-gray-700 line-through">
                         <span class="underline">đ</span>
-                        {courses.reduce((acc, course) => acc + course.originalPrice, 0).toLocaleString()}
+                        {cart && cart.reduce((acc, course) => acc + course.price, 0).toLocaleString()}
                       </span>
                     </div>
                     <a href="/cart" className="font-bold bg-gray-900 text-white w-full mx-auto flex justify-center p-3">

@@ -12,10 +12,9 @@ import accountRoute from "./routes/user/accountRoute.js";
 import courseRoute from "./routes/course/courseRoute.js";
 import feedbackRoute from "./routes/feedbackRoute.js";
 import instructorRoute from "./routes/instructor/instructorRoute.js";
-import paymentRoute from './routes/payment/paymentRoute.js';
-import cartRoute from './routes/user/cartRoute.js';
-import wishlistRoute from './routes/user/wishlistRoute.js';
-import instructorRoute from './routes/user/instructorRoute.js';
+import paymentRoute from "./routes/payment/paymentRoute.js";
+import cartRoute from "./routes/user/cartRoute.js";
+import wishlistRoute from "./routes/user/wishlistRoute.js";
 import cloudinary from "cloudinary";
 dotenv.config();
 
@@ -59,10 +58,10 @@ app.use("/user", accountRoute);
 app.use("/courses", courseRoute);
 app.use("/feedback", feedbackRoute);
 app.use("/instructor", instructorRoute);
-app.use('/payment', paymentRoute);
-app.use('/cart', cartRoute);
-app.use('/wishlist', wishlistRoute);
-app.use('/instructor', instructorRoute);
+app.use("/payment", paymentRoute);
+app.use("/cart", cartRoute);
+app.use("/wishlist", wishlistRoute);
+app.use("/instructor", instructorRoute);
 
 const PORT = 5000;
 app.listen(5000, () => {
