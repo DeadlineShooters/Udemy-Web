@@ -196,7 +196,7 @@ const Home = () => {
                 </span>
                 <Carousel containerClass="" itemClass="m-2 itemClassHome" responsive={responsive}>
                   {courses[category.name].map((course) => (
-                    <div class="">
+                    <a class="" href={`course/${course._id}`}>
                       <img class="" src={course.thumbNail.secureURL} alt="" />
                       <div class="flex flex-col gap-1 pt-1.5">
                         <h3 class="font-bold text-gray-900 line-clamp-2 leading-tight">{course.name}</h3>
@@ -222,7 +222,7 @@ const Home = () => {
                           </span>
                         </div>
                       </div>
-                    </div>
+                    </a>
                   ))}
                 </Carousel>
               </div>

@@ -15,7 +15,7 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import EditRatingButton from "../../../../Components/Feedback/EditRatingButton";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { useAuth } from "../../../../AuthContextProvider";
-import {useCourse} from '../../../../CourseContextProvider';
+import { useCourse } from "../../../../CourseContextProvider";
 import axios from "axios";
 
 const MyLearning = () => {
@@ -23,23 +23,24 @@ const MyLearning = () => {
   const userId = userData._id;
   const [courseList, setCourseList] = useState([]);
   const [detailCourse, setDetailCourse] = useState();
-  const {setSelectedCourse} = useCourse();
+  const { setSelectedCourse } = useCourse();
 
   useEffect(() => {
     const getCourse = () => {
-      axios.get(`http://localhost:5000/user/${userId}/get-course/all`)
+      axios
+        .get(`http://localhost:5000/user/${userId}/get-course/all`)
         .then((response) => {
           if (response.data.success) {
             setCourseList(response.data.courseList);
           }
         })
         .catch((error) => {
-          console.error('Error:', error);
-      });
+          console.error("Error:", error);
+        });
     };
     getCourse();
   }, []);
-  
+
   useEffect(() => {
     console.log(courseList);
   }, [courseList]);
@@ -54,24 +55,25 @@ const MyLearning = () => {
   };
 
   const courseContentNavigation = async (course) => {
-    await axios.get(`http://localhost:5000/user/${userId}/get-course/${course._id}/detail`)
+    await axios
+      .get(`http://localhost:5000/user/${userId}/get-course/${course._id}/detail`)
       .then((response) => {
         if (response.data.success) {
           setSelectedCourse(response.data.course);
-          const recentVideoId = Object.keys(JSON.parse(localStorage.getItem('selectLecture')))[0];
+          const recentVideoId = Object.keys(JSON.parse(localStorage.getItem("selectLecture")))[0];
           if (!recentVideoId) {
             const newRecentVideoId = response.data.course.sectionList[0].lectureList[0].index;
-            localStorage.setItem('selectLecture', newRecentVideoId);
-            navigate(`/course/${response.data.course.slugName}/learn/${newRecentVideoId}#overview`, {state: {course: response.data.course}});
+            localStorage.setItem("selectLecture", newRecentVideoId);
+            navigate(`/course/${response.data.course.slugName}/learn/${newRecentVideoId}#overview`, { state: { course: response.data.course } });
           } else {
-            navigate(`/course/${response.data.course.slugName}/learn/${recentVideoId}#overview`, {state: {course: response.data.course}});
+            navigate(`/course/${response.data.course.slugName}/learn/${recentVideoId}#overview`, { state: { course: response.data.course } });
           }
         }
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       });
-  }
+  };
 
   return (
     <div>
@@ -90,46 +92,46 @@ const MyLearning = () => {
         </div>
       </div>
       <div className="lower-wishlist cardContainer mx-auto flex flex-col">
-      {courseList.length > 0 ?    
-      (<div>
-        <form class="functionbar flex flex-row items-end justify-end w-full ml-auto pb-8 px-2">
-          <div className="filter flex flex-row items-center px-5">
-            <span className='mr-2'>Filter by:</span>
-            <select className="p-2 text-md hover:bg-gray-200 border border-gray-400 rounded-lg">
-              <option value="all">All Courses</option>
-              <option value="favorites">Favorites</option>
-            </select>
-          </div>
-          <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
-            Search
-          </label>
-          <div class="relative flex items-center">
-            <input
-              type="search"
-              id="default-search"
-              class="block w-full p-2 ps-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Search my course..."
-              required
-            />
-            <button
-              type="submit"
-              class="text-white absolute end-1 bg-purple-900 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-2 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              <svg class="w-4 h-4 text-white dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-              </svg>
-            </button>
-          </div>
-        </form>
-          {courseList.map((oneCourse, index) => (
-            <div className="justify-center md:justify-start flex flex-wrap">
-              <div class="bg-white lg:w-1/4 md:w-1/3 w-60 pb-8 px-2">
-                <div className='relative'>
-                  <img class="" src={oneCourse.course.thumbNail.secureURL} alt="" />
-                  <div className='overflow-hidden absolute top-0 left-0 opacity-0 hover:opacity-100' onClick={() => courseContentNavigation(oneCourse.course)}>
-                    <img className='h-full object-cover w-full' src={course_overlay} alt='course placeholder' />
-                  </div>
-                  <div className='rounded-md absolute top-0 right-0 mt-2 mr-2 w-12 h-12'>
+        {courseList.length > 0 ? (
+          <div>
+            <form class="functionbar flex flex-row items-end justify-end w-full ml-auto pb-8 px-2">
+              <div className="filter flex flex-row items-center px-5">
+                <span className="mr-2">Filter by:</span>
+                <select className="p-2 text-md hover:bg-gray-200 border border-gray-400 rounded-lg">
+                  <option value="all">All Courses</option>
+                  <option value="favorites">Favorites</option>
+                </select>
+              </div>
+              <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
+                Search
+              </label>
+              <div class="relative flex items-center">
+                <input
+                  type="search"
+                  id="default-search"
+                  class="block w-full p-2 ps-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Search my course..."
+                  required
+                />
+                <button
+                  type="submit"
+                  class="text-white absolute end-1 bg-purple-900 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-2 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  <svg class="w-4 h-4 text-white dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                  </svg>
+                </button>
+              </div>
+            </form>
+            {courseList.map((oneCourse, index) => (
+              <div className="justify-center md:justify-start flex flex-wrap">
+                <div class="bg-white lg:w-1/4 md:w-1/3 w-60 pb-8 px-2">
+                  <div className="relative">
+                    <img class="" src={oneCourse.course.thumbNail.secureURL} alt="" />
+                    <div className="overflow-hidden absolute top-0 left-0 opacity-0 hover:opacity-100" onClick={() => courseContentNavigation(oneCourse.course)}>
+                      <img className="h-full object-cover w-full" src={course_overlay} alt="course placeholder" />
+                    </div>
+                    <div className="rounded-md absolute top-0 right-0 mt-2 mr-2 w-12 h-12">
                       <Menu as="div" className="relative ml-6">
                         <div>
                           <Menu.Button className="relative flex rounded-full bg-white-800 text-sm focus:ring-2">
@@ -166,16 +168,18 @@ const MyLearning = () => {
                         </Transition>
                       </Menu>
                     </div>
-                </div>
-                <div class="flex flex-col gap-1 pt-1.5">
-                  <h3 class="font-bold text-gray-900 line-clamp-2 leading-tight">{oneCourse.course.name}</h3>
-                  <p class="text-xs truncate text-gray-500">{oneCourse.course.instructor.firstName + " " + oneCourse.course.instructor.lastName}</p>     
-                </div>
-                {oneCourse.progress > 0 ? (
-                  <div>
-                    <div className="w-full bg-gray-200 rounded-full h-1 mt-3 dark:bg-gray-700">
-                      <div className="bg-blue-600 h-[2px] rounded-full" style={{width: (oneCourse.progress * 100) + "%"}}></div>
-                      <p className='text-slate-500  text-sm'>{(oneCourse.progress.toPrecision(4) * 100)}% Complete</p>
+                  </div>
+                  <div class="flex flex-col gap-1 pt-1.5">
+                    <h3 class="font-bold text-gray-900 line-clamp-2 leading-tight">{oneCourse.course.name}</h3>
+                    <p class="text-xs truncate text-gray-500">{oneCourse.course.instructor.firstName + " " + oneCourse.course.instructor.lastName}</p>
+                  </div>
+                  {oneCourse.progress > 0 ? (
+                    <div>
+                      <div className="w-full bg-gray-200 rounded-full h-1 mt-3 dark:bg-gray-700">
+                        <div className="bg-blue-600 h-[2px] rounded-full" style={{ width: oneCourse.progress * 100 + "%" }}></div>
+                        <p className="text-slate-500  text-sm">{oneCourse.progress.toPrecision(4) * 100}% Complete</p>
+                      </div>
+                      <div className="flex flex-row items-start justify-end mt-1">{index !== 3 ? <EditRatingButton review={review} /> : <EditRatingButton />}</div>
                     </div>
                   ) : (
                     <div className="w-full bg-gray-200 rounded-full h-1 mt-3 dark:bg-gray-700">

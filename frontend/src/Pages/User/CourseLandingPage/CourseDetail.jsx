@@ -19,6 +19,7 @@ import { createImageFromInitials } from "../../../Components/Utils/Utils.js";
 import { convertDecimal128ToNumber } from "../../../Components/Utils/Utils.js";
 import { useFeedbacks } from "../../../Components/Feedback/useFeedbacks.js";
 import Pagination from "../../../Components/Pagination.jsx";
+import DOMPurify from "dompurify";
 
 const CourseDetail = () => {
   const videoRef = useRef();
@@ -73,6 +74,8 @@ const CourseDetail = () => {
   // Convert the createDate string to a Date object
   const date = new Date(course.createDate);
 
+  const sanitizedHTML = DOMPurify.sanitize(course.description);
+
   // Format the date
   const formattedDate = `${date.toLocaleString("default", { month: "short" })} ${date.getDate()}, ${date.getFullYear()}`;
 
@@ -81,27 +84,27 @@ const CourseDetail = () => {
       {/* <video ref={videoRef} src={course.promotionalVideo.secureURL} style={{ display: "none" }} /> */}
       <div
         className="course-detail-container w-full lg:bg-course-title-bg-grey
-        lg:py-5 lg:px-20 sm:mt-5 sm:mb-5 sm:px-5 sm:text-black lg:text-white sm:flex sm:flex-col sm:items-center lg:block"
+        lg:py-5 lg:px-20 sm:mt-5 sm:mb-5 sm:px-5 sm:text-black lg:text-white sm:flex sm:flex-col sm:items-center lg:block "
       >
-        <div id="short-description" className=" relative lg:px-10 w-full px-6 sm:mb-5">
+        <div id="short-description" className=" relative lg:px-10 w-full px-6 sm:mb-5 lg:w-1/2">
           <h1 className="course-title font-bold text-3xl">{course.name}</h1>
           <br />
-          <p className="course-description">{course.introduction}</p>
+          <p className="course-description text-xl">{course.introduction}</p>
           <br />
 
           <div className="course-rating flex items-center">
-            <div className="text-amber-500 font-bold mr-1 text-sm">
+            <div className="text-amber-500 font-bold mr-1 text-lg">
               <span className="mr-1">{convertDecimal128ToNumber(course.avgRating)}</span>
               <FontAwesomeIcon icon={faStar} />
             </div>
-            <a href="#reviews" className="mr-3 text-violet-500 underline text-sm text-purple-200">
+            <a href="#reviews" className="mr-3 text-violet-500 underline  text-purple-200 text-lg">
               ({course.oneStarCnt + course.twoStarCnt + course.threeStarCnt + course.fiveStarCnt + course.fourStarCnt} ratings)
             </a>
-            <span className="text-sm">{course.totalStudent} students</span>
+            <span className="text-lg">{course.totalStudent} students</span>
           </div>
           <p>
-            <FontAwesomeIcon icon={faExclamation} className="text-red-500 text-sm mr-2" />
-            <span className="text-sm">Created date {formattedDate}</span>
+            <FontAwesomeIcon icon={faExclamation} className="text-red-500 mr-2 text-lg" />
+            <span className="text-lg">Created date {formattedDate}</span>
           </p>
         </div>
         <div className={`sidebar-container  sm:w-8/12 lg:w-3/12 lg:shadow-lg sm:shadow-md sm:-translate-y-0 lg:-translate-y-1/3 bg-white lg:fixed lg:right-6  `}>
@@ -143,15 +146,15 @@ const CourseDetail = () => {
       </div>
 
       <div className="course-details-outermost-container lg:py-5 lg:px-20 flex items-center px-6">
-        <div className="course-info-container lg:w-7/12 sm:10/12 md:px-10 ">
+        <div className="course-info-container lg:w-8/12 sm:10/12 md:px-10 ">
           <span className="price-number font-bold text-2xl text-slate-950 ">Course content</span>
           <div className="content-description mt-5">
-            <span className="price-number text-sm text-slate-950 ">{course.totalSection}</span>
-            <span className="price-number  text-sm  text-slate-950 "> sections • </span>
-            <span className="price-number  text-sm  text-slate-950 ">{course.totalLecture}</span>
-            <span className="price-number  text-sm  text-slate-950 "> lectures • </span>
-            <span className="price-number  text-sm  text-slate-950 ">{formatSecondsToHoursMinutesSeconds(course.totalLength)}</span>
-            <span className="price-number  text-sm  text-slate-950 "> total length</span>
+            <span className="text-lg price-number text-slate-950 ">{course.totalSection}</span>
+            <span className="text-lg price-number text-slate-950 "> sections • </span>
+            <span className="text-lg price-number text-slate-950 ">{course.totalLecture}</span>
+            <span className="text-lg price-number text-slate-950 "> lectures • </span>
+            <span className="text-lg price-number text-slate-950 ">{formatSecondsToHoursMinutesSeconds(course.totalLength)}</span>
+            <span className="text-lg price-number text-slate-950 "> total length</span>
           </div>
 
           <div className="curriculum-container course-layout mb-5 ">
@@ -160,26 +163,7 @@ const CourseDetail = () => {
             ))}
           </div>
           <span className="price-number font-bold text-2xl text-slate-950">Description</span>
-          <div className="text-sm mt-5 mb-5">
-            <h1>Welcome to the Complete Software Testing Masterclass.</h1>
-            <br />
-            <p>
-              Learn software testing with this course and become a successful software tester/agile Tester. Obtain the core Mobile Testing, Backend testing, Web testing, and Test Engineering skills,
-              and learn JIRA, SQL, TestRail, TestGear, Confluence, Charles Proxy, and GitHub. By the end of this course, you will have enough knowledge to get a job as a software tester or start
-              working as a freelancer! We will also explain many testing platforms where you can start earning money as a beta tester.
-            </p>
-
-            <br />
-
-            <p>We'll take you step-by-step through engaging video tutorials and teach you everything you need to know to succeed as a Software Tester.</p>
-
-            <br />
-
-            <p>
-              The course includes over hours and hours of 1080P (HD) video tutorials with high-quality sound. All the videos are hand-edited and unnecessary parts are removed. You will only learn
-              "what you need to learn" to become successful!
-            </p>
-          </div>
+          <div className="text-lg mt-5 mb-5" dangerouslySetInnerHTML={{ __html: sanitizedHTML }}></div>
           <span className="price-number font-bold text-2xl text-slate-950 ">Instructor</span>
           <ProfileCard
             instructor={course.instructor}
