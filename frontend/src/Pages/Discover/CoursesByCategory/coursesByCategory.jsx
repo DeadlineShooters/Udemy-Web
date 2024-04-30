@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import Carousel from 'react-multi-carousel';
 import Drawer from 'react-modern-drawer';
@@ -160,7 +160,7 @@ const CoursesByCategory = () => {
 			document.documentElement.style.setProperty('--containerWidth', `${containerWidth}px`);
 			if (!isMediumScreen) {
 				setOpenFilterBarSm(false);
-			} 
+			}
 		};
 
 		window.addEventListener('resize', handleResize);
@@ -181,7 +181,7 @@ const CoursesByCategory = () => {
 			.then((response) => {
 				if (response.data.success) {
 					setCourses(response.data.courses);
-					setFilterCourses(response.data.courses)
+					setFilterCourses(response.data.courses);
 					setCategoryName(response.data.courses[0].category.name);
 				}
 			})
@@ -369,32 +369,42 @@ const CoursesByCategory = () => {
 						<div className={`col-span-full ${openFilterBar ? 'lg:col-span-9' : ''}  divide-y divide-gray-300`}>
 							{filterCourses &&
 								filterCourses.map((course) => (
-									<div className='flex gap-4 pb-8 pt-4 '>
-										<img className='w-24 h-24 object-cover object-center md:w-60 md:h-fit' src={course.thumbNail.publicURL} alt='' />
-										<div className='pr-24 relative flex flex-col gap-1 w-full '>
-											<h3 class='font-bold text-gray-900 line-clamp-2 leading-tight'>{course.name}</h3>
-											<span class='text-sm text-gray-700 font-medium'>{course.introduction}</span>
-											<span class='text-xs text-gray-700'>{course.instructor.firstName} {course.instructor.lastName}</span>
-											<div class='flex gap-1 items-center'>
-												<span class='text-gray-900 font-bold text-sm'>{course.avgRating}</span>
-												<div class='flex gap-0.5'>{RenderStars({ rating: course.avgRating })}</div>
-												{/* <span class='text-gray-700 font-medium text-xs inline-block align-middle'>({course.ratingCnt.toLocaleString()})</span> */}
-											</div>
-											<div class='text-gray-700 text-xs align-middle'>
-												{course.totalLength} total hours • {course.totalLecture} lectures
-											</div>
-											<div class='flex flex-col items-end content-end space-x-2 absolute top-0 right-0'>
-												<span class='font-bold text-gray-900 '>
-													<span class='underline'>đ</span>
-													{(course.price * 0.8).toLocaleString()}
+									<Link to={`/course/${course._id}`}>
+										<div className='flex gap-4 pb-8 pt-4 '>
+											<img className='w-24 h-24 object-cover object-center md:w-60 md:h-fit' src={course.thumbNail.secureURL} alt='' />
+											<div className='pr-24 relative flex flex-col gap-1 w-full '>
+												<h3 class='font-bold text-gray-900 line-clamp-2 leading-tight'>{course.name}</h3>
+												<span class='text-sm text-gray-700 font-medium'>{course.introduction}</span>
+												<span class='text-xs text-gray-700'>
+													{course.instructor.firstName} {course.instructor.lastName}
 												</span>
-												<span class='text-gray-700 line-through'>
-													<span class='underline'>đ</span>
-													{course.price.toLocaleString()}
-												</span>
+												<div class='flex gap-1 items-center'>
+													<span class='text-gray-900 font-bold text-sm'>{course.avgRating}</span>
+													<div class='flex gap-0.5'>{RenderStars({ rating: course.avgRating })}</div>
+													{/* <span class='text-gray-700 font-medium text-xs inline-block align-middle'>({course.ratingCnt.toLocaleString()})</span> */}
+												</div>
+												<div class='text-gray-700 text-xs align-middle'>
+													{course.totalLength} total hours • {course.totalLecture} lectures
+												</div>
+												<div class='flex items-center space-x-2'>
+													{course.price === 0 ? (
+														<span class='font-bold text-gray-900 '>Free</span>
+													) : (
+														<>
+															<span class='font-bold text-gray-900 '>
+																<span class='underline'>đ</span>
+																{(course.price * 0.8).toLocaleString()}
+															</span>
+															<span class='text-gray-500 line-through'>
+																<span class='underline'>đ</span>
+																{course.price.toLocaleString()}
+															</span>
+														</>
+													)}
+												</div>
 											</div>
 										</div>
-									</div>
+									</Link>
 								))}
 						</div>
 					</div>
@@ -438,7 +448,14 @@ const CoursesByCategory = () => {
 						))}
 					</div>
 					<div className='sticky bottom-0 w-full bg-white shadow-[0_-2px_4px_rgba(0,0,0,.08),0_-4px_12px_rgba(0,0,0,.08)] py-4'>
-						<button className='bg-gray-900 text-white w-11/12 mx-auto flex justify-center p-2' onClick={() => {toggleDrawer()}}>Done</button>
+						<button
+							className='bg-gray-900 text-white w-11/12 mx-auto flex justify-center p-2'
+							onClick={() => {
+								toggleDrawer();
+							}}
+						>
+							Done
+						</button>
 					</div>
 				</div>
 			</Drawer>
