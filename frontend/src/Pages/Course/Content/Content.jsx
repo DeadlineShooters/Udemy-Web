@@ -11,22 +11,42 @@ import axios from "axios";
 
 const CourseContent = () => {
   const {state} = useLocation();
-  const [courseDetails, setCourseDetais] = useState(state.course);
+  const {selectedCourse, setSelectedCourse} = useCourse();
+  const [courseDetails, setCourseDetails] = useState(state ? state.course : null);
   const [slugName, setSlugName] = useState("");
+
   useEffect(() => {
-    const saveLatestCourse = () => {
-      localStorage.setItem('storedCourses', JSON.stringify(state.course));
+    const getCourse = () =>{
+      const url = window.location.href;
+      const [, , , ,slugName, , tail] = url.split("/");
+      const [lectureIndex, hash] = tail.split("#");
+      axios.post("http://localhost:5000/user/course/section/lecture", {lectureIndex, slugName})
+      .then((response) => {
+        if (response.data.success) {
+          setCourseDetails(response.data.data.course[0]);
+          setSlugName(slugName);
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
     }
-    saveLatestCourse();
+    getCourse();
   }, []);
+
   useEffect(() => {
     const getLatestCourse = () => {
-      const storedCourses = JSON.parse(localStorage.getItem('storedCourses')) || [];
-      setCourseDetais(storedCourses);
-      setSlugName(storedCourses.slugName);
-    }
+      const storedCourse = JSON.parse(localStorage.getItem('selectedCourse'));
+      if (!state) {
+        setCourseDetails(storedCourse);
+        setSlugName(storedCourse.slugName);
+      } else {
+        console.log("No stored courses found in localStorage");
+      }
+    };
     getLatestCourse();
   }, []);
+  
 
   const localNavigate = useNavigate();
   const handleOverviewClick = () => {
@@ -34,9 +54,13 @@ const CourseContent = () => {
   };
 
   const initialExpandedSections = {};
+  if (courseDetails) {
     courseDetails.sectionList.forEach(section => {
-      initialExpandedSections[section.index] = true; // Initialize each section as collapsed
-  });
+      initialExpandedSections[section.index] = true; // Initialize each section as expanded
+    });
+  } else {
+    console.log("courseDetails is not yet set.");
+  }
 
   const [expandedSections, setExpandedSections] = useState(initialExpandedSections);
   const toggleSection = (sectionID) => {
@@ -48,7 +72,6 @@ const CourseContent = () => {
   const [videoUrl, setVideoUrl] = useState("");
   const initialSelectLecture = JSON.parse(localStorage.getItem("selectLecture")) || {};
   const [selectLecture, setSelectLecture] = useState(initialSelectLecture);
-
 
   const toggleSelectLecture = (lectureID) => {
     setSelectLecture((prevState) => ({
@@ -66,8 +89,7 @@ const CourseContent = () => {
         axios.post("http://localhost:5000/user/course/section/lecture", {lectureIndex})
         .then((response) => {
           if (response.data.success) {
-            console.log(response.data.lecture);
-            setVideoUrl(response.data.lecture[0].video.secureURL);
+            setVideoUrl(response.data.data[0].video.secureURL);
           }
         })
         .catch((error) => {
@@ -77,22 +99,39 @@ const CourseContent = () => {
     }
     getLatestVideo();
   }, []);
+
   useEffect(() => {
     localStorage.setItem("selectLecture", JSON.stringify(selectLecture));
   }, [selectLecture]);
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const handleLectureClick = (videoUrl, courseSlug, lectureIndex) => {
+
+  const handleLectureClick = async (videoUrl, courseSlug, lectureIndex) => {
     setLoading(true);
     setVideoUrl(videoUrl);
-    navigate(`/course/${courseSlug}/learn/${lectureIndex}`, {state: {course : courseDetails}});
+    const currentHash = window.location.hash;
+    navigate(`/course/${courseSlug}/learn/${lectureIndex}${currentHash}`, {state: {course: courseDetails}});
     setLoading(false);
   };
+
   const [QAlistOfLecture, setQAlistOfLecture] = useState();
+
   const handleQAClick = () => {
     localNavigate(window.location.pathname + '#QA');
   };
+
+  const updateCourseProgress = (selected) => {
+    // const increment = selected ? 1 : -1;
+    // const storedCourse = JSON.parse(localStorage.getItem('selectedCourse'));
+    // const newProgress = (storedCourse.progress + increment) / storedCourse.course.totalLecture * 100;
+    // setSelectedCourse(prevCourse => ({
+    //   ...prevCourse,
+    //   progress: newProgress,
+    // }));
+  };
+
+  console.log("123", selectedCourse);
   return (
     <div class="flex flex-row">
       {!loading ? (
@@ -102,8 +141,8 @@ const CourseContent = () => {
             <div className={` ${window.location.hash === '#overview' ? "text-[rgb(109,60,208)]" : "black"} font-bold hover:text-[#382660] text-lg mx-5 cursor-pointer`} onClick={handleOverviewClick}>Overview</div>
             <div className="font-bold hover:text-[#382660] text-lg mx-5 cursor-pointer" onClick={handleQAClick}>QA</div>
           </div>
-          {window.location.hash === '#overview' && <CourseOverview course={courseDetails} />}
-          {window.location.hash === '#QA' && <CompQA QA={QAlistOfLecture}/>}
+          {window.location.hash === '#overview' && <CourseOverview/>}
+          {window.location.hash === '#QA' && <CompQA/>}
         </div>
       ) : (
         <div role="status" class="flex flex-col bg-slate-900 items-center justify-center" style={{ height: "603px", width: "3560px" }}>
@@ -130,19 +169,19 @@ const CourseContent = () => {
         <div class="flex flew-row border">
           <p class="font-bold text-xl my-5 ml-5">Course content</p>
         </div>
-        {courseDetails.sectionList.map((section, indexSection) => (
-          <div key={indexSection}>
+        {courseDetails.sectionList.map((section, index) => (
+          <div key={index}>
             <div class="flex flew-row border justify-between items-center cursor-pointer" onClick={() => toggleSection(section.index)}>
               <p class="font-bold text-base my-3 ml-5">
-                Section {indexSection + 1}: {section.name}
+                Section {index + 1}: {section.name}
               </p>
               <img
-                src={expandedSections[section.indexSection] ? arrow_up : arrow_down}
-                alt={expandedSections[section.indexSection] ? "up-arrow" : "down-arrow"}
+                src={expandedSections[section.index] ? arrow_up : arrow_down}
+                alt={expandedSections[section.index] ? "up-arrow" : "down-arrow"}
                 class="w-5 h-5 mr-5"
               ></img>
             </div>
-            <div class={`${expandedSections[section.indexSection] ? "flex flex-col" : "hidden"} ml-5 cursor-pointer`}>
+            <div class={`${expandedSections[section.index] ? "flex flex-col" : "hidden"} ml-5 cursor-pointer`}>
               {section.lectureList.map((lecture, indexLecture) => (
                 <div
                   key={lecture.index}
@@ -151,7 +190,12 @@ const CourseContent = () => {
                     {
                       handleLectureClick(lecture.video.secureURL, slugName, lecture.index);
                     }
-                    toggleSelectLecture(lecture.index, section.index);
+                    if (!selectLecture[lecture.index]) {
+                      toggleSelectLecture(lecture.index);
+                      updateCourseProgress(true);
+                    } else {
+                      updateCourseProgress(false);
+                    }
                   }}
                 >
                   <input
@@ -161,7 +205,7 @@ const CourseContent = () => {
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-5"
                   />
                   <p className="p-2">
-                    {indexSection + 1}.{indexLecture + 1} {lecture.name}
+                    {index + 1}.{indexLecture + 1} {lecture.name}
                   </p>
                 </div>
               ))}

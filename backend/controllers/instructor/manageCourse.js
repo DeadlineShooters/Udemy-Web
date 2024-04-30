@@ -25,21 +25,22 @@ export const createCourse = async (req, res) => {
         newCourse.status = true;
         
         for (const sectionData of data.sections) {
+            const maxIndex = await Section.aggregate([
+                { $group: { _id: null, maxIndex: { $max: "$index" } } }
+            ]);
+            const sectionIndex = (maxIndex.length > 0) ? maxIndex[0].maxIndex + 1 : 1;
             const section = new Section({
+                index: sectionIndex,
                 name: sectionData.name,
                 lectureList: []
             });
             for (const lectureData  of sectionData.lectures) {
-                // Get the highest index value for lectures in the section
                 const maxIndex = await Lecture.aggregate([
                     { $group: { _id: null, maxIndex: { $max: "$index" } } }
                 ]);
-        
-                // Calculate the new index for the lecture
-                const newIndex = (maxIndex.length > 0) ? maxIndex[0].maxIndex + 1 : 1;
-
+                const lectureIndex = (maxIndex.length > 0) ? maxIndex[0].maxIndex + 1 : 1;
                 const newLecture = new Lecture({
-                    index: newIndex,
+                    index: lectureIndex,
                     name: lectureData.name,
                     video: lectureData.video,
                 })
@@ -136,6 +137,11 @@ export const updateSection = async (req, res) => {
                 sectionIds.push(updatedSection._id);
             } else {
                 const newSection = new Section(sectionWithLectures);
+                const maxIndex = await Section.aggregate([
+                    { $group: { _id: null, maxIndex: { $max: "$index" } } }
+                ]);
+                const sectionIndex = (maxIndex.length > 0) ? maxIndex[0].maxIndex + 1 : 1;
+                newSection.index = sectionIndex;
                 const savedSection = await newSection.save();
                 sectionIds.push(savedSection._id);
             }

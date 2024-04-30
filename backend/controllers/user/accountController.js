@@ -147,7 +147,7 @@ export const getOneCourse = async (req, res) => {
                 path: 'lectureList',
                 model: 'Lecture',
             }
-        }).populate({path: "instructor", model: "User"});;
+        }).populate({path: "instructor", model: "User"});
         console.log("user get course here: ", course);
         if (course) {
             return res.status(200).send({ success: true, message: "Course found successfully", course: course });  
@@ -162,12 +162,30 @@ export const getOneCourse = async (req, res) => {
 
 export const getExactLecture = async (req, res) => {
     try {
-        const {lectureIndex} = req.body;
-        const lecture = await Lecture.find({index: lectureIndex});
-        if (lecture) {
-            return res.status(200).send({ success: true, message: "Lecture found successfully", lecture: lecture });  
+        const {lectureIndex, slugName} = req.body;
+        if (!slugName) {
+            const lecture = await Lecture.find({index: lectureIndex});
+            if (lecture) {
+                return res.status(200).send({ success: true, message: "Lecture found successfully", data: lecture });  
+            } else {
+                return res.status(400).send({ success: false, message: "Lecture found failed"});  
+            }
         } else {
-            return res.status(400).send({ success: false, message: "Lecture found failed"});  
+            const course = await Course.find({slugName: slugName}).populate({
+                path: 'sectionList',
+                model: 'Section',
+                populate: {
+                    path: 'lectureList',
+                    model: 'Lecture',
+                }
+            }).populate({path: "instructor", model: "User"});
+            const lecture = await Lecture.find({index: lectureIndex});
+            const returnData = {course, lecture};
+            if (lecture) {
+                return res.status(200).send({ success: true, message: "Lecture found successfully", data: returnData });  
+            } else {
+                return res.status(400).send({ success: false, message: "Lecture found failed"});  
+            }
         }
     } catch (error) {
         console.error('Error fetching course list:', error);
