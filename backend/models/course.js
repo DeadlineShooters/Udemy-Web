@@ -7,10 +7,11 @@ import Category from "./category.js";
 
 const courseSchema = mongoose.Schema({
   name: { type: String, require: true },
-  slugName: {type: String},
+  slugName: { type: String },
   instructor: { type: Schema.Types.ObjectId, ref: "User" },
   totalStudent: { type: Number },
   introduction: { type: String },
+  description: { type: String },
   price: { type: Number },
   sectionList: [{ type: Schema.Types.ObjectId, ref: "Section" }],
   promotionalVideo: videoSchema,
@@ -30,5 +31,5 @@ const courseSchema = mongoose.Schema({
   oneStarCnt: { type: Number, default: 0 },
 });
 
-const course = mongoose.model("Course", courseSchema);
-export default course;
+const Course = mongoose.model("Course", courseSchema);
+export default Course;

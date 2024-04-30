@@ -1,11 +1,19 @@
 import Feedback from "../models/feedbackModel.js";
 import { PAGE_SIZE } from "../utils/constants.js";
+import Course from "../models/course.js";
 
 const controller = {};
 
-controller.getFeedback = async ({ page }) => {
+controller.getFeedback = async (req) => {
+  const { courseID } = req.params;
+  const { page = 1 } = req.query; // default is first page if not provided
+
   // PAGINATION
   const skip = (page - 1) * PAGE_SIZE;
+  console.log("Get feedback for course " + courseID);
+
+  // QUERY
+  const query = { courseID }; // retrieves documents where courseID matches
 
   try {
     const data = await Feedback.find(query).skip(skip).limit(PAGE_SIZE).exec();
@@ -14,7 +22,7 @@ controller.getFeedback = async ({ page }) => {
 
     return { data, count };
   } catch (error) {
-    console.error(error);
+    console.log("Error in getFeedback:", error);
     throw new Error("Feedback could not be loaded");
   }
 };
