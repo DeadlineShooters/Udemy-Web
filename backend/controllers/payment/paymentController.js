@@ -1,5 +1,11 @@
 import moongoose from 'mongoose';
 import User from '../../models/user.js';
+import crypto from 'crypto';
+import https from 'https';
+import Course from '../../models/course.js';
+import Transaction from '../../models/transaction.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const controller = {};
 
@@ -7,18 +13,17 @@ controller.payment = async (request, response) => {
 	var userId = request.body.userId;
 	var amount = request.body.amount;
 	var partnerCode = 'MOMO';
-	var accessKey = 'F8BBA842ECF85';
-	var secretkey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
+	var accessKey = process.env.ACCESS_KEY;
+	var secretkey = process.env.SECRET_KEY;
 	var requestId = partnerCode + new Date().getTime();
 	var orderId = requestId;
 	var orderInfo = 'pay with MoMo';
-	var redirectUrl = 'http://localhost:5000/customer/handlepayment';
+	var redirectUrl = 'http://localhost:5000/payment/handle-payment';
 	var ipnUrl = 'https://callback.url/notify';
 	// var ipnUrl = redirectUrl = "https://webhook.site/454e7b77-f177-4ece-8236-ddf1c26ba7f8";
 	var requestType = 'captureWallet';
 	var extraData = userId;
 	amount = amount.toString();
-	console.log(amount);
 
 	var rawSignature =
 		'accessKey=' +
@@ -101,24 +106,34 @@ controller.payment = async (request, response) => {
 };
 
 controller.handlePayment = async (req, res) => {
-	console.log(req.query);
 	if (req.query.resultCode == 0) {
 		let userId = req.query.extraData;
 		let user = await User.findById(userId);
 		if (user) {
-			user.cart.map(async courseId => {
+			const courseUpdates = user.cart.map(async (courseId) => {
 				let course = await Course.findById(courseId);
 				if (course) {
 					user.courseList.push(courseId);
-					await user.save();
-					course.totalStudent += 1
-					course.totalRevenue += course.price
-					await course.save()
+					course.totalStudent += 1;
+					course.totalRevenue += course.price;
+					await course.save();
+
+					let transaction = new Transaction({
+						student: user._id,
+						instructor: course.instructor,
+						course: courseId,
+						amount: course.price,
+					});
+					await transaction.save();
 				} else {
 					console.log('No course found!');
 				}
-			})
+			});
+
+			await Promise.all(courseUpdates);
+
 			user.cart = [];
+			await user.save();
 		} else {
 			console.log('No user found!');
 		}

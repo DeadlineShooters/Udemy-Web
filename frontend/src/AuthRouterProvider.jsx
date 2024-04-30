@@ -193,7 +193,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/course/:courseId/learn/:videoId",
+    path: "/course/:courseSlug/learn/:lectureIndex",
     element: <CourseLayout />,
     children: [
       {
@@ -231,7 +231,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/instructor/course/:courseId/manage",
+    path: "/instructor/course/:courseSlug/manage",
     element: <ProtectedRoutes />,
     children: [
       {

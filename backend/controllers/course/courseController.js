@@ -46,6 +46,63 @@ controller.categories = async (req, res) => {
   }
 };
 
+controller.isEnrolled = async (req, res) => {
+	var { userId, courseId } = req.body;
+	try {
+		let user = await User.findById(userId);
+		if (user) {
+			if (user.courseList.includes(courseId)) {
+				res.json({ success: true });
+			} else {
+				res.json({ success: false, message: 'No course found!' });
+			}
+		} else {
+			res.json({ success: false, message: 'No user found!' });
+		}
+	} catch (error) {
+		console.log(error);
+		res.status(500).send(error);
+	}
+};
+
+controller.isCarted = async (req, res) => {
+	var { userId, courseId } = req.body;
+	try {
+		let user = await User.findById(userId);
+		if (user) {
+			if (user.cart.includes(courseId)) {
+				res.json({ success: true });
+			} else {
+				res.json({ success: false, message: 'No course found!' });
+			}
+		} else {
+			res.json({ success: false, message: 'No user found!' });
+		}
+	} catch (error) {
+		console.log(error);
+		res.status(500).send(error);
+	}
+};
+
+controller.isWishlisted = async (req, res) => {
+	var { userId, courseId } = req.body;
+	try {
+		let user = await User.findById(userId);
+		if (user) {
+			if (user.wishList.includes(courseId)) {
+				res.json({ success: true });
+			} else {
+				res.json({ success: false, message: 'No course found!' });
+			}
+		} else {
+			res.json({ success: false, message: 'No user found!' });
+		}
+	} catch (error) {
+		console.log(error);
+		res.status(500).send(error);
+	}
+};
+
 const client = new Client({
   cloud: {
     id: process.env.ELASTIC_CLOUD_ID,

@@ -16,7 +16,6 @@ import './CourseDashboard.css';
 const profileImage =
 	"https://res.cloudinary.com/dk6q93ryt/image/upload/v1696217092/samples/smile.jpg";
 
-
 const CourseDashBoard = () => {
   const { userData } = useAuth();
   const instructorID = userData._id; 
@@ -27,9 +26,14 @@ const CourseDashBoard = () => {
   const { setSelectedCourse } = useCourse();
 
   const handleCourseSelectionAndNav = (course) => {
-    navigate(`/instructor/course/${course._id}/manage/basics`)
+    navigate(`/instructor/course/${course.slugName}/manage/basics`)
     setSelectedCourse(course);
   };
+
+  const img_illust1 = "https://res.cloudinary.com/dqxtf297o/image/upload/v1714285439/Udemy-important/dashboard_img1.jpg";
+  const img_illust2 = "https://res.cloudinary.com/dqxtf297o/image/upload/v1714285845/Udemy-important/dashboard_img4.jpg";
+  const img_illust3 = "https://res.cloudinary.com/dqxtf297o/image/upload/v1714286036/Udemy-important/dashboard_img3.jpg";
+  const img_illust4 = "https://res.cloudinary.com/dqxtf297o/image/upload/v1714286036/Udemy-important/dashboard_img2.jpg";
 
   useEffect(() => {
     const getCourse = () => {
@@ -53,25 +57,25 @@ const CourseDashBoard = () => {
     // alert(filter)
   };
   const resource1 = {
-    imgSrc: profileImage,
+    imgSrc: img_illust3,
     title: "Create an Engaging Course",
     desciption: "Whether you've been teaching for years or are teaching for the first time, you can make an engaging course. We've compiled resources and best practices to help you get to the next level, no matter where you're starting.",
     getStartedUrl: '#',
   }
   const resource2 = {
-    imgSrc: profileImage,
+    imgSrc: img_illust1,
     title: "Get Started with Video",
     desciption: "Quality video lectures can set your course apart. Use our resources to learn the basics.",
     getStartedUrl: '#',
   }
   const resource3 = {
-    imgSrc: profileImage,
+    imgSrc: img_illust2,
     title: "Build Your Audience",
     desciption: "Set your course up for success by building your audience.",
     getStartedUrl: '#',
   }
   const resource4 = {
-    imgSrc: profileImage,
+    imgSrc: img_illust4,
     title: "Join the New Instructor Challenge!",
     desciption: "Get exclusive tips and resources designed to help you launch your first course faster! Eligible instructors who publish their first course on time will receive a special bonus to celebrate. Start today!",
     getStartedUrl: '#',

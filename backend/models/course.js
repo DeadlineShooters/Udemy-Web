@@ -7,6 +7,7 @@ import Category from "./category.js";
 
 const courseSchema = mongoose.Schema({
   name: { type: String, require: true },
+  slugName: {type: String},
   instructor: { type: Schema.Types.ObjectId, ref: "User" },
   totalStudent: { type: Number },
   introduction: { type: String },

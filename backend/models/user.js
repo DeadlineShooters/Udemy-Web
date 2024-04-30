@@ -20,7 +20,8 @@ const userSchema = new mongoose.Schema({
   hashedPassword: { type: String, required: true },
   socialLinks: { web: { type: String, default: "" }, youtube: { type: String, default: "" }, facebook: { type: String, default: "" } },
   archivedCourse: [{ type: Schema.Types.ObjectId, ref: "Course" }],
-  cart: { type: Array },
+  cart: [{ type: Schema.Types.ObjectId, ref: "Course" }],
+
   instructor: instructorSchema,
 });
 

@@ -21,13 +21,14 @@ const CourseOverview = ({course}) => {
         <div className='flex flex-col text-lg mb-5'>
           <div>Lectures: {course.totalLecture}</div>
           <div>Sections: {course.totalSection}</div>
-          <div>Video: {course.totalLength / 60} total hours</div>
+          <div>Video: {course.totalLength} total hours</div>
         </div>
       </div>
       <hr className="border-[0.5px] border-gray-300"/>
       <div className='flex flex-row ml-5 mt-5 w-[60rem]'>
         <div className='text-lg mb-5 mr-48'>Description</div>
-        <div className='text-lg mb-5'>{course.description}</div>
+        <div dangerouslySetInnerHTML={{ __html: course.description }} />
+        
       </div>
       <hr className="border-[0.5px] border-gray-300"/>
       <div className='flex flex-row ml-5 mt-5 w-[60rem]'>
