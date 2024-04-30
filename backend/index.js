@@ -11,6 +11,7 @@ import courseRoute from './routes/course/courseRoute.js';
 import paymentRoute from './routes/payment/paymentRoute.js';
 import cartRoute from './routes/user/cartRoute.js';
 import wishlistRoute from './routes/user/wishlistRoute.js';
+import instructorRoute from './routes/user/instructorRoute.js';
 import cloudinary from "cloudinary";
 dotenv.config();
 
@@ -55,6 +56,7 @@ app.use('/courses', courseRoute);
 app.use('/payment', paymentRoute);
 app.use('/cart', cartRoute);
 app.use('/wishlist', wishlistRoute);
+app.use('/instructor', instructorRoute);
 
 app.listen(5000, () => {
 	console.log('Server is running');
