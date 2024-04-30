@@ -1,5 +1,5 @@
 import { RouterProvider, Outlet, createBrowserRouter, useLocation } from "react-router-dom";
-
+import { useState } from "react";
 //Component
 import Navbar from "./Components/Navbar/Navbar.jsx";
 import CourseNavbar from "./Components/CourseNavBar/CourseNavBar.jsx";
@@ -42,18 +42,22 @@ import Curriculum from "./Pages/Instructor/ManageCourses/Curriculum.jsx";
 import QuestionAndAnswer from "./Pages/Instructor/QA.jsx";
 import CreateCourse from "./Pages/Instructor/ManageCourses/CreateCourse.jsx";
 import InstructorProfile from "./Pages/Instructor/InstructorProfile/InstructorProfile.jsx";
+import { useInView } from "react-intersection-observer";
+import ScrollContext from "./context/ScrollContext.js";
 
 // import fonts
 import "./fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf";
 import { useAuth } from "./AuthContextProvider.jsx";
 
 const Layout = () => {
+  const [isFooterInView, setIsFooterInView] = useState(false);
+
   return (
-    <div>
+    <ScrollContext.Provider value={{ isFooterInView, setIsFooterInView }}>
       <Navbar />
       <Outlet />
       <Footer />
-    </div>
+    </ScrollContext.Provider>
   );
 };
 

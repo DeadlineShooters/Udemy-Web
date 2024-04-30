@@ -7,7 +7,6 @@ export const getColor = () => {
 const getInitials = (name) => {
   let initials;
   const nameSplit = name.split(" ");
-  console.log("name split: ", nameSplit);
   // const nameLength = nameSplit.length;
   // if (nameLength > 1) {
   initials = nameSplit[0].substring(0, 1) + nameSplit[1].substring(0, 1);

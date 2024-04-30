@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -20,13 +20,17 @@ import { convertDecimal128ToNumber } from "../../../Components/Utils/Utils.js";
 import { useFeedbacks } from "../../../Components/Feedback/useFeedbacks.js";
 import Pagination from "../../../Components/Pagination.jsx";
 import DOMPurify from "dompurify";
+import ScrollContext from "../../../context/ScrollContext.js";
 
 const CourseDetail = () => {
   const videoRef = useRef();
   const { courseId } = useParams();
   const [course, setCourse] = useState(null);
   const [error, setError] = useState(null);
-  const { feedbacks, isLoading, count } = useFeedbacks();
+  const { feedbacks, isLoading, count } = useFeedbacks(courseId);
+  const { isFooterInView } = useContext(ScrollContext);
+
+  console.log("in view: " + isFooterInView);
   console.log("isloading: " + isLoading);
 
   console.log(process.env.REACT_APP_BACKEND_HOST);
@@ -107,7 +111,7 @@ const CourseDetail = () => {
             <span className="text-lg">Created date {formattedDate}</span>
           </p>
         </div>
-        <div className={`sidebar-container  sm:w-8/12 lg:w-3/12 lg:shadow-lg sm:shadow-md sm:-translate-y-0 lg:-translate-y-1/3 bg-white lg:fixed lg:right-6  `}>
+        <div className={`sidebar-container  sm:w-8/12 lg:w-3/12 lg:shadow-lg sm:shadow-md sm:-translate-y-0 lg:-translate-y-1/3 bg-white ${isFooterInView ? "" : "lg:fixed"}  lg:right-6  `}>
           <Modal>
             <Modal.Open opens="view-course-preview">
               <button type="button" className="relative w-full h-full" onClick={handlePlayVideo}>

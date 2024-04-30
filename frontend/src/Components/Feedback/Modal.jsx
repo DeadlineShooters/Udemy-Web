@@ -83,13 +83,13 @@ function Open({ children, opens: opensWindowName }) {
 
 function Window({ children, name }) {
   const { openName, close } = useContext(ModalContext);
-  console.dir(children); // children is ViewReview component or the modal that will show up
+  // console.dir(children); // children is ViewReview component or the modal that will show up
 
   const ref = useOutsideClick(close);
 
   if (name !== openName) return null;
 
-  console.dir(document.body);
+  // console.dir(document.body);
   if (typeof document !== "undefined") {
     return createPortal(
       <Overlay>
