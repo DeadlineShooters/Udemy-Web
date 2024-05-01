@@ -31,22 +31,20 @@ const MyLearning = () => {
         const response = await axios.get(`http://localhost:5000/user/${userId}/get-course/all`);
         if (response.data.success) {
           const courseList = response.data.courseList;
-          console.log("course list: ", courseList);
           const promises = courseList.map(async (course) => {
             let feedback = null;
             try {
-              const feedbackResponse = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${course._id}/${userId}`);
+              const feedbackResponse = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${course.course._id}/${userId}`);
               feedback = feedbackResponse.data.feedback;
             } catch (error) {
-              if (error.response && error.response.status === 404) {
-                console.error("Feedback not found:", error);
-              } else {
+              if (error.response.status !== 404) {
                 throw error;
               }
             }
             return { ...course, feedback };
           });
           const coursesWithFeedback = await Promise.all(promises);
+          console.log("Courses with feedback: ", coursesWithFeedback);
           setCourseList(coursesWithFeedback);
         }
       } catch (error) {
@@ -64,10 +62,6 @@ const MyLearning = () => {
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
-  const review = {
-    rating: 4,
-    feedback: "Very thorough course with many quizzes for you to test your knowledge",
-  };
 
   const courseContentNavigation = async (course) => {
     await axios
@@ -196,7 +190,10 @@ const MyLearning = () => {
                         <div className="bg-blue-600 h-[2px] rounded-full" style={{ width: oneCourse.progress * 100 + "%" }}></div>
                         <p className="text-slate-500  text-sm">{oneCourse.progress.toPrecision(4) * 100}% Complete</p>
                       </div>
-                      <div className="flex flex-row items-start justify-end mt-1">{<EditRatingButton review={review} />}</div>
+
+                      <div className="flex flex-row items-start justify-end mt-1">
+                        {<EditRatingButton review={oneCourse.feedback ? oneCourse.feedback : null} courseId={oneCourse.course._id} userId={userId} />}
+                      </div>
                     </div>
                   ) : (
                     <div className="w-full bg-gray-200 rounded-full h-1 mt-3 dark:bg-gray-700">
