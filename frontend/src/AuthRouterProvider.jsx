@@ -35,7 +35,7 @@ import CourseLandingPage from './Pages/Instructor/ManageCourses/CourseLandingPag
 import Reviews from './Pages/Instructor/Reviews.jsx';
 import ManageCourseLayout from './Components/CourseManagement/ManageCourseLayout.jsx';
 import Curriculum from './Pages/Instructor/ManageCourses/Curriculum.jsx';
-import QuestionAndAnswer from "./Pages/Instructor/QA.jsx";
+import QuestionAndAnswer from "./Pages/Instructor/QA/QA.jsx";
 import CreateCourse from "./Pages/Instructor/ManageCourses/CreateCourse.jsx";
 import Search from "./Pages/Discover/Search/search.jsx";
 
