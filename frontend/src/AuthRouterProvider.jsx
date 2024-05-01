@@ -2,7 +2,6 @@ import { RouterProvider, Outlet, createBrowserRouter, useLocation } from "react-
 
 //Component
 import Navbar from './Components/Navbar/Navbar.jsx';
-import CourseNavbar from './Components/CourseNavBar/CourseNavBar.jsx';
 import Sidebar from './Components/Sidebar/sidebar.jsx';
 import Footer from "./Components/Footer/Footer.jsx";
 
@@ -56,15 +55,6 @@ const Layout = () => {
 	);
 };
 
-const CourseLayout = () => {
-	return (
-		<>
-			<CourseNavbar />
-			<Outlet />
-			{/* <Footer/>*/}
-		</>
-	);
-};
 
 const CourseDashboardLayout = () => {
 	return (
@@ -188,13 +178,7 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/course/:courseSlug/learn/:lectureIndex',
-		element: <CourseLayout />,
-		children: [
-			{
-				path: '',
-				element: <CourseContent />,
-			},
-		],
+		element: <CourseContent />,
 	},
 	{
 		path: '/instructor',

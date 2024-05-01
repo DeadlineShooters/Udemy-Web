@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
         progress: { type: Number, default: 0 },
         completed: { type: Boolean, default: false },
         lectures: [{
-            lecture: { type: Schema.Types.ObjectId, ref: "Lecture" },
+            lecture: { type: Number },
             viewed: { type: Boolean, default: false }
         }]
     }],

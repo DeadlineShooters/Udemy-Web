@@ -192,3 +192,34 @@ export const getExactLecture = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
+export const updateCourseProgress = async (req, res) => {
+    try {
+        const { userId, courseId, viewLectures } = req.body;
+        // Find the user by userId
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        // Find the course in the user's courseList array
+        const course = user.courseList.find(courseItem => courseItem.course.toString() === courseId);
+        // Find the overall course has total lectures field
+        const overallCourse = await Course.findById(courseId);
+        // Get the total lectures
+        const totalLectures = overallCourse.totalLecture;
+        if (!course) {
+            return res.status(404).json({ success: false, message: "Course not found for the user" });
+        }
+        // Update the progress & viewed list of the course
+        const viewedLecturesCount = viewLectures.filter(lecture => lecture.viewed).length;
+        const progress = (viewedLecturesCount / totalLectures) * 100;
+        course.progress = progress;
+        course.lectures = viewLectures;
+        await user.save();
+        const data = {user, course};
+        return res.status(200).json({ success: true, message: "Progress updated successfully", data});
+    } catch (error) {
+        console.error("Error updating progress:", error);
+        return res.status(500).json({ success: false, message: "Internal server error" });
+    }
+} 

@@ -10,4 +10,6 @@ router.post("/become-instructor", accountController.becomeInstructor);
 router.get("/:userId/get-course/all", accountController.getCourse);
 router.get("/:userId/get-course/:courseId/detail", accountController.getOneCourse);
 router.post("/course/section/lecture", accountController.getExactLecture);
+router.post("/course/update-progress", accountController.updateCourseProgress);
+
 export default router;
