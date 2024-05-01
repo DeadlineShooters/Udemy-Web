@@ -26,24 +26,39 @@ const MyLearning = () => {
   const { setSelectedCourse } = useCourse();
 
   useEffect(() => {
-    const getCourse = () => {
-      axios
-        .get(`http://localhost:5000/user/${userId}/get-course/all`)
-        .then((response) => {
-          if (response.data.success) {
-            setCourseList(response.data.courseList);
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
+    const getCourse = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/user/${userId}/get-course/all`);
+        if (response.data.success) {
+          const courseList = response.data.courseList;
+          console.log("course list: ", courseList);
+          const promises = courseList.map(async (course) => {
+            let feedback = null;
+            try {
+              const feedbackResponse = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${course._id}/${userId}`);
+              feedback = feedbackResponse.data.feedback;
+            } catch (error) {
+              if (error.response && error.response.status === 404) {
+                console.error("Feedback not found:", error);
+              } else {
+                throw error;
+              }
+            }
+            return { ...course, feedback };
+          });
+          const coursesWithFeedback = await Promise.all(promises);
+          setCourseList(coursesWithFeedback);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
     };
     getCourse();
   }, []);
 
-  useEffect(() => {
-    console.log(courseList);
-  }, [courseList]);
+  // useEffect(() => {
+  //   console.log(courseList);
+  // }, [courseList]);
 
   const navigate = useNavigate();
   function classNames(...classes) {
@@ -181,7 +196,7 @@ const MyLearning = () => {
                         <div className="bg-blue-600 h-[2px] rounded-full" style={{ width: oneCourse.progress * 100 + "%" }}></div>
                         <p className="text-slate-500  text-sm">{oneCourse.progress.toPrecision(4) * 100}% Complete</p>
                       </div>
-                      <div className="flex flex-row items-start justify-end mt-1">{index !== 3 ? <EditRatingButton review={review} /> : <EditRatingButton />}</div>
+                      <div className="flex flex-row items-start justify-end mt-1">{<EditRatingButton review={review} />}</div>
                     </div>
                   ) : (
                     <div className="w-full bg-gray-200 rounded-full h-1 mt-3 dark:bg-gray-700">

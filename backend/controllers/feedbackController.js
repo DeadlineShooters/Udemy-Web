@@ -28,6 +28,31 @@ controller.getFeedback = async (req, res) => {
   }
 };
 
+controller.getSingleFeedback = async (req, res) => {
+  const { courseID, userID } = req.params;
+
+  console.log("Get feedback for course " + courseID + " from user " + userID);
+
+  // QUERY
+  const query = {
+    courseID: new mongoose.Types.ObjectId(courseID),
+    userID: new mongoose.Types.ObjectId(userID), // retrieves documents where courseID and userID matches
+  };
+
+  try {
+    const feedback = await Feedback.findOne(query).populate("userID").exec();
+
+    if (feedback) {
+      res.json({ feedback }); // Send the response
+    } else {
+      res.status(404).send("No feedback found"); // Send an error response
+    }
+  } catch (error) {
+    console.log("Error in getSingleFeedback:", error);
+    res.status(500).send("Feedback could not be loaded"); // Send an error response
+  }
+};
+
 controller.createFeedback = async (req, res) => {
   const { courseID, userID, feedback, rating } = req.body;
 
