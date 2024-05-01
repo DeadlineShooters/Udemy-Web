@@ -10,20 +10,20 @@ import share from "../../Assets/share.png";
 import archive from "../../Assets/archive.png";
 import CircleProgressBar from '../Utils/ProgressBar';
 import { useCourse } from '../../CourseContextProvider';
+
 const CourseNavbar = () => {
   const {selectedCourse} = useCourse();
-  const [courseName, setCourseName] = useState(selectedCourse ? selectedCourse.name : "");
-
+  const [courseName, setCourseName] = useState("");
+  const [progress, setProgress] = useState();
   useEffect(() => {
     const getLatestCourse = () => {
-      const storedCourses = JSON.parse(localStorage.getItem('storedCourses'));
-      console.log("retrieve course:", storedCourses);
-      setCourseName(storedCourses.name);
+      const storedCourses = JSON.parse(localStorage.getItem('selectedCourse'));
+      setCourseName(storedCourses.course.name);
+      setProgress(storedCourses.progress);
     }
     getLatestCourse();
-  }, []);
+  }, [selectedCourse]);
 
-  const progress = 50;
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }

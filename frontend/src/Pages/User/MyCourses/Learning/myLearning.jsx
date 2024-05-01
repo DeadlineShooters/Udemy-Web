@@ -56,10 +56,11 @@ const MyLearning = () => {
 
   const courseContentNavigation = async (course) => {
     await axios
-      .get(`http://localhost:5000/user/${userId}/get-course/${course._id}/detail`)
+      .get(`http://localhost:5000/user/${userId}/get-course/${course.course._id}/detail`)
       .then((response) => {
         if (response.data.success) {
-          setSelectedCourse(response.data.course);
+          setSelectedCourse(course);
+          localStorage.setItem("selectedCourse", JSON.stringify(course));
           const recentVideoId = Object.keys(JSON.parse(localStorage.getItem("selectLecture")))[0];
           if (!recentVideoId) {
             const newRecentVideoId = response.data.course.sectionList[0].lectureList[0].index;
@@ -128,7 +129,7 @@ const MyLearning = () => {
                 <div class="bg-white lg:w-1/4 md:w-1/3 w-60 pb-8 px-2">
                   <div className="relative">
                     <img class="" src={oneCourse.course.thumbNail.secureURL} alt="" />
-                    <div className="overflow-hidden absolute top-0 left-0 opacity-0 hover:opacity-100" onClick={() => courseContentNavigation(oneCourse.course)}>
+                    <div className="overflow-hidden absolute top-0 left-0 opacity-0 hover:opacity-100" onClick={() => courseContentNavigation(oneCourse)}>
                       <img className="h-full object-cover w-full" src={course_overlay} alt="course placeholder" />
                     </div>
                     <div className="rounded-md absolute top-0 right-0 mt-2 mr-2 w-12 h-12">

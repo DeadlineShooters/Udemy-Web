@@ -9,6 +9,12 @@ const userSchema = new mongoose.Schema({
       course: { type: Schema.Types.ObjectId, ref: "Course" },
       progress: { type: Number, default: 0 },
       completed: { type: Boolean, default: false },
+      lectures: [
+        {
+          lecture: { type: Schema.Types.ObjectId, ref: "Lecture" },
+          viewed: { type: Boolean, default: false },
+        },
+      ],
     },
   ],
   wishList: [{ type: Schema.Types.ObjectId, ref: "Course" }],
@@ -18,10 +24,13 @@ const userSchema = new mongoose.Schema({
   reminderNotification: { type: Boolean },
   email: { type: String, required: true },
   hashedPassword: { type: String, required: true },
-  socialLinks: { web: { type: String, default: "" }, youtube: { type: String, default: "" }, facebook: { type: String, default: "" } },
+  socialLinks: {
+    web: { type: String, default: "" },
+    youtube: { type: String, default: "" },
+    facebook: { type: String, default: "" },
+  },
   archivedCourse: [{ type: Schema.Types.ObjectId, ref: "Course" }],
   cart: [{ type: Schema.Types.ObjectId, ref: "Course" }],
-
   instructor: instructorSchema,
 });
 
