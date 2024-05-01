@@ -59,13 +59,14 @@ const MyLearning = () => {
         if (response.data.success) {
           setSelectedCourse(course);
           localStorage.setItem('selectedCourse', JSON.stringify(course));
-          const recentVideoId = Object.keys(JSON.parse(localStorage.getItem('selectLecture')))[0];
-          if (!recentVideoId) {
+          const selectLecture = JSON.parse(localStorage.getItem('selectLecture'));
+          const lectureKey = selectLecture ? Object.keys(selectLecture)[0] : null;
+          if (!lectureKey) {
             const newRecentVideoId = response.data.course.sectionList[0].lectureList[0].index;
             localStorage.setItem('selectLecture', newRecentVideoId);
             navigate(`/course/${response.data.course.slugName}/learn/${newRecentVideoId}#overview`, {state: {course: response.data.course}});
           } else {
-            navigate(`/course/${response.data.course.slugName}/learn/${recentVideoId}#overview`, {state: {course: response.data.course}});
+            navigate(`/course/${response.data.course.slugName}/learn/${lectureKey}#overview`, {state: {course: response.data.course}});
           }
         }
       })
