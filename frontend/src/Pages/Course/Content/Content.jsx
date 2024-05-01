@@ -47,7 +47,7 @@ const CourseContent = () => {
     if (courseOverall) {
       setCourseProgress(courseOverall.progress);
     }
-  }, []);
+  }, [courseOverall]);
 
   useEffect(() => {
     const url = window.location.href;
