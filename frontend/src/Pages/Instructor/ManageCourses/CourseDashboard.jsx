@@ -9,7 +9,7 @@ import UserNav from "../../../Components/UserNav.jsx";
 import { useAuth } from "../../../AuthContextProvider.jsx";
 import { useCourse } from "../../../CourseContextProvider.jsx";
 import { useNavigate } from "react-router-dom";
-import StarRatings from "../../../Components/StarRatings.jsx";
+import {StarRatings} from "../../../Components/StarRatings.jsx";
 import axios from "axios";
 import './CourseDashboard.css';
 

@@ -9,23 +9,26 @@ const Statistics = () => {
 	const dropdownRef = useRef(null);
 	const { userData } = useAuth();
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-	const [selectedCourse, setSelectedCourse] = useState('All courses');
-	const [selectedChart, setSelectedChart] = useState('revenue');
+	const [selectedCourse, setSelectedCourse] = useState('');
+	const [selectedChart, setSelectedChart] = useState('Revenue');
 	const [revenues, setRevenues] = useState([]);
 	const [enrollments, setEnrollments] = useState([]);
-	const [ratings, setRatings] = useState([]);
+	const [avgRatings, setAvgRatings] = useState([]);
 	const [totalRevenue, setTotalRevenue] = useState([]);
 	const [totalEnrollments, setTotalEnrollments] = useState([]);
 	const [avgRating, setAvgRating] = useState([]);
 	const [courses, setCourses] = useState([]);
 	const [searchCourses, setSearchCourses] = useState(null);
+	const [series, setSeries] = useState([]);
+	const selectedCourseRef = useRef();
+	selectedCourseRef.current = selectedCourse;
 
 	const toggleDropdown = () => {
 		setIsDropdownOpen(!isDropdownOpen);
 	};
 
-	const handleDropdownItemClick = (courseName) => {
-		setSelectedCourse(courseName);
+	const handleDropdownItemClick = (course) => {
+		setSelectedCourse(course);
 		setIsDropdownOpen(!isDropdownOpen);
 	};
 
@@ -46,12 +49,12 @@ const Statistics = () => {
 		};
 	}, []);
 
-	useEffect(
-		() => async () => {
+	useEffect(() => {
+		(async () => {
 			try {
 				const response = await axios.post('http://localhost:5000/instructor/stats', {
 					userId: userData._id,
-					courseId: selectedCourse.id,
+					courseId: selectedCourseRef.current ? selectedCourseRef.current._id : '',
 				});
 				if (response.data.success) {
 					setTotalRevenue(response.data.totalRevenue);
@@ -61,21 +64,34 @@ const Statistics = () => {
 			} catch (error) {
 				console.error('Error:', error);
 			}
-		},
-		[]
-	);
+		})();
+	}, [selectedCourse]);
 
-	useEffect(
-		() => async () => {
+	useEffect(() => {
+		(async () => {
 			try {
 				const response = await axios.post('http://localhost:5000/instructor/stats-by-month', {
 					userId: userData._id,
-					courseId: selectedCourse.id,
+					courseId: selectedCourseRef.current ? selectedCourseRef.current._id : '',
 				});
 				if (response.data.success) {
-					setRevenues(response.data.revenues);
-					setEnrollments(response.data.enrollments);
-					setRatings(response.data.ratings);
+					console.log(response.data);
+					setRevenues(fillData(response.data.revenues));
+					setEnrollments(fillData(response.data.enrollments));
+					setAvgRatings(fillData(response.data.ratings));
+				}
+			} catch (error) {
+				console.error('Error:', error);
+			}
+		})();
+	}, [selectedCourse]);
+
+	useEffect(
+		() => async () => {
+			try {
+				const response = await axios.post('http://localhost:5000/instructor/get-course', { instructorID: userData._id });
+				if (response.data.success) {
+					setCourses(response.data.course);
 				}
 			} catch (error) {
 				console.error('Error:', error);
@@ -84,19 +100,33 @@ const Statistics = () => {
 		[]
 	);
 
-	useEffect(
-		() => async () => {
-			try {
-				const response = await axios.post('http://localhost:5000/instructor/courses', { userId: userData._id });
-				if (response.data.success) {
-					setCourses(response.data.courses);
-				}
-			} catch (error) {
-				console.error('Error:', error);
-			}
-		},
-		[]
-	);
+	useEffect(() => {
+		let data;
+		switch (selectedChart) {
+			case 'Revenue':
+				data = revenues;
+				break;
+			case 'Enrollment':
+				data = enrollments;
+				break;
+			case 'Rating':
+				data = avgRatings;
+				break;
+			default:
+				data = [];
+		}
+
+		setSeries([
+			{
+				name: selectedChart,
+				data: data,
+			},
+		]);
+	}, [selectedChart, revenues, enrollments, avgRatings]);
+
+	useEffect(() => {
+		series.name = selectedChart;
+	}, [selectedChart]);
 
 	const handleSearch = (event) => {
 		const searchQuery = event.target.value;
@@ -108,12 +138,27 @@ const Statistics = () => {
 		}
 	};
 
-	const series = [
-		{
-			name: 'Sales',
-			data: [50, 40, 300, 320, 500, 350, 200, 230, 500],
-		},
-	];
+	const getNearestMonths = (count) => {
+		const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+		const currentMonth = new Date().getMonth();
+		let months = [];
+
+		for (let i = count - 1; i >= 0; i--) {
+			const monthIndex = (currentMonth - i + 12) % 12;
+			months.push(monthNames[monthIndex]);
+		}
+
+		return months;
+	};
+
+	const fillData = (data, count = 12) => {
+		const filledData = new Array(count).fill(0);
+		const start = count - data.length;
+		for (let i = 0; i < data.length; i++) {
+			filledData[start + i] = data[i];
+		}
+		return filledData;
+	};
 
 	const options = {
 		chart: {
@@ -149,7 +194,7 @@ const Statistics = () => {
 					fontWeight: 400,
 				},
 			},
-			categories: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+			categories: getNearestMonths(12),
 		},
 		yaxis: {
 			labels: {
@@ -195,10 +240,10 @@ const Statistics = () => {
 							<button
 								id='dropdownSearchButton'
 								onClick={toggleDropdown}
-								className='justify-end w-full md:w-[32rem] text-2xl text-gray-500 hover:text-gray-700  focus:outline-none  font-medium text-xl px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+								className='justify-end w-full md:w-[32rem] text-2xl text-gray-500 hover:text-gray-800  focus:outline-none  font-medium text-xl px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
 								type='button'
 							>
-								<span className='truncate'>{selectedCourse}</span>
+								<span className='truncate'>{selectedCourse !== '' ? selectedCourse.name : 'All courses'}</span>
 								<svg className='w-2.5 h-2.5 ms-3' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 10 6'>
 									<path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='m1 1 4 4 4-4' />
 								</svg>
@@ -244,76 +289,23 @@ const Statistics = () => {
 										</div>
 									</div>
 									<ul class='max-h-96 px-3 pb-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200' aria-labelledby='dropdownSearchButton'>
-										<button
-											class='flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700'
-											onClick={() => handleDropdownItemClick(courseName)}
-										>
-											<div class='flex-shrink-0'>
-												<img class='h-12' src='https://img-c.udemycdn.com/course/240x135/3490000_d298_2.jpg' alt='' />
-											</div>
-											<div class='w-full ps-3'>
-												<div class='text-gray-500 font-bold text-sm dark:text-gray-400 text-left line-clamp-2'>{courseName}</div>
-											</div>
-										</button>
-										<button
-											class='flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700'
-											onClick={() => handleDropdownItemClick(courseName)}
-										>
-											<div class='flex-shrink-0'>
-												<img class='h-12' src='https://img-c.udemycdn.com/course/240x135/3490000_d298_2.jpg' alt='' />
-											</div>
-											<div class='w-full ps-3'>
-												<div class='text-gray-500 font-bold text-sm dark:text-gray-400 text-left line-clamp-2'>{courseName}</div>
-											</div>
-										</button>
-										<button
-											class='flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700'
-											onClick={() => handleDropdownItemClick(courseName)}
-										>
-											<div class='flex-shrink-0'>
-												<img class='h-12' src='https://img-c.udemycdn.com/course/240x135/3490000_d298_2.jpg' alt='' />
-											</div>
-											<div class='w-full ps-3'>
-												<div class='text-gray-500 font-bold text-sm dark:text-gray-400 text-left line-clamp-2'>{courseName}</div>
-											</div>
-										</button>
-										<button
-											class='flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700'
-											onClick={() => handleDropdownItemClick(courseName)}
-										>
-											<div class='flex-shrink-0'>
-												<img class='h-12' src='https://img-c.udemycdn.com/course/240x135/3490000_d298_2.jpg' alt='' />
-											</div>
-											<div class='w-full ps-3'>
-												<div class='text-gray-500 font-bold text-sm dark:text-gray-400 text-left line-clamp-2'>{courseName}</div>
-											</div>
-										</button>
-										<button
-											class='flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700'
-											onClick={() => handleDropdownItemClick(courseName)}
-										>
-											<div class='flex-shrink-0'>
-												<img class='h-12' src='https://img-c.udemycdn.com/course/240x135/3490000_d298_2.jpg' alt='' />
-											</div>
-											<div class='w-full ps-3'>
-												<div class='text-gray-500 font-bold text-sm dark:text-gray-400 text-left line-clamp-2'>{courseName}</div>
-											</div>
-										</button>
-										<button
-											class='flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700'
-											onClick={() => handleDropdownItemClick(courseName)}
-										>
-											<div class='flex-shrink-0'>
-												<img class='h-12' src='https://img-c.udemycdn.com/course/240x135/3490000_d298_2.jpg' alt='' />
-											</div>
-											<div class='w-full ps-3'>
-												<div class='text-gray-500 font-bold text-sm dark:text-gray-400 text-left line-clamp-2'>{courseName}</div>
-											</div>
-										</button>
+										{courses.map((course) => (
+											<button
+												class='w-full flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700'
+												onClick={() => handleDropdownItemClick(course)}
+											>
+												<div class='flex-shrink-0'>
+													<img class='object-cover object-center h-12 w-20' src={course.thumbNail.secureURL} alt='' />
+												</div>
+												<div class='w-full ps-3'>
+													<div class='text-gray-500 font-bold text-sm dark:text-gray-400 text-left line-clamp-2'>{course.name}</div>
+												</div>
+											</button>
+										))}
 									</ul>
 									<button
 										class='font-medium justify-center w-full border-t-2 flex items-center p-2 text-[#2d2f31] hover:text-[#eb524f]'
-										onClick={() => handleDropdownItemClick('All courses')}
+										onClick={() => handleDropdownItemClick('')}
 									>
 										All courses
 									</button>
@@ -327,46 +319,46 @@ const Statistics = () => {
 							<div class='grid grid-cols-2 md:grid-cols-3 gap-6 p-4'>
 								<button
 									class={`${
-										selectedChart === 'revenue' ? 'border-[#a435f0] bg-purple-50' : ''
+										selectedChart === 'Revenue' ? 'border-[#a435f0] bg-purple-50' : ''
 									} hover:border-[#a435f0] hover:bg-purple-50 flex flex-col justify-center gap-2 border-2 border-dashed border-gray-500/50 px-2 sm:px-4 lg:px-8 rounded-md dark:text-gray-200`}
 									onClick={() => {
-										handleChartItemClick('revenue');
+										handleChartItemClick('Revenue');
 									}}
 								>
 									<span className='text-gray-500'>Total revenue</span>
-									<span className='text-3xl sm:text-4xl font-medium'>${(42325.28).toLocaleString()}</span>
+									<span className='text-3xl sm:text-4xl font-medium'>${totalRevenue ? totalRevenue.toLocaleString() : 0}</span>
 									<div className='text-gray-500'>
-										<span className='font-medium'>${(711.88).toLocaleString()}</span> this month
+										<span className='font-medium'>${revenues[11] ? revenues[11].toLocaleString() : 0}</span> this month
 									</div>
 								</button>
 
 								<button
 									class={`${
-										selectedChart === 'enrollment' ? 'border-[#a435f0] bg-purple-50' : ''
+										selectedChart === 'Enrollment' ? 'border-[#a435f0] bg-purple-50' : ''
 									} hover:border-[#a435f0] hover:bg-purple-50 flex flex-col justify-center gap-2 border-2 border-dashed border-gray-500/50 px-2 sm:px-4 lg:px-8 rounded-md dark:text-gray-200`}
 									onClick={() => {
-										handleChartItemClick('enrollment');
+										handleChartItemClick('Enrollment');
 									}}
 								>
 									<span className='text-gray-500'>Total enrollments</span>
-									<span className='text-3xl sm:text-4xl  font-medium'>{(119023).toLocaleString()}</span>
+									<span className='text-3xl sm:text-4xl  font-medium'>{totalEnrollments ? totalEnrollments.toLocaleString() : 0}</span>
 									<div className='text-gray-500'>
-										<span className='font-medium'>{(200).toLocaleString()}</span> this month
+										<span className='font-medium'>{enrollments[11] ? enrollments[11].toLocaleString() : 0}</span> this month
 									</div>
 								</button>
 
 								<button
 									class={`${
-										selectedChart === 'rating' ? 'border-[#a435f0] bg-purple-50' : ''
+										selectedChart === 'Rating' ? 'border-[#a435f0] bg-purple-50' : ''
 									} hover:border-[#a435f0] hover:bg-purple-50 flex flex-col justify-center gap-2 border-2 border-dashed border-gray-500/50 px-2 sm:px-4 lg:px-8 rounded-md dark:text-gray-200`}
 									onClick={() => {
-										handleChartItemClick('rating');
+										handleChartItemClick('Rating');
 									}}
 								>
 									<span className='text-gray-500'>Instructor rating</span>
-									<span className='text-3xl sm:text-4xl  font-medium'>{(4.53).toLocaleString()}</span>
+									<span className='text-3xl sm:text-4xl  font-medium'>{avgRating ? avgRating.toLocaleString() : 0}</span>
 									<div className='text-gray-500'>
-										<span className='font-medium'>{(68).toLocaleString()}</span> ratings this month
+										<span className='font-medium'>{avgRatings[11] ? avgRatings[11].toLocaleString() : 0}</span> ratings this month
 									</div>
 								</button>
 							</div>
