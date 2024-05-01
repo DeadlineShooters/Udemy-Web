@@ -50,14 +50,12 @@ import "./fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,
 import { useAuth } from "./AuthContextProvider.jsx";
 
 const Layout = () => {
-  const [isFooterInView, setIsFooterInView] = useState(false);
-
   return (
-    <ScrollContext.Provider value={{ isFooterInView, setIsFooterInView }}>
+    <>
       <Navbar />
       <Outlet />
       <Footer />
-    </ScrollContext.Provider>
+    </>
   );
 };
 
@@ -187,12 +185,18 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/course/:courseId",
-    element: <Layout />,
+    path: "/course",
+    element: <ProtectedRoutes />,
     children: [
       {
         path: "",
-        element: <CourseDetail />,
+        element: <Layout />,
+        children: [
+          {
+            path: ":courseId",
+            element: <CourseDetail />,
+          },
+        ],
       },
     ],
   },

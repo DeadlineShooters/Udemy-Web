@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
   courseList: [
     {
       course: { type: Schema.Types.ObjectId, ref: "Course" },
-      progress: { type: Number, default: 0 },
+      progress: { type: Number, default: 0.0 },
       completed: { type: Boolean, default: false },
       lectures: [
         {

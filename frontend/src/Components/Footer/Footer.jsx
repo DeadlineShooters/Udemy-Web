@@ -7,29 +7,6 @@ import ScrollContext from "../../context/ScrollContext";
 const logo_light = "https://res.cloudinary.com/dqxtf297o/image/upload/v1713627289/Logo_light.png";
 
 const Footer = () => {
-  const { setIsFooterInView } = useContext(ScrollContext);
-  const ref = useRef();
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        console.log("Footer is in view:", entry.isIntersecting); // Add this line
-        setIsFooterInView(entry.isIntersecting);
-      },
-      { threshold: 0.05 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-      console.log("Footer is being observed"); // Add this line
-    }
-
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
-  }, [setIsFooterInView]);
   return (
     <footer className="flex w-full max-h-sm bg-[#2D2F31] items-end">
       <div className="flex w-full flex-col mx-10 mt-12">

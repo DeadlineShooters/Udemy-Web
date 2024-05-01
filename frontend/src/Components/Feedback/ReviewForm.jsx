@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as faStarSolid } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 import axios from "axios";
-import { successNotify } from "../../utils/helpers";
+import { failureNotify, successNotify } from "../../utils/helpers";
 
 // for both edit and create review
 const ReviewForm = ({ setReload, reviewToEdit, courseId, userId, onCloseModal }) => {
@@ -30,31 +30,36 @@ const ReviewForm = ({ setReload, reviewToEdit, courseId, userId, onCloseModal })
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const reviewData = {
-      courseID: reviewToEdit ? reviewToEdit.courseID : courseId,
-      userID: reviewToEdit ? reviewToEdit.userID : userId,
-      feedback: review,
-      rating: rating,
-    };
+    // Check if rating is larger than 0
+    if (rating > 0) {
+      const reviewData = {
+        courseID: reviewToEdit ? reviewToEdit.courseID : courseId,
+        userID: reviewToEdit ? reviewToEdit.userID : userId,
+        feedback: review,
+        rating: rating,
+      };
 
-    try {
-      if (reviewToEdit) {
-        // If reviewToEdit is defined, update the existing review
-        const response = await axios.put(`${process.env.REACT_APP_BACKEND_HOST}/feedback`, reviewData);
-        console.log("Updated review:", response.data);
-        setReload((prevState) => !prevState);
-      } else {
-        // If reviewToEdit is not defined, create a new review
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/feedback`, reviewData);
-        console.log("Created review:", response.data);
-        setReload((prevState) => !prevState);
+      try {
+        if (reviewToEdit) {
+          // If reviewToEdit is defined, update the existing review
+          const response = await axios.put(`${process.env.REACT_APP_BACKEND_HOST}/feedback`, reviewData);
+          console.log("Updated review:", response.data);
+          setReload((prevState) => !prevState);
+        } else {
+          // If reviewToEdit is not defined, create a new review
+          const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/feedback`, reviewData);
+          console.log("Created review:", response.data);
+          setReload((prevState) => !prevState);
+        }
+
+        successNotify("Review saved successfully");
+
+        onCloseModal();
+      } catch (error) {
+        console.error("Error submitting review:", error);
       }
-
-      successNotify("Review saved successfully");
-
-      onCloseModal();
-    } catch (error) {
-      console.error("Error submitting review:", error);
+    } else {
+      failureNotify("Please select a rating before submitting.");
     }
   };
 

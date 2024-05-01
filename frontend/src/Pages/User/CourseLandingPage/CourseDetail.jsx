@@ -25,6 +25,8 @@ import { useFeedbacks } from "../../../Components/Feedback/useFeedbacks.js";
 import Pagination from "../../../Components/Pagination.jsx";
 import DOMPurify from "dompurify";
 import ScrollContext from "../../../context/ScrollContext.js";
+import ProtectedRoutes from "../../../Components/Utils/AuthSecure.jsx";
+import { Navigate } from "react-router-dom";
 
 const CourseDetail = () => {
   const videoRef = useRef();
@@ -32,7 +34,6 @@ const CourseDetail = () => {
   const [course, setCourse] = useState(null);
   const [error, setError] = useState(null);
   const { feedbacks, isLoading, count } = useFeedbacks(courseId);
-  const { isFooterInView } = useContext(ScrollContext);
   const { userData } = useAuth();
   const [isFocused, setIsFocused] = useState(false);
   const { cart, setCart } = useCart();
@@ -245,7 +246,7 @@ const CourseDetail = () => {
             <span className="text-lg">Created date {formattedDate}</span>
           </p>
         </div>
-        <div className={`sidebar-container  sm:w-8/12 lg:w-3/12 lg:shadow-lg sm:shadow-md sm:-translate-y-0 lg:-translate-y-1/3 bg-white ${isFooterInView ? "" : "lg:fixed"}  lg:right-6  `}>
+        <div className="sidebar-container  sm:w-8/12 lg:w-3/12 lg:shadow-lg sm:shadow-md sm:-translate-y-0 lg:-translate-y-1/3 bg-white fixed  lg:right-6  ">
           <Modal>
             <Modal.Open opens="view-course-preview">
               <button type="button" className="relative w-full h-full" onClick={handlePlayVideo}>
@@ -280,7 +281,7 @@ const CourseDetail = () => {
                 </>
               )}
             </div>
-            {isEnrolled ? (
+            {isEnrolled || course.instructor._id === userId ? (
               <Link to={`/course/${courseId}`} className="flex items-center justify-center block w-full border bg-black h-12 font-bold text-white">
                 Go to Course
               </Link>
@@ -343,7 +344,7 @@ const CourseDetail = () => {
 
                   <div className="average flex flex-row justify-between items-center">
                     <span className="price-number font-bold text-3xl text-slate-950">{convertDecimal128ToNumber(course.avgRating)}</span>
-                    <FontAwesomeIcon icon={faStar} className="text-amber-500" size="lg" />
+                    <FontAwesomeIcon icon={faStar} className="text-amber-500" size="2xl" />
                   </div>
                 </div>
                 <div class="rating-button-container flex flex-col h-full">

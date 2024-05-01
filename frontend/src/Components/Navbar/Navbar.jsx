@@ -205,12 +205,14 @@ const Navbar = () => {
         {isLogged === true ? (
           <div className={`flex items-center`}>
             <ul>
-              {userData.instructor !== null ? (
+              {userData?.instructor ? (
                 <li class="hover:text-purple-700 hide-teach-udemy">
                   <Link to="/instructor/courses">Instructor</Link>
                 </li>
               ) : (
-                <li className="hover:text-purple-700 hide-teach-udemy">Teach on Udemy</li>
+                <li className="hover:text-purple-700 hide-teach-udemy">
+                  <Link to="/user/instructor-become">Teach on Udemy</Link>
+                </li>
               )}
               <li className="hover:text-purple-700 hide-my-learning">
                 <Link to="/home/my-courses/learning">My learning</Link>

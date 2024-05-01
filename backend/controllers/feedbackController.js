@@ -28,6 +28,59 @@ controller.getFeedback = async (req, res) => {
   }
 };
 
+controller.getInstructorFeedback = async (req, res) => {
+  const { instructorID } = req.params;
+
+  try {
+    // Find all courses created by the instructor
+    const courses = await Course.find({ instructor: new mongoose.Types.ObjectId(instructorID) }).exec();
+
+    // Extract the course IDs
+    const courseIDs = courses.map((course) => course._id);
+
+    // Find all feedback for these courses
+    const feedbacks = await Feedback.find({ courseID: { $in: courseIDs } })
+      .populate(["userID", "courseID"])
+      .exec();
+
+    res.json({ feedbacks }); // Send the response
+  } catch (error) {
+    console.log("Error in getInstructorFeedback:", error);
+    res.status(500).send("Feedback could not be loaded"); // Send an error response
+  }
+};
+
+controller.addInstructorResponse = async (req, res) => {
+  const { feedbackID } = req.params;
+  const { instructorId, content } = req.body;
+
+  try {
+    // Find the feedback by ID
+    let feedback = await Feedback.findById(feedbackID);
+
+    // Create a new response
+    const response = {
+      instructorId: new mongoose.Types.ObjectId(instructorId),
+      content: content,
+      createdTime: Date.now(),
+    };
+
+    // Add the response to the feedback
+    feedback.instructorResponse = response;
+
+    // Save the updated feedback
+    await feedback.save();
+
+    // Populate courseID and userID
+    feedback = await Feedback.findById(feedback._id).populate("courseID").populate("userID");
+
+    res.json({ feedback }); // Send the response
+  } catch (error) {
+    console.log("Error in addInstructorResponse:", error);
+    res.status(500).send("Response could not be added"); // Send an error response
+  }
+};
+
 controller.getSingleFeedback = async (req, res) => {
   const { courseID, userID } = req.params;
 
