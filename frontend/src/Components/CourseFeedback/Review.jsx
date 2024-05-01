@@ -78,7 +78,7 @@ const Review = ({ reviewParam }) => {
           </div>
 
           <div className="show-response">
-            {review.instructorResponse && showResponse && <InstructorResponse response={review.instructorResponse} />}
+            {review.instructorResponse && showResponse && <InstructorResponse response={review.instructorResponse} parent={"instructor-feedback"} />}
             {showResponseInput && (
               <div className="mt-3 flex">
                 <img src={createImageFromInitials(160, instructor.firstName + " " + instructor.lastName)} alt="avatar" className="w-10 h-10 rounded-full mr-2" />

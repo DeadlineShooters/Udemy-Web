@@ -4,42 +4,12 @@ import Review from "../../Components/CourseFeedback/Review";
 import { useAuth } from "../../AuthContextProvider";
 import axios from "axios";
 
-// Dummy data
-const reviews = [
-  {
-    id: "112",
-    firstName: "John",
-    lastName: "Doe",
-    date: "2024-03-17",
-    avatar: "https://via.placeholder.com/150",
-    rating: 5,
-    feedback: "Great course!",
-    courseName: "The Complete 2024 Software Testing Bootcamp ",
-    courseThumbnail: "",
-    instructorResponse: {
-      firstName: "Ngoc",
-      lastName: "Pham",
-      content: "Thank you",
-      createdTime: "2024-03-18",
-    },
-  },
-  {
-    id: "1123",
-    firstName: "John",
-    lastName: "Doe",
-    date: "2024-03-17",
-    avatar: "https://via.placeholder.com/150",
-    rating: 4,
-    feedback: "Great course!",
-    courseName: "The Complete 2024 Software Testing Bootcamp",
-    courseThumbnail: "",
-  },
-  // Add more review objects here...
-];
-
 const Reviews = () => {
   const [reviews, setReviews] = useState([]);
   const { userData } = useAuth();
+  const [notResponded, setNotResponded] = useState(false);
+  const [alreadyResponded, setAlreadyResponded] = useState(false);
+  const [rating, setRating] = useState("all");
 
   useEffect(() => {
     const getFeedbacks = async () => {
@@ -54,39 +24,64 @@ const Reviews = () => {
     getFeedbacks();
   }, []);
 
+  const handleNotRespondedChange = (event) => {
+    setNotResponded(event.target.checked);
+  };
+
+  const handleAlreadyRespondedChange = (event) => {
+    setAlreadyResponded(event.target.checked);
+  };
+
+  const handleRatingChange = (event) => {
+    setRating(event.target.value);
+  };
+
+  // Filter reviews based on the state
+  const filteredReviews = reviews.filter((review) => {
+    let matches = true;
+    if (notResponded) {
+      matches = matches && review.instructorResponse === undefined; // Replace with your logic
+    }
+    if (alreadyResponded) {
+      matches = matches && review.instructorResponse; // Replace with your logic
+    }
+    if (rating !== "all") {
+      matches = matches && review.rating == rating; // Replace with your logic
+    }
+    return matches;
+  });
+
   return (
     <DashboardHeaderTitle title={"Reviews"}>
       {reviews.length > 0 && (
         <div className="flex items-end filter-container pb-3 text-xl">
           <div className="flex items-center mr-8">
-            <input type="checkbox" id="notResponded" class="form-checkbox h-6 w-6 mr-2" />
-
+            <input type="checkbox" id="notResponded" class="form-checkbox h-6 w-6 mr-2" checked={notResponded} onChange={handleNotRespondedChange} />
             <label htmlFor="notResponded">Not Responded</label>
           </div>
 
           <div className="flex items-center mr-8">
-            <input type="checkbox" id="alreadyResponded" class="form-checkbox h-6 w-6 mr-2" />
-
+            <input type="checkbox" id="alreadyResponded" class="form-checkbox h-6 w-6 mr-2" checked={alreadyResponded} onChange={handleAlreadyRespondedChange} />
             <label htmlFor="alreadyResponded">Already Responded</label>
           </div>
 
           <div className="flex flex-col filter-container mr-8">
             <span>Rating</span>
-            <select className="p-2 text-md hover:bg-gray-200 border border-black text-xl">
+            <select className="px-3 p-2 text-md hover:bg-gray-200 border border-black text-xl" value={rating} onChange={handleRatingChange}>
               <option value="all">All</option>
-              <option value="favorites">1 star</option>
-              <option value="favorites">2 star</option>
-              <option value="favorites">3 star</option>
-              <option value="favorites">4 star</option>
-              <option value="favorites">5 star</option>
+              <option value="1">1 star</option>
+              <option value="2">2 star</option>
+              <option value="3">3 star</option>
+              <option value="4">4 star</option>
+              <option value="5">5 star</option>
             </select>
           </div>
         </div>
       )}
 
       <div className="flex flex-grow flex-col justify-center mt-3 text-xl">
-        {reviews.length > 0 ? (
-          reviews.map((review) => {
+        {filteredReviews.length > 0 ? (
+          filteredReviews.map((review) => {
             // Render your review component here using 'review' data
             return <Review key={review.id} reviewParam={review} />;
           })
