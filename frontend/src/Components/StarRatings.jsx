@@ -11,10 +11,10 @@ const StarRatings = ({ rating }) => {
   return (
     <div className="flex text-sm flex-row">
       {[...Array(solidStars)].map((_, i) => (
-        <FontAwesomeIcon key={i} icon={faStarSolid} className="text-yellow-500" />
+        <FontAwesomeIcon key={i} icon={faStarSolid} className="text-yellow-500 text-lg" />
       ))}
       {[...Array(regularStars)].map((_, i) => (
-        <FontAwesomeIcon key={i + solidStars} icon={faStarRegular} className="text-yellow-500" />
+        <FontAwesomeIcon key={i + solidStars} icon={faStarRegular} className="text-yellow-500 text-lg" />
       ))}
     </div>
   );

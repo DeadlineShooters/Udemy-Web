@@ -45,13 +45,13 @@ const ViewReview = ({ review, onCloseModal, setReload }) => {
   }
 
   return (
-    <div className=" ">
-      <h2 className="text-lg font-bold mb-5">Your Review</h2>
+    <div className="w-80">
+      <h2 className="text-2xl font-bold mb-5">Your Review</h2>
       <StarRatings rating={review.rating} />
-      <p className="mt-4">{review.feedback}</p>
+      <p className="mt-4 text-xl">{review.feedback}</p>
       <div className="flex flex-row justify-end mt-5">
         <button onClick={() => setIsDeleting(true)}>
-          <span className="px-3 py-2 bg-black font-bold text-white ">Delete</span>
+          <span className="px-3 py-2 bg-black font-bold text-white text-lg">Delete</span>
         </button>
       </div>
     </div>

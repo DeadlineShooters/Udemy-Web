@@ -24,39 +24,119 @@ const MyLearning = () => {
   const [courseList, setCourseList] = useState([]);
   const [detailCourse, setDetailCourse] = useState();
   const { setSelectedCourse } = useCourse();
+  const [favoriteCourses, setFavoriteCourses] = useState([]);
+  const [filter, setFilter] = useState("all");
+
+  const handleFilterChange = (e) => {
+    setFilter(e.target.value);
+  };
 
   useEffect(() => {
-    const getCourse = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5000/user/${userId}/get-course/all`);
-        if (response.data.success) {
-          const courseList = response.data.courseList;
-          const promises = courseList.map(async (course) => {
-            let feedback = null;
-            try {
-              const feedbackResponse = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${course.course._id}/${userId}`);
-              feedback = feedbackResponse.data.feedback;
-            } catch (error) {
-              if (error.response.status !== 404) {
-                throw error;
-              }
-            }
-            return { ...course, feedback };
-          });
-          const coursesWithFeedback = await Promise.all(promises);
-          console.log("Courses with feedback: ", coursesWithFeedback);
-          setCourseList(coursesWithFeedback);
-        }
-      } catch (error) {
-        console.error("Error:", error);
+    if (filter === "favorites") {
+      // Filter the courseList to only show favorited courses
+      const filteredCourses = courseList.filter((course) => favoriteCourses.includes(course.course._id));
+      setCourseList(filteredCourses);
+    } else {
+      // Fetch all courses if the filter is set to 'all'
+      getCourse();
+    }
+  }, [filter]);
+
+  const handleClickFavorite = async (e, courseId) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/user/addFavorite/${userId}/${courseId}`);
+
+      if (response.data.success) {
+        alert("Course added to favorite courses successfully");
+        setFavoriteCourses([...favoriteCourses, courseId]);
+      } else {
+        alert(response.data.message);
       }
-    };
+    } catch (error) {
+      console.error("Error adding course to favorite courses:", error);
+    }
+  };
+
+  const handleClickUnfavorite = async (e, courseId) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/user/removeFavorite/${userId}/${courseId}`);
+
+      if (response.data.success) {
+        alert("Course removed from favorite courses successfully");
+        setFavoriteCourses(favoriteCourses.filter((id) => id !== courseId));
+      } else {
+        alert(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error removing course from favorite courses:", error);
+    }
+  };
+
+  const fetchFavoriteStatus = async (courseId) => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/user/favorites/${userId}/${courseId}`);
+      return response.data.isFavorite; // Assuming the API returns an object with a boolean isFavorite property
+    } catch (error) {
+      console.error("There has been a problem with your axios operation:", error);
+    }
+  };
+
+  // Function to update the favorite label and state
+  const updateFavoriteLabel = async () => {
+    try {
+      // Fetch the favorite status for each course and update the state
+      const updatedFavoriteCourses = await Promise.all(
+        courseList.map(async (course) => {
+          const isFavorite = await fetchFavoriteStatus(course.course._id);
+          return isFavorite ? course.course._id : null;
+        })
+      ).then((results) => results.filter((id) => id !== null)); // Filter out null values
+
+      // Update the favoriteCourses state with the new array
+      setFavoriteCourses(updatedFavoriteCourses);
+    } catch (error) {
+      console.error("Error updating favorite labels:", error);
+    }
+  };
+
+  const getCourse = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/user/${userId}/get-course/all`);
+      if (response.data.success) {
+        const courseList = response.data.courseList;
+        const promises = courseList.map(async (course) => {
+          let feedback = null;
+          try {
+            const feedbackResponse = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${course.course._id}/${userId}`);
+            feedback = feedbackResponse.data.feedback;
+          } catch (error) {
+            if (error.response.status !== 404) {
+              throw error;
+            }
+          }
+          return { ...course, feedback };
+        });
+        const coursesWithFeedback = await Promise.all(promises);
+        console.log("Courses with feedback: ", coursesWithFeedback);
+        setCourseList(coursesWithFeedback);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  // Call the function to update the favorite status on load
+  useEffect(() => {
+    updateFavoriteLabel();
+  }, [courseList]); // Dependency array ensures this effect runs when courseList changes
+
+  useEffect(() => {
     getCourse();
   }, []);
-
-  // useEffect(() => {
-  //   console.log(courseList);
-  // }, [courseList]);
 
   const navigate = useNavigate();
   function classNames(...classes) {
@@ -65,7 +145,7 @@ const MyLearning = () => {
 
   const courseContentNavigation = async (course) => {
     await axios
-      .get(`http://localhost:5000/user/${userId}/get-course/${course.course._id}/detail`)
+      .get(`${process.env.REACT_APP_BACKEND_HOST}/user/${userId}/get-course/${course.course._id}/detail`)
       .then((response) => {
         if (response.data.success) {
           setSelectedCourse(course);
@@ -108,7 +188,7 @@ const MyLearning = () => {
             <form class="functionbar flex flex-row items-end justify-end w-full ml-auto pb-8 px-2">
               <div className="filter flex flex-row items-center px-5">
                 <span className="mr-2">Filter by:</span>
-                <select className="p-2 text-md hover:bg-gray-200 border border-gray-400 rounded-lg">
+                <select className="p-2 text-md hover:bg-gray-200 border border-gray-400 font-bold" value={filter} onChange={handleFilterChange}>
                   <option value="all">All Courses</option>
                   <option value="favorites">Favorites</option>
                 </select>
@@ -172,6 +252,26 @@ const MyLearning = () => {
                                 <div className={classNames(active ? "bg-gray-100" : "", "flex flex-row items-center px-4 py-2 text-sm text-gray-700")}>
                                   <img src={archive} alt="share" className="h-5 w-5 mr-5" />
                                   <a href="/user/public-profile">Archive this course</a>
+                                </div>
+                              )}
+                            </Menu.Item>
+                            <Menu.Item>
+                              {({ active }) => (
+                                <div className={classNames(active ? "bg-gray-100" : "", "flex flex-row items-center px-4 py-2 text-sm text-gray-700")}>
+                                  <FontAwesomeIcon icon={faStar} className="text-black text-lg mr-5" />
+                                  <a
+                                    href="/user/public-profile"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      if (favoriteCourses.includes(oneCourse.course._id)) {
+                                        handleClickUnfavorite(e, oneCourse.course._id);
+                                      } else {
+                                        handleClickFavorite(e, oneCourse.course._id);
+                                      }
+                                    }}
+                                  >
+                                    {favoriteCourses.includes(oneCourse.course._id) ? "Unfavorite" : "Favorite"}
+                                  </a>
                                 </div>
                               )}
                             </Menu.Item>

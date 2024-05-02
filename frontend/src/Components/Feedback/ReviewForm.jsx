@@ -71,7 +71,7 @@ const ReviewForm = ({ setReload, reviewToEdit, courseId, userId, onCloseModal })
           <FontAwesomeIcon className="text-amber-500 text-3xl" key={i} icon={i < rating ? faStarSolid : faStarRegular} onClick={() => handleRatingClick(i + 1)} />
         ))}
       </div>
-      <textarea value={review} onChange={handleReviewChange} className=" border border-gray-500 mb-4 p-2" style={{ width: "37vw", height: "20vh" }} placeholder="Enter your review here..." />
+      <textarea value={review} onChange={handleReviewChange} className="text-xl border border-gray-500 mb-4 p-2" style={{ width: "37vw", height: "20vh" }} placeholder="Enter your review here..." />
       <div className="flex flex-row justify-end w-full ">
         <button type="submit" className="bg-black text-white font-bold px-2 py-1">
           Save
