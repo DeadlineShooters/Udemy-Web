@@ -1,4 +1,11 @@
 {
+  "scripts": {
+    "start": "node backend/index.js",
+    "server": "nodemon backend/index.js",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
@@ -6,6 +13,8 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "antd": "^5.15.2",
+    "axios": "^1.6.8",
+    "react-icons": "^5.0.1",
     "react-player": "^2.15.1",
     "react-quill": "^2.0.0",
     "styled-components": "^6.1.8"

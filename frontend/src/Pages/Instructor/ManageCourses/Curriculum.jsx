@@ -3,37 +3,41 @@ import DashboardHeaderTitle from "../../../Components/DashboardHeaderTitle";
 import Heading1 from "../../../Components/CourseManagement/Heading1";
 import "react-quill/dist/quill.snow.css";
 import { Button } from "@material-tailwind/react";
-import { IconPlus, IconAlertCircleFilled } from '@tabler/icons-react';
-import './CreateCourse.css';
-import Section from './HandleSections.jsx';
+import { IconPlus, IconAlertCircleFilled } from "@tabler/icons-react";
+import "./CreateCourse.css";
+import Section from "./HandleSections.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import Modal from "../../../Components/CourseManagement/Modal.jsx";
 import axios from "axios";
 import { useCourse } from "../../../CourseContextProvider.jsx";
-import { Bounce, toast } from 'react-toastify';
+import { Bounce, toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 
 const Curriculum = () => {
+  const dispatch = useDispatch();
   const { selectedCourse, setSelectedCourse } = useCourse();
   const [courseId, setCourseId] = useState("");
   const [instructor, setInstructor] = useState("");
   const [sections, setSections] = useState([]);
 
   useEffect(() => {
+    dispatch({ type: "SET_CREATE_COURSE_HANDLER", payload: handleSaveCourse });
+
     const getSaveCourse = () => {
-      const savedCourse = localStorage.getItem('course');
+      const savedCourse = localStorage.getItem("course");
       if (savedCourse) {
         const course = JSON.parse(savedCourse);
         setCourseId(course._id);
         setInstructor(course.instructor);
         setSections(course.sectionList);
       }
-    }
+    };
     getSaveCourse();
-  }, [])
+  }, []);
 
   useEffect(() => {
     const saveCourse = () => {
-      const savedCourse = JSON.parse(localStorage.getItem('course'));
+      const savedCourse = JSON.parse(localStorage.getItem("course"));
       let tempCourse;
       if (sections.length > 0) {
         tempCourse = {
@@ -54,18 +58,18 @@ const Curriculum = () => {
   const [totalLength, setTotalLength] = useState();
   const [totalLecture, setTotalLecture] = useState();
   const [addSection, setAddSection] = useState(false);
-  const [newSectionName, setNewSectionName] = useState('');
+  const [newSectionName, setNewSectionName] = useState("");
   const [showInformModal, setShowInformModal] = useState(false); // State for section modal
   const [trackProgress, setTrackProgress] = useState(0);
   const [showWarningModal, setShowWarningModal] = useState(false); // State for section modal
 
   const location = useLocation();
   let currentUrl = location.pathname;
-  const replacedUrl = currentUrl.replace(/\/curriculum$/, '/basics');
-  
+  const replacedUrl = currentUrl.replace(/\/curriculum$/, "/basics");
+
   const toggleAddSection = () => {
     setAddSection(!addSection);
-  }
+  };
 
   const navigate = useNavigate();
 
@@ -75,18 +79,18 @@ const Curriculum = () => {
 
   const handleSectionCreate = () => {
     setAddSection(!addSection);
-    if (newSectionName.trim() !== '') {
+    if (newSectionName.trim() !== "") {
       setSections([...sections, { name: newSectionName, lectureList: [] }]);
-      setNewSectionName('');
+      setNewSectionName("");
     }
   };
 
   const handleLectureCreate = (sectionName, lectureName, lectureVideoLink, lectureVideoID, lectureVideoDuration, lectureVideoName) => {
     const updatedSections = sections.map((section) => {
       if (section.name === sectionName) {
-        return { 
-          ...section, 
-          lectureList: [...section.lectureList, { name: lectureName, video: {secureURL: lectureVideoLink, publicID: lectureVideoID, duration: lectureVideoDuration, name: lectureVideoName}}] 
+        return {
+          ...section,
+          lectureList: [...section.lectureList, { name: lectureName, video: { secureURL: lectureVideoLink, publicID: lectureVideoID, duration: lectureVideoDuration, name: lectureVideoName } }],
         };
       }
       return section;
@@ -98,14 +102,14 @@ const Curriculum = () => {
     const updatedSections = sections.map((section) => {
       if (section.name === sectionName) {
         let updatedLectures = section.lectureList;
-        const lectureIndex = updatedLectures.findIndex(lecture => lecture.name === oldLectureName);
-        updatedLectures[lectureIndex] = { name: lectureName, video: {secureURL: lectureVideoLink, publicID: lectureVideoID, duration: lectureVideoDuration, name: lectureVideoName} };
+        const lectureIndex = updatedLectures.findIndex((lecture) => lecture.name === oldLectureName);
+        updatedLectures[lectureIndex] = { name: lectureName, video: { secureURL: lectureVideoLink, publicID: lectureVideoID, duration: lectureVideoDuration, name: lectureVideoName } };
         return { ...section, lectureList: updatedLectures };
       }
       return section;
     });
     setSections(updatedSections);
-  }
+  };
 
   const handleLectureDelete = (sectionName, lectureName) => {
     const updatedSections = sections.map((section) => {
@@ -130,24 +134,24 @@ const Curriculum = () => {
   };
 
   const handleSectionDelete = (sectionName) => {
-    const updatedSections = sections.map((section) => {
-      if (section.name === sectionName) {
-        // Clear lectures of the specified section
-        return { ...section, lectureList: [] };
-      }
-      return section;
-    }).filter((section) => section.name !== sectionName); // Delete the specified section
+    const updatedSections = sections
+      .map((section) => {
+        if (section.name === sectionName) {
+          // Clear lectures of the specified section
+          return { ...section, lectureList: [] };
+        }
+        return section;
+      })
+      .filter((section) => section.name !== sectionName); // Delete the specified section
     setSections(updatedSections);
   };
 
-  const NumToTime = (num) => { 
+  const NumToTime = (num) => {
     let hours = Math.floor(num / 3600);
-    let minutes = Math.floor((num - (hours * 3600)) / 60);
-    let seconds = Math.round((num - (hours * 3600) - (minutes * 60)));
-    return hours.toString().padStart(2, '0') + ':' + 
-           minutes.toString().padStart(2, '0') + ':' + 
-           seconds.toString().padStart(2, '0');
-  }
+    let minutes = Math.floor((num - hours * 3600) / 60);
+    let seconds = Math.round(num - hours * 3600 - minutes * 60);
+    return hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0") + ":" + seconds.toString().padStart(2, "0");
+  };
 
   useEffect(() => {
     const calculateCourseLength = () => {
@@ -167,11 +171,9 @@ const Curriculum = () => {
   }, [sections]);
 
   const calculateProgressRate = () => {
-    const filledVariables = [
-      sections.length > 0
-    ];
+    const filledVariables = [sections.length > 0];
     const totalVariables = filledVariables.length;
-    const filledCount = filledVariables.filter(variable => !!variable).length;
+    const filledCount = filledVariables.filter((variable) => !!variable).length;
     const progressRate = (filledCount / totalVariables) * 100;
     return progressRate;
   };
@@ -187,10 +189,10 @@ const Curriculum = () => {
     } else {
       handleUploadCourse();
     }
-  }
+  };
 
   const successNotify = () => {
-    toast.success('Updated successfully!', {
+    toast.success("Updated successfully!", {
       position: "top-center",
       autoClose: 5000,
       hideProgressBar: false,
@@ -202,7 +204,7 @@ const Curriculum = () => {
       transition: Bounce,
     });
   };
-  
+
   const handleUploadCourse = async () => {
     const data = {
       instructor: instructor,
@@ -211,10 +213,10 @@ const Curriculum = () => {
       totalLecture: totalLecture,
       totalLength: totalLength,
       status: true,
-    }
+    };
     console.log("edit upload", data);
-    try { 
-      const response = await axios.put(`http://localhost:5000/instructor/${courseId}/update-section`, {data})
+    try {
+      const response = await axios.put(`http://localhost:5000/instructor/${courseId}/update-section`, { data });
       if (response.status === 200) {
         console.log("after", response.data.course);
         successNotify();
@@ -224,7 +226,7 @@ const Curriculum = () => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
   return (
     <DashboardHeaderTitle title={"Curriculum"}>
       <div className="flex flex-row items-center justify-between">
@@ -240,54 +242,47 @@ const Curriculum = () => {
           </div>
         </div>
         <div className="flex flex-row">
-          <Button 
-            color="black" 
-            className="flex flex-row rounded-full hover:bg-violet-600" 
-            style={{height: "48px"}} 
-            onClick={toggleAddSection}>
+          <Button color="black" className="flex flex-row rounded-full hover:bg-violet-600" style={{ height: "48px" }} onClick={toggleAddSection}>
             <IconPlus stroke={2} className="mr-2" />
-            <span className="font-bold text-base normal-case">
-              Add
-            </span>
+            <span className="font-bold text-base normal-case">Add</span>
           </Button>
         </div>
       </div>
       <div className="mt-6 border-t-2">
         <div className="form-group mb-5">
-        {addSection && 
-          <div>
-            <Heading1>Create Your Section: </Heading1>
+          {addSection && (
             <div>
-              <div className="flex justify-between border border-black p-3 mb-2">
-                <input 
-                  type="text" 
-                  placeholder="Input your section name" 
-                  maxLength={120} 
-                  value={newSectionName} 
-                  className="focus:outline-none focus:ring-0 w-full" 
-                  onChange={handleSectionNameChange}/>
-                <span>120</span>
+              <Heading1>Create Your Section: </Heading1>
+              <div>
+                <div className="flex justify-between border border-black p-3 mb-2">
+                  <input
+                    type="text"
+                    placeholder="Input your section name"
+                    maxLength={120}
+                    value={newSectionName}
+                    className="focus:outline-none focus:ring-0 w-full"
+                    onChange={handleSectionNameChange}
+                  />
+                  <span>120</span>
+                </div>
+                <Button color="black" className="rounded-none hover:bg-violet-800" style={{ height: "48px" }} onClick={handleSectionCreate}>
+                  <span className="font-bold text-base normal-case">Add</span>
+                </Button>
               </div>
-              <Button 
-                color="black" 
-                className="rounded-none hover:bg-violet-800" 
-                style={{height: "48px"}} 
-                onClick={handleSectionCreate}>
-                <span className="font-bold text-base normal-case">
-                  Add
-                </span>
-              </Button>
+              <hr className="border-[1px] border-black my-5" />
             </div>
-            <hr className="border-[1px] border-black my-5"/>
-          </div>}
-          {sections.length === 0 && 
-          <div className={`${addSection === true ? "hidden" : "" } flex flex-row my-10`}>
-            <p className="flex flex-row text-lg mr-2 items-center">
-              <IconAlertCircleFilled color="red" className="mr-2"/>
-              Your section content is empty.
-            </p>
-            <p className="text-lg font-bold cursor-pointer hover:text-[#123456]" onClick={toggleAddSection}>Add section now!</p>
-          </div>}
+          )}
+          {sections.length === 0 && (
+            <div className={`${addSection === true ? "hidden" : ""} flex flex-row my-10`}>
+              <p className="flex flex-row text-lg mr-2 items-center">
+                <IconAlertCircleFilled color="red" className="mr-2" />
+                Your section content is empty.
+              </p>
+              <p className="text-lg font-bold cursor-pointer hover:text-[#123456]" onClick={toggleAddSection}>
+                Add section now!
+              </p>
+            </div>
+          )}
           {sections.map((section, index) => (
             <Section
               key={index}
@@ -304,20 +299,19 @@ const Curriculum = () => {
         </div>
       </div>
       <div className="flex flex-row justify-end bottom-0 items-end align-bottom">
-        <Button color="black" className="rounded-none hover:bg-violet-800" style={{height: "48px"}} onClick={() => navigate(replacedUrl)}>
+        <Button color="black" className="rounded-none hover:bg-violet-800" style={{ height: "48px" }} onClick={() => navigate(replacedUrl)}>
           <span className="font-bold text-base normal-case">Go to Landing Page</span>
         </Button>
-        <Button color="purple" className="rounded-none hover:bg-violet-800" style={{height: "48px"}} onClick={() => handleSaveCourse()}>
-          <span className="font-bold text-base normal-case">Save Course</span>
-        </Button>
-        <Modal 
-          showModal={showWarningModal} 
+
+        <Modal
+          showModal={showWarningModal}
           setShowModal={setShowWarningModal}
           title={"Edit Failed"}
           type={"alert"}
           description={`You don't complete all fields needed for the course. Please complete it and try again ໒(⊙ᴗ⊙)७✎▤`}
           handle={setShowWarningModal}
-          action={"OK"}/>
+          action={"OK"}
+        />
       </div>
     </DashboardHeaderTitle>
   );

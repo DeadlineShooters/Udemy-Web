@@ -7,8 +7,10 @@ export default function ManageCourseLayout() {
     <div>
       <Header />
       <div className="flex px-8 py-5 bg-gray-50">
-        <Sidebar />
-        <main className="w-full shadow-xl bg-white">
+        <div className="mt-10">
+          <Sidebar />
+        </div>
+        <main className="mt-10 w-full shadow-xl bg-white">
           <Outlet />
         </main>
       </div>

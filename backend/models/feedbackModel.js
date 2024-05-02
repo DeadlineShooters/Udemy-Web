@@ -10,5 +10,5 @@ const feedbackSchema = mongoose.Schema({
   instructorResponse: feedbackResponseSchema,
 });
 
-const lecture = mongoose.model("Lecture", lectureSchema);
-export default lecture;
+const Feedback = mongoose.model("Feedback", feedbackSchema);
+export default Feedback;

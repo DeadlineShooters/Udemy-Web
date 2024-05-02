@@ -12,4 +12,8 @@ router.get("/:userId/get-course/:courseId/detail", accountController.getOneCours
 router.post("/course/section/lecture", accountController.getExactLecture);
 router.post("/course/update-progress", accountController.updateCourseProgress);
 
+
+router.get("/favorites/:userId/:courseId", accountController.fetchFavoriteStatus);
+router.post("/addFavorite/:userId/:courseId", accountController.addCourseToFavorites);
+router.post("/removeFavorite/:userId/:courseId", accountController.removeCourseFromFavorites);
 export default router;

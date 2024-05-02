@@ -1,69 +1,72 @@
 import { RouterProvider, Outlet, createBrowserRouter, useLocation } from "react-router-dom";
-
+import { useState } from "react";
 //Component
 import Navbar from './Components/Navbar/Navbar.jsx';
 import Sidebar from './Components/Sidebar/sidebar.jsx';
 import Footer from "./Components/Footer/Footer.jsx";
 
 //General page
-import Home from './Pages/Discover/Home/Home.jsx';
-import CourseContent from './Pages/Course/Content/Content.jsx';
-import NotFound from './Components/404/404.jsx';
-import CourseDetail from './Pages/User/CourseLandingPage/CourseDetail.jsx';
-import Cart from './Pages/Cart/cart.jsx';
-import CoursesByCategory from './Pages/Discover/CoursesByCategory/coursesByCategory.jsx';
+import Home from "./Pages/Discover/Home/Home.jsx";
+import CourseContent from "./Pages/Course/Content/Content.jsx";
+import NotFound from "./Components/404/404.jsx";
+import CourseDetail from "./Pages/User/CourseLandingPage/CourseDetail.jsx";
+import Cart from "./Pages/Cart/cart.jsx";
+import CoursesByCategory from "./Pages/Discover/CoursesByCategory/coursesByCategory.jsx";
 import ProtectedRoutes from "./Components/Utils/AuthSecure.jsx";
 import Search from "./Pages/Discover/Search/search.jsx";
 
 //Student page
-import MyLearning from './Pages/User/MyCourses/Learning/myLearning.jsx';
-import Wishlist from './Pages/User/MyCourses/Wishlist/Wishlist.jsx';
-import Archived from './Pages/User/MyCourses/Archived/Archived.jsx';
+import MyLearning from "./Pages/User/MyCourses/Learning/myLearning.jsx";
+import Wishlist from "./Pages/User/MyCourses/Wishlist/Wishlist.jsx";
+import Archived from "./Pages/User/MyCourses/Archived/Archived.jsx";
 
 //User edit & settings page
-import PublicProfile from './Pages/User/ManageAccount/publicProfile.jsx';
-import EditProfile from './Pages/User/ManageAccount/editProfile.jsx';
-import AccountSettings from './Pages/User/ManageAccount/accountSettings.jsx';
-import CloseAccount from './Pages/User/ManageAccount/closeAccount.jsx';
-import Register from './Pages/User/Authentication/Register.jsx';
-import Login from './Pages/User/Authentication/Login.jsx';
-import HandlePopUpLogin from './Pages/User/Authentication/HandlePopUpLogin.jsx';
+import PublicProfile from "./Pages/User/ManageAccount/publicProfile.jsx";
+import EditProfile from "./Pages/User/ManageAccount/editProfile.jsx";
+import AccountSettings from "./Pages/User/ManageAccount/accountSettings.jsx";
+import CloseAccount from "./Pages/User/ManageAccount/closeAccount.jsx";
+import Register from "./Pages/User/Authentication/Register.jsx";
+import Login from "./Pages/User/Authentication/Login.jsx";
+import HandlePopUpLogin from "./Pages/User/Authentication/HandlePopUpLogin.jsx";
 
 //Instructor page
+import CourseDashBoard from "./Pages/Instructor/ManageCourses/CourseDashboard.jsx";
 import InstructorRegister from "./Pages/Instructor/InstructorProfile/InstructorBecome.jsx";
-import CourseDashBoard from './Pages/Instructor/ManageCourses/CourseDashboard.jsx';
-import Statistics from './Pages/Instructor/Statistics/Statistics.jsx';
-import CourseLandingPage from './Pages/Instructor/ManageCourses/CourseLandingPage.jsx';
-import Reviews from './Pages/Instructor/Reviews.jsx';
-import ManageCourseLayout from './Components/CourseManagement/ManageCourseLayout.jsx';
-import Curriculum from './Pages/Instructor/ManageCourses/Curriculum.jsx';
+
+import Statistics from "./Pages/Instructor/Statistics/Statistics.jsx";
+import CourseLandingPage from "./Pages/Instructor/ManageCourses/CourseLandingPage.jsx";
+import Reviews from "./Pages/Instructor/Reviews.jsx";
+import ManageCourseLayout from "./Components/CourseManagement/ManageCourseLayout.jsx";
+import Curriculum from "./Pages/Instructor/ManageCourses/Curriculum.jsx";
 import QuestionAndAnswer from "./Pages/Instructor/QA.jsx";
 import CreateCourse from "./Pages/Instructor/ManageCourses/CreateCourse.jsx";
 import InstructorProfile from "./Pages/Instructor/InstructorProfile/InstructorProfile.jsx";
+import { useInView } from "react-intersection-observer";
+import ScrollContext from "./context/ScrollContext.js";
 
 // import fonts
 import "./fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf";
 import { useAuth } from "./AuthContextProvider.jsx";
 
 const Layout = () => {
-	return (
-		<div>
-			<Navbar />
-			<Outlet />
-			<Footer />
-		</div>
-	);
+  return (
+    <>
+      <Navbar />
+      <Outlet />
+      <Footer />
+    </>
+  );
 };
 
 
 const CourseDashboardLayout = () => {
-	return (
-		<>
-			<Sidebar />
-			<Outlet />
-			{/* <Footer/>*/}
-		</>
-	);
+  return (
+    <>
+      <Sidebar />
+      <Outlet />
+      {/* <Footer/>*/}
+    </>
+  );
 };
 
 const router = createBrowserRouter([
@@ -234,5 +237,5 @@ const router = createBrowserRouter([
 ]);
 
 export function AppRouterProvider() {
-	return <RouterProvider router={router} />;
+  return <RouterProvider router={router} />;
 }
