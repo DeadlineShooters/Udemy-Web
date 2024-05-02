@@ -49,7 +49,6 @@ const MyLearning = () => {
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/user/addFavorite/${userId}/${courseId}`);
 
       if (response.data.success) {
-        alert("Course added to favorite courses successfully");
         setFavoriteCourses([...favoriteCourses, courseId]);
       } else {
         alert(response.data.message);
@@ -66,7 +65,6 @@ const MyLearning = () => {
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/user/removeFavorite/${userId}/${courseId}`);
 
       if (response.data.success) {
-        alert("Course removed from favorite courses successfully");
         setFavoriteCourses(favoriteCourses.filter((id) => id !== courseId));
       } else {
         alert(response.data.message);
