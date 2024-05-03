@@ -14,8 +14,8 @@ try {
 }
 
 await ElasticCourse.deleteMany({})
-    .then(() => console.log('Data deleted'))
-    .catch((error) => console.log(error));
+	.then(() => console.log('Data deleted'))
+	.catch((error) => console.log(error));
 
 try {
 	let courses = await Course.find({}).populate('category').populate('instructor');
@@ -30,12 +30,12 @@ try {
 				bio: course.instructor.bio,
 			},
 			introduction: course.introduction,
-			category: course.category.name
+			category: course.category.name,
 		};
 		let elasticCourse = new ElasticCourse(data);
 		await elasticCourse.save();
 	});
-	console.log("Completed seeding the data")
+	console.log('Completed seeding the data');
 } catch (error) {
 	console.log(error);
 }

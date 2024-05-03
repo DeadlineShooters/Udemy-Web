@@ -114,8 +114,6 @@ const CourseDetail = () => {
 
 	console.log('isloading: ' + isLoading);
 
-	console.log(process.env.REACT_APP_BACKEND_HOST);
-
 	const handlePlayVideo = () => {
 		document.body.style.overflow = 'hidden';
 		if (videoRef.current) {
@@ -134,7 +132,7 @@ const CourseDetail = () => {
 	useEffect(
 		() => async () => {
 			await axios
-				.get(`${process.env.REACT_APP_BACKEND_HOST}courses/${courseId}`)
+				.get(`${process.env.REACT_APP_BACKEND_HOST}/courses/${courseId}`)
 				.then((response) => {
 					setCourse(response.data);
 				})
