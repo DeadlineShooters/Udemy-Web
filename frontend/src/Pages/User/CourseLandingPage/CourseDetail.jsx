@@ -39,197 +39,197 @@ const CourseDetail = () => {
   const { cart, setCart } = useCart();
   const { wishlist, setWishlist } = useWishlist();
 
-  const [isEnrolled, setIsEnrolled] = useState(false);
-  const [isCarted, setIsCarted] = useState(false);
-  const [isWishlisted, setIsWishlisted] = useState(false);
-  const userId = userData._id;
+	const [isEnrolled, setIsEnrolled] = useState(false);
+	const [isCarted, setIsCarted] = useState(false);
+	const [isWishlisted, setIsWishlisted] = useState(false);
+	const userId = userData._id;
 
-  const toggleFocus = () => {
-    setIsFocused(!isFocused);
-  };
+	const toggleFocus = () => {
+		setIsFocused(!isFocused);
+	};
 
-  const addToCart = async () => {
-    try {
-      const response = await axios.post("http://localhost:5000/cart/add-to-cart", {
-        userId,
-        courseId,
-      });
-      if (response.data.success) {
-        setIsCarted(true);
-        setCart((oldCart) => [...oldCart, response.data.course]);
-        toast.success("Course added to cart successfully");
-      } else {
-        toast.error("Failed to add course to cart");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error("Error adding course to cart");
-    }
-  };
+	const addToCart = async () => {
+		try {
+			const response = await axios.post('http://localhost:5000/cart/add-to-cart', {
+				userId,
+				courseId,
+			});
+			if (response.data.success) {
+				setIsCarted(true);
+				setCart((oldCart) => [...oldCart, response.data.course]);
+				toast.success('Course added to cart successfully');
+			} else {
+				toast.error('Failed to add course to cart');
+			}
+		} catch (error) {
+			console.error('Error:', error);
+			toast.error('Error adding course to cart');
+		}
+	};
 
-  const removeFromCart = async () => {
-    const userId = JSON.parse(localStorage.getItem("user"))._id;
-    try {
-      const response = await axios.post("http://localhost:5000/cart/remove-from-cart", {
-        userId,
-        courseId,
-      });
-      if (response.data.success) {
-        setIsCarted(false);
-        setCart((oldCart) => oldCart.filter((course) => course._id !== courseId));
-        toast.success("Course removed from cart successfully");
-      } else {
-        toast.error("Failed to remove course from cart");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error("Error adding course from cart");
-    }
-  };
+	const removeFromCart = async () => {
+		const userId = JSON.parse(localStorage.getItem('user'))._id;
+		try {
+			const response = await axios.post('http://localhost:5000/cart/remove-from-cart', {
+				userId,
+				courseId,
+			});
+			if (response.data.success) {
+				setIsCarted(false);
+				setCart((oldCart) => oldCart.filter((course) => course._id !== courseId));
+				toast.success('Course removed from cart successfully');
+			} else {
+				toast.error('Failed to remove course from cart');
+			}
+		} catch (error) {
+			console.error('Error:', error);
+			toast.error('Error adding course from cart');
+		}
+	};
 
-  const handleWishlist = async () => {
-    const userId = JSON.parse(localStorage.getItem("user"))._id;
-    const url = isWishlisted ? "http://localhost:5000/wishlist/remove-from-wishlist" : "http://localhost:5000/wishlist/add-to-wishlist";
-    try {
-      const response = await axios.post(url, { userId, courseId });
-      if (response.data.success) {
-        setIsWishlisted(!isWishlisted);
-        setWishlist((oldWishlist) => (isWishlisted ? oldWishlist.filter((course) => course._id !== courseId) : [...oldWishlist, response.data.course]));
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+	const handleWishlist = async () => {
+		const userId = JSON.parse(localStorage.getItem('user'))._id;
+		const url = isWishlisted ? 'http://localhost:5000/wishlist/remove-from-wishlist' : 'http://localhost:5000/wishlist/add-to-wishlist';
+		try {
+			const response = await axios.post(url, { userId, courseId });
+			if (response.data.success) {
+				setIsWishlisted(!isWishlisted);
+				setWishlist((oldWishlist) => (isWishlisted ? oldWishlist.filter((course) => course._id !== courseId) : [...oldWishlist, response.data.course]));
+			}
+		} catch (error) {
+			console.error('Error:', error);
+		}
+	};
 
-  const handleCart = () => {
-    if (isCarted) {
-      removeFromCart();
-    } else {
-      addToCart();
-    }
-  };
+	const handleCart = () => {
+		if (isCarted) {
+			removeFromCart();
+		} else {
+			addToCart();
+		}
+	};
 
-  if (!isLoading) {
-    console.log("feedbacks: ", feedbacks);
-  }
+	if (!isLoading) {
+		console.log('feedbacks: ', feedbacks);
+	}
 
-  console.log("isloading: " + isLoading);
+	console.log('isloading: ' + isLoading);
 
-  console.log(process.env.REACT_APP_BACKEND_HOST);
+	console.log(process.env.REACT_APP_BACKEND_HOST);
 
-  const handlePlayVideo = () => {
-    document.body.style.overflow = "hidden";
-    if (videoRef.current) {
-      videoRef.current.src = course.promotionalVideo.secureURL;
-      videoRef.current.play();
-    }
-  };
+	const handlePlayVideo = () => {
+		document.body.style.overflow = 'hidden';
+		if (videoRef.current) {
+			videoRef.current.src = course.promotionalVideo.secureURL;
+			videoRef.current.play();
+		}
+	};
 
-  function formatSecondsToHoursMinutesSeconds(seconds) {
-    var hours = Math.floor(seconds / 3600);
-    var minutes = Math.floor((seconds % 3600) / 60);
-    seconds = seconds % 60;
-    return hours + "h" + minutes + "m" + seconds + "s";
-  }
+	function formatSecondsToHoursMinutesSeconds(seconds) {
+		var hours = Math.floor(seconds / 3600);
+		var minutes = Math.floor((seconds % 3600) / 60);
+		seconds = seconds % 60;
+		return hours + 'h' + minutes + 'm' + seconds + 's';
+	}
 
-  useEffect(
-    () => async () => {
-      await axios
-        .get(`${process.env.REACT_APP_BACKEND_HOST}/courses/${courseId}`)
-        .then((response) => {
-          setCourse(response.data);
-        })
-        .catch((error) => {
-          if (error.response && error.response.status === 404) {
-            setError("Course not found");
-          } else {
-            console.error("Error:", error);
-          }
-        });
-    },
-    [courseId]
-  );
+	useEffect(
+		() => async () => {
+			await axios
+				.get(`${process.env.REACT_APP_BACKEND_HOST}courses/${courseId}`)
+				.then((response) => {
+					setCourse(response.data);
+				})
+				.catch((error) => {
+					if (error.response && error.response.status === 404) {
+						setError('Course not found');
+					} else {
+						console.error('Error:', error);
+					}
+				});
+		},
+		[courseId]
+	);
 
-  useEffect(
-    () => async () => {
-      try {
-        const response = await axios.post("http://localhost:5000/courses/is-enrolled", {
-          userId: userData._id,
-          courseId,
-        });
-        if (response.data.success) {
-          setIsEnrolled(true);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    },
-    []
-  );
+	useEffect(
+		() => async () => {
+			try {
+				const response = await axios.post('http://localhost:5000/courses/is-enrolled', {
+					userId: userData._id,
+					courseId,
+				});
+				if (response.data.success) {
+					setIsEnrolled(true);
+				}
+			} catch (error) {
+				console.error('Error:', error);
+			}
+		},
+		[]
+	);
 
-  useEffect(
-    () => async () => {
-      try {
-        const response = await axios.post("http://localhost:5000/courses/is-carted", {
-          userId: userData._id,
-          courseId,
-        });
-        if (response.data.success) {
-          setIsCarted(true);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    },
-    [isWishlisted]
-  );
+	useEffect(
+		() => async () => {
+			try {
+				const response = await axios.post('http://localhost:5000/courses/is-carted', {
+					userId: userData._id,
+					courseId,
+				});
+				if (response.data.success) {
+					setIsCarted(true);
+				}
+			} catch (error) {
+				console.error('Error:', error);
+			}
+		},
+		[isWishlisted]
+	);
 
-  useEffect(
-    () => async () => {
-      try {
-        const response = await axios.post("http://localhost:5000/courses/is-wishlisted", {
-          userId: userData._id,
-          courseId,
-        });
-        if (response.data.success) {
-          setIsWishlisted(true);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    },
-    [isCarted]
-  );
+	useEffect(
+		() => async () => {
+			try {
+				const response = await axios.post('http://localhost:5000/courses/is-wishlisted', {
+					userId: userData._id,
+					courseId,
+				});
+				if (response.data.success) {
+					setIsWishlisted(true);
+				}
+			} catch (error) {
+				console.error('Error:', error);
+			}
+		},
+		[isCarted]
+	);
 
-  if (!course) {
-    return <Spinner />;
-  }
+	if (!course) {
+		return <Spinner />;
+	}
 
-  if (isLoading) return <Spinner />;
+	if (isLoading) return <Spinner />;
 
-  if (error) {
-    return <NotFound />;
-  }
+	if (error) {
+		return <NotFound />;
+	}
 
-  // Convert the createDate string to a Date object
-  const date = new Date(course.createDate);
+	// Convert the createDate string to a Date object
+	const date = new Date(course.createDate);
 
-  const sanitizedHTML = DOMPurify.sanitize(course.description);
+	const sanitizedHTML = DOMPurify.sanitize(course.description);
 
-  // Format the date
-  const formattedDate = `${date.toLocaleString("default", { month: "short" })} ${date.getDate()}, ${date.getFullYear()}`;
+	// Format the date
+	const formattedDate = `${date.toLocaleString('default', { month: 'short' })} ${date.getDate()}, ${date.getFullYear()}`;
 
-  return (
-    <div className={`w-full h-full course-title-container`}>
-      <div
-        className="course-detail-container w-full lg:bg-course-title-bg-grey
-        lg:py-5 lg:px-20 sm:mt-5 sm:mb-5 sm:px-5 sm:text-black lg:text-white sm:flex sm:flex-col sm:items-center lg:block "
-      >
-        <div id="short-description" className=" relative lg:px-10 w-full px-6 sm:mb-5 lg:w-1/2">
-          <h1 className="course-title font-bold text-3xl">{course.name}</h1>
-          <br />
-          <p className="course-description text-xl">{course.introduction}</p>
-          <br />
+	return (
+		<div className={`w-full h-full course-title-container`}>
+			<div
+				className='course-detail-container w-full lg:bg-course-title-bg-grey
+        lg:py-5 lg:px-20 sm:mt-5 sm:mb-5 sm:px-5 sm:text-black lg:text-white sm:flex sm:flex-col sm:items-center lg:block '
+			>
+				<div id='short-description' className=' relative lg:px-10 w-full px-6 sm:mb-5 lg:w-1/2'>
+					<h1 className='course-title font-bold text-3xl'>{course.name}</h1>
+					<br />
+					<p className='course-description text-xl'>{course.introduction}</p>
+					<br />
 
           <div className="course-rating flex items-center">
             <div className="text-amber-500 font-bold mr-1 text-lg">
@@ -306,41 +306,45 @@ const CourseDetail = () => {
         </div>
       </div>
 
-      <div className="course-details-outermost-container lg:py-5 lg:px-20 flex items-center px-6">
-        <div className="course-info-container lg:w-8/12 sm:10/12 md:px-10 ">
-          <span className="price-number font-bold text-2xl text-slate-950 ">Course content</span>
-          <div className="content-description mt-5">
-            <span className="text-lg price-number text-slate-950 ">{course.totalSection}</span>
-            <span className="text-lg price-number text-slate-950 "> sections • </span>
-            <span className="text-lg price-number text-slate-950 ">{course.totalLecture}</span>
-            <span className="text-lg price-number text-slate-950 "> lectures • </span>
-            <span className="text-lg price-number text-slate-950 ">{formatSecondsToHoursMinutesSeconds(course.totalLength)}</span>
-            <span className="text-lg price-number text-slate-950 "> total length</span>
-          </div>
+			<div className='course-details-outermost-container lg:py-5 lg:px-20 flex items-center px-6'>
+				<div className='course-info-container lg:w-8/12 sm:10/12 md:px-10 '>
+					<span className='price-number font-bold text-2xl text-slate-950 '>Course content</span>
+					<div className='content-description mt-5'>
+						<span className='text-lg price-number text-slate-950 '>{course.totalSection}</span>
+						<span className='text-lg price-number text-slate-950 '> sections • </span>
+						<span className='text-lg price-number text-slate-950 '>{course.totalLecture}</span>
+						<span className='text-lg price-number text-slate-950 '> lectures • </span>
+						<span className='text-lg price-number text-slate-950 '>{formatSecondsToHoursMinutesSeconds(course.totalLength)}</span>
+						<span className='text-lg price-number text-slate-950 '> total length</span>
+					</div>
 
-          <div className="curriculum-container course-layout mb-5 ">
-            {course.sectionList.map((section) => (
-              <Section key={section._id} title={section.name} lectures={section.lectures} isLastSection={section.index === course.sectionList.length - 1} />
-            ))}
-          </div>
-          <span className="price-number font-bold text-2xl text-slate-950">Description</span>
-          <div className="text-lg mt-5 mb-5" dangerouslySetInnerHTML={{ __html: sanitizedHTML }}></div>
-          <span className="price-number font-bold text-2xl text-slate-950 ">Instructor</span>
-          <ProfileCard
-            instructor={course.instructor}
-            profileImg={course.instructor.avatar ? course.instructor.avatar.public_id : createImageFromInitials(160, course.instructor.firstName + " " + course.instructor.lastName)}
-          />
+					<div className='curriculum-container course-layout mb-5 '>
+						{course.sectionList.map((section) => (
+							<Section key={section._id} title={section.name} lectures={section.lectures} isLastSection={section.index === course.sectionList.length - 1} />
+						))}
+					</div>
+					<span className='price-number font-bold text-2xl text-slate-950'>Description</span>
+					<div className='text-lg mt-5 mb-5' dangerouslySetInnerHTML={{ __html: sanitizedHTML }}></div>
+					<span className='price-number font-bold text-2xl text-slate-950 '>Instructor</span>
+					<ProfileCard
+						instructor={course.instructor}
+						profileImg={
+							course.instructor.avatar
+								? course.instructor.avatar.public_id
+								: createImageFromInitials(160, course.instructor.firstName + ' ' + course.instructor.lastName)
+						}
+					/>
 
-          {count > 0 && (
-            <div id="reviews">
-              <div className="border-b pb-2">
-                <span className="price-number font-bold text-2xl text-slate-950">Student feedback</span>
-              </div>
-              <div className="star-filter flex h-1/5 items-center my-3 ">
-                <div className="average-container h-full flex flex-col justify-between mr-5 ">
-                  <span className="text-gray-500 font-bold text-lg w-1/4" id="average-text">
-                    Average
-                  </span>
+					{count > 0 && (
+						<div id='reviews'>
+							<div className='border-b pb-2'>
+								<span className='price-number font-bold text-2xl text-slate-950'>Student feedback</span>
+							</div>
+							<div className='star-filter flex h-1/5 items-center my-3 '>
+								<div className='average-container h-full flex flex-col justify-between mr-5 '>
+									<span className='text-gray-500 font-bold text-lg w-1/4' id='average-text'>
+										Average
+									</span>
 
                   <div className="average flex flex-row justify-between items-center">
                     <span className="price-number font-bold text-3xl text-slate-950">{convertDecimal128ToNumber(course.avgRating)}</span>
@@ -356,24 +360,24 @@ const CourseDetail = () => {
                   <div className="rating-row flex flex-row">
                     <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">3 Stars - {course.threeStarCnt}</button>
 
-                    <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">2 Stars -{course.twoStarCnt}</button>
+										<button class='rating-button focus:text-purple-600 focus:border-purple-600 text-sm'>2 Stars -{course.twoStarCnt}</button>
 
-                    <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">1 Star - {course.oneStarCnt}</button>
-                  </div>
-                </div>
-              </div>
-              <div id="reviews-container">
-                {feedbacks.map((review, index) => (
-                  <CourseReview key={index} review={review} />
-                ))}
-                <Pagination count={count} />
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+										<button class='rating-button focus:text-purple-600 focus:border-purple-600 text-sm'>1 Star - {course.oneStarCnt}</button>
+									</div>
+								</div>
+							</div>
+							<div id='reviews-container'>
+								{feedbacks.map((review, index) => (
+									<CourseReview key={index} review={review} />
+								))}
+								<Pagination count={count} />
+							</div>
+						</div>
+					)}
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default CourseDetail;

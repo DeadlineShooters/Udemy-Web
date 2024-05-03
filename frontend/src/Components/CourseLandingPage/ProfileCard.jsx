@@ -23,15 +23,15 @@ const ProfileCard = ({ instructor }) => {
         <div className="stats flex flex-col">
           <div className="reviews flex items-center">
             <FontAwesomeIcon icon={faStar} className="mr-2" />
-            <span className="mr-1">{instructor.instructor.totalReviews}</span> <span>Reviews</span>
+            {/* <span className="mr-1">{instructor.instructor.totalReviews}</span> <span>Reviews</span> */}
           </div>
           <div className="reviews flex items-center">
             <FontAwesomeIcon icon={faGraduationCap} className="mr-2" />
-            <span className="mr-1">{instructor.instructor.totalStudents}</span> <span>Students</span>
+            {/* <span className="mr-1">{instructor.instructor.totalStudents}</span> <span>Students</span> */}
           </div>
         </div>
       </div>
-      <div className="bio">{instructor.instructor.bio}</div>
+      {/* <div className="bio">{instructor.instructor.bio}</div> */}
     </div>
   );
 };
