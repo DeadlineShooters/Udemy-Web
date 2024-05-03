@@ -173,6 +173,7 @@ const CourseContent = () => {
         }).then((response) => {
           if (response.data.success) {
             localStorage.setItem('selectedCourse', JSON.stringify(response.data.data.course));
+            setCourseOverall(response.data.data.course);
             setCourseProgress(response.data.data.course.progress);
           }
         })
@@ -215,7 +216,10 @@ const CourseContent = () => {
               </li>
               <li class='flex flex-row items-center'>
                 <div><CircleProgressBar progress={courseProgress}/></div>
-                <p class='text-gray-200 hover:text-gray-300 mx-2'>Your progress</p>
+                {courseProgress === 100 ? 
+                  <p class='text-gray-200 hover:text-gray-300 mx-2' onClick={() => navigate(`/course/${courseDetails.slugName}/certificate/${courseOverall.certificate}`)}>Get certificate</p> : 
+                  <p class='text-gray-200 hover:text-gray-300 mx-2'>Your progress</p> 
+                }
               </li>
             </ul>
             <Menu as="div" className="relative ml-4">

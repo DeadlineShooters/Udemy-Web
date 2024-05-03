@@ -47,6 +47,7 @@ import ScrollContext from "./context/ScrollContext.js";
 // import fonts
 import "./fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf";
 import { useAuth } from "./AuthContextProvider.jsx";
+import Certificate from "./Pages/Course/Certificate/Certificate.jsx";
 
 const Layout = () => {
   return (
@@ -180,7 +181,21 @@ const router = createBrowserRouter([
 		],
 	},
 	{
-		path: '/course/:courseSlug/learn/:lectureIndex',
+		path: '/course/:slug',
+		element: <ProtectedRoutes />,
+		children: [
+			{
+				path: 'certificate',
+				element: <Layout />,
+				children: [{
+					path: ':cerId',
+					element: <Certificate/>
+				}]
+			},
+		],
+	},
+	{
+		path: '/course/:slug/learn/:lectureIndex',
 		element: <CourseContent />,
 	},
 	{

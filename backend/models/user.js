@@ -11,7 +11,9 @@ const userSchema = new mongoose.Schema({
         lectures: [{
             lecture: { type: Number },
             viewed: { type: Boolean, default: false }
-        }]
+        }],
+        isArchived: {type: Boolean, default: false},
+        certificate: {type: Schema.Types.ObjectId, ref: "Certificate"}
     }],
     wishList: [{ type: Schema.Types.ObjectId, ref: "Course" }],
     favoritesCourse: [{ type: Schema.Types.ObjectId, ref: "Course" }],
