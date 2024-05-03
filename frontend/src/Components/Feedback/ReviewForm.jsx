@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as faStarSolid } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 import axios from "axios";
-import { failureNotify, successNotify } from "../../utils/helpers";
+import { failureNotify } from "../../utils/helpers";
 
 // for both edit and create review
 const ReviewForm = ({ setReload, reviewToEdit, courseId, userId, onCloseModal }) => {
@@ -51,8 +51,6 @@ const ReviewForm = ({ setReload, reviewToEdit, courseId, userId, onCloseModal })
           console.log("Created review:", response.data);
           setReload((prevState) => !prevState);
         }
-
-        successNotify("Review saved successfully");
 
         onCloseModal();
       } catch (error) {

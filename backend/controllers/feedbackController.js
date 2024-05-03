@@ -1,20 +1,27 @@
 import Feedback from "../models/feedbackModel.js";
 import { PAGE_SIZE } from "../utils/constants.js";
 import Course from "../models/course.js";
+import User from "../models/user.js";
 import mongoose from "mongoose";
 
 const controller = {};
 
 controller.getFeedback = async (req, res) => {
   const { courseID } = req.params;
-  const { page = 1 } = req.query; // default is first page if not provided
+  const { page = 1, rating } = req.query; // default is first page if not provided
 
+  console.log("Rating: " + rating);
   // PAGINATION
   const skip = (page - 1) * PAGE_SIZE;
   console.log("Get feedback for course " + courseID);
 
   // QUERY
-  const query = { courseID: new mongoose.Types.ObjectId(courseID) }; // retrieves documents where courseID matches
+  let query = { courseID: new mongoose.Types.ObjectId(courseID) }; // retrieves documents where courseID matches
+
+  // If a rating filter is applied, add it to the query
+  if (rating !== "null") {
+    query.rating = Number(rating);
+  }
 
   try {
     const feedbacks = await Feedback.find(query).skip(skip).limit(PAGE_SIZE).populate("userID").exec();
@@ -146,6 +153,13 @@ controller.createFeedback = async (req, res) => {
     const totalResponses = course.fiveStarCnt + course.fourStarCnt + course.threeStarCnt + course.twoStarCnt + course.oneStarCnt;
     course.avgRating = totalRatings / totalResponses;
 
+    // Find the user who is the instructor and update totalReviews
+    const user = await User.findById(course.instructor);
+    if (user && user.instructor) {
+      user.instructor.totalReviews += 1;
+      await user.save();
+    }
+
     await course.save();
 
     res.status(201).json(savedFeedback);
@@ -177,15 +191,15 @@ controller.deleteFeedback = async (req, res) => {
     }
 
     // Update the star counts
-    if (feedback.rating === 5) {
+    if (feedback.rating === 5 && course.fiveStarCnt > 0) {
       course.fiveStarCnt -= 1;
-    } else if (feedback.rating === 4) {
+    } else if (feedback.rating === 4 && course.fourStarCnt > 0) {
       course.fourStarCnt -= 1;
-    } else if (feedback.rating === 3) {
+    } else if (feedback.rating === 3 && course.threeStarCnt > 0) {
       course.threeStarCnt -= 1;
-    } else if (feedback.rating === 2) {
+    } else if (feedback.rating === 2 && course.twoStarCnt > 0) {
       course.twoStarCnt -= 1;
-    } else if (feedback.rating === 1) {
+    } else if (feedback.rating === 1 && course.oneStarCnt > 0) {
       course.oneStarCnt -= 1;
     }
 
@@ -231,9 +245,48 @@ controller.updateFeedback = async (req, res) => {
     const existingFeedback = await Feedback.findOne({ courseID, userID });
 
     if (existingFeedback) {
+      // Find the course and update the star counts and average rating
+      const course = await Course.findById(courseID);
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+
+      // Decrement the old rating count
+      if (existingFeedback.rating === 5 && course.fiveStarCnt > 0) {
+        course.fiveStarCnt -= 1;
+      } else if (existingFeedback.rating === 4 && course.fourStarCnt > 0) {
+        course.fourStarCnt -= 1;
+      } else if (existingFeedback.rating === 3 && course.threeStarCnt > 0) {
+        course.threeStarCnt -= 1;
+      } else if (existingFeedback.rating === 2 && course.twoStarCnt > 0) {
+        course.twoStarCnt -= 1;
+      } else if (existingFeedback.rating === 1 && course.oneStarCnt > 0) {
+        course.oneStarCnt -= 1;
+      }
+
       // Update the fields
       existingFeedback.feedback = feedback;
       existingFeedback.rating = rating;
+
+      // Increment the new rating count
+      if (rating === 5) {
+        course.fiveStarCnt += 1;
+      } else if (rating === 4) {
+        course.fourStarCnt += 1;
+      } else if (rating === 3) {
+        course.threeStarCnt += 1;
+      } else if (rating === 2) {
+        course.twoStarCnt += 1;
+      } else if (rating === 1) {
+        course.oneStarCnt += 1;
+      }
+
+      // Update the average rating
+      const totalRatings = course.fiveStarCnt * 5 + course.fourStarCnt * 4 + course.threeStarCnt * 3 + course.twoStarCnt * 2 + course.oneStarCnt;
+      const totalResponses = course.fiveStarCnt + course.fourStarCnt + course.threeStarCnt + course.twoStarCnt + course.oneStarCnt;
+      course.avgRating = totalResponses > 0 ? totalRatings / totalResponses : 0;
+
+      await course.save();
 
       // Save the updated document
       const updatedFeedback = await existingFeedback.save();

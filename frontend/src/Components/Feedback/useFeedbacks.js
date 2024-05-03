@@ -3,7 +3,7 @@ import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 import { PAGE_SIZE } from "../../utils/constants.js";
 
-export function useFeedbacks(courseID) {
+export function useFeedbacks(courseID, rating) {
   const queryClient = useQueryClient();
   console.log("IN use feedback: courseID=" + courseID);
   const [searchParams] = useSearchParams();
@@ -15,7 +15,7 @@ export function useFeedbacks(courseID) {
   const { isLoading, data, error } = useQuery({
     queryKey: ["feedbacks", page],
     queryFn: () =>
-      axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${courseID}?page=${page}`).then((res) => {
+      axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${courseID}?page=${page}&rating=${rating}`).then((res) => {
         console.log("Data in use feedback", res.data);
         return res.data;
       }),
@@ -28,13 +28,13 @@ export function useFeedbacks(courseID) {
   if (page < pageCount)
     queryClient.prefetchQuery({
       queryKey: ["feedbacks", page + 1],
-      queryFn: () => axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${courseID}?page=${page + 1}`).then((res) => res.data),
+      queryFn: () => axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${courseID}?page=${page + 1}&rating=${rating}`).then((res) => res.data),
     });
 
   if (page > 1)
     queryClient.prefetchQuery({
       queryKey: ["feedbacks", page - 1],
-      queryFn: () => axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${courseID}?page=${page - 1}`).then((res) => res.data),
+      queryFn: () => axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${courseID}?page=${page - 1}&rating=${rating}`).then((res) => res.data),
     });
 
   return { isLoading, error, feedbacks, count };
