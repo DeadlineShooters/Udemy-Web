@@ -1,10 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
-import StarRatings from "../StarRatings";
-import { useState, useRef, useEffect } from "react";
-import Modal from "./Modal";
-import ReviewForm from "./ReviewForm";
+import {StarRatings} from "../StarRatings";
 
 const ViewReview = ({ review, onCloseModal }) => {
   return (

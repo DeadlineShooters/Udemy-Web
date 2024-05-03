@@ -1,82 +1,81 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Fragment } from 'react';
-import DashboardHeaderTitle from "../../../Components/DashboardHeaderTitle";
 import CreateCourseCard from "../../../Components/CourseDashboard/CreateCourseCard";
 import ResourceCard from "../../../Components/CourseDashboard/ResourceCard";
 import { Button } from "@material-tailwind/react";
 import { IoMdSearch } from "react-icons/io";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import { Menu, Transition } from '@headlessui/react';
-import { getColor, createImageFromInitials } from '../../../Components/Utils/Utils.js';
-import secureLocalStorage from 'react-secure-storage';
+import UserNav from "../../../Components/UserNav.jsx";
 import { useAuth } from "../../../AuthContextProvider.jsx";
-import { Link, useNavigate } from "react-router-dom";
+import { useCourse } from "../../../CourseContextProvider.jsx";
+import { useNavigate } from "react-router-dom";
+import {StarRatings} from "../../../Components/StarRatings.jsx";
+import axios from "axios";
+import './CourseDashboard.css';
 
 const profileImage =
 	"https://res.cloudinary.com/dk6q93ryt/image/upload/v1696217092/samples/smile.jpg";
 
-
 const CourseDashBoard = () => {
   const { userData } = useAuth();
+  const instructorID = userData._id; 
   const [selectedFilter, setSelectedFilter] = useState('');
+  const [isHaveCourse, setHaveCourse] = useState(false);
   const [courses, setCourses] = useState([]);
   const navigate = useNavigate();
+  const { setSelectedCourse } = useCourse();
+
+  const handleCourseSelectionAndNav = (course) => {
+    navigate(`/instructor/course/${course.slugName}/manage/basics`)
+    setSelectedCourse(course);
+  };
+
+  const img_illust1 = "https://res.cloudinary.com/dqxtf297o/image/upload/v1714285439/Udemy-important/dashboard_img1.jpg";
+  const img_illust2 = "https://res.cloudinary.com/dqxtf297o/image/upload/v1714285845/Udemy-important/dashboard_img4.jpg";
+  const img_illust3 = "https://res.cloudinary.com/dqxtf297o/image/upload/v1714286036/Udemy-important/dashboard_img3.jpg";
+  const img_illust4 = "https://res.cloudinary.com/dqxtf297o/image/upload/v1714286036/Udemy-important/dashboard_img2.jpg";
+
   useEffect(() => {
-    const res = [
-      {
-        name: "Learn ReactJS",
-        status: "DRAFT",
-        thumbnail: profileImage
-      },
-      {
-        name: "Learn ReactJS",
-        status: "DRAFT",
-        thumbnail: profileImage
-      },
-      {
-        name: "Learn ReactJS",
-        status: "DRAFT",
-        thumbnail: profileImage
-      },
-    ]
-
-    setCourses(res);
-  }, [])
-
+    const getCourse = () => {
+      axios.post('http://localhost:5000/instructor/get-course', {instructorID})
+			.then((response) => {
+				if (response.data.success) {
+          setHaveCourse(true);
+          console.log("Course got:", response.data.course);
+          setCourses(response.data.course);
+				}
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+			});
+    }
+    getCourse();
+  }, [courses])
   const handleFilterSelect = (filter) => {
     setSelectedFilter(filter);
     // Perform filtering logic based on selected filter
     // alert(filter)
   };
-  const haveCourse = true;
-  function classNames(...classes) {
-		return classes.filter(Boolean).join(' ');
-	}
-  const logout = () => {
-		secureLocalStorage.clear();
-		window.open('http://localhost:5000/auth/logout', '_self');
-	};
   const resource1 = {
-    imgSrc: profileImage,
+    imgSrc: img_illust3,
     title: "Create an Engaging Course",
     desciption: "Whether you've been teaching for years or are teaching for the first time, you can make an engaging course. We've compiled resources and best practices to help you get to the next level, no matter where you're starting.",
     getStartedUrl: '#',
   }
   const resource2 = {
-    imgSrc: profileImage,
+    imgSrc: img_illust1,
     title: "Get Started with Video",
     desciption: "Quality video lectures can set your course apart. Use our resources to learn the basics.",
     getStartedUrl: '#',
   }
   const resource3 = {
-    imgSrc: profileImage,
+    imgSrc: img_illust2,
     title: "Build Your Audience",
     desciption: "Set your course up for success by building your audience.",
     getStartedUrl: '#',
   }
   const resource4 = {
-    imgSrc: profileImage,
+    imgSrc: img_illust4,
     title: "Join the New Instructor Challenge!",
     desciption: "Get exclusive tips and resources designed to help you launch your first course faster! Eligible instructors who publish their first course on time will receive a special bonus to celebrate. Start today!",
     getStartedUrl: '#',
@@ -91,92 +90,11 @@ const CourseDashBoard = () => {
             </div>
           <div className="flex flex-row items-center">
             <a href="/">Student</a>
-          <Menu as='div' className='user relative ml-4'>
-            <div>
-              <Menu.Button className='relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:outline-none focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800'>
-                <img id='preview' src={createImageFromInitials(60, userData.firstName + " " + userData.lastName, getColor())} alt='profile-pic' className='rounded-full w-12 h-12' />
-              </Menu.Button>
-            </div>
-              <Transition
-                as={Fragment}
-                enter='transition ease-out duration-100'
-                enterFrom='transform opacity-0 scale-95'
-                enterTo='transform opacity-100 scale-100'
-                leave='transition ease-in duration-75'
-                leaveFrom='transform opacity-100 scale-100'
-                leaveTo='transform opacity-0 scale-95'
-              >
-                <Menu.Items className='absolute right-0 z-99999 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
-                <Menu.Item>
-                    {({ active }) => (
-                      <a href='/' className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
-                        Student
-                      </a>
-                    )}
-                  </Menu.Item>
-                <hr/>
-                  <Menu.Item>
-                    {({ active }) => (
-                      <a
-                        href='/home/my-courses/learning'
-                        className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                      >
-                        My learning
-                      </a>
-                    )}
-                  </Menu.Item>
-                  <Menu.Item>
-                    {({ active }) => (
-                      <a
-                        href='/home/my-courses/wishlist'
-                        className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                      >
-                        Wishlist
-                      </a>
-                    )}
-                  </Menu.Item>
-                  <hr />
-                  <Menu.Item>
-                    {({ active }) => (
-                      <a href='/user/edit-profile' className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
-                        Edit profile
-                      </a>
-                    )}
-                  </Menu.Item>
-                  <Menu.Item>
-                    {({ active }) => (
-                      <a href='/user/account-settings' className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
-                        Account settings
-                      </a>
-                    )}
-                  </Menu.Item>
-                  <hr />
-                  <Menu.Item>
-                    {({ active }) => (
-                      <button
-                        onClick={logout}
-                        className={classNames(active ? 'bg-gray-100 w-full text-left' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                      >
-                        Logout
-                      </button>
-                    )}
-                  </Menu.Item>
-                  <hr />
-                  <div className='flex flex-row justify-between'>
-                    <a href='/about-us' className={classNames('px-4 py-2 text-xs text-gray-600')}>
-                      About Udemy
-                    </a>
-                    <a href='/help' className={classNames('px-4 py-2 text-xs text-gray-600')}>
-                      Help
-                    </a>
-                  </div>
-                </Menu.Items>
-              </Transition>
-            </Menu>
+            <UserNav/>
           </div>
       </div>
       {/* <a href="/instructor/course/123/manage/curriculum">Edit course</a> */}
-      {haveCourse && (
+      {isHaveCourse && (
         <div>
           <div className="mt-2 flex justify-between">
             <div className="flex gap-10">
@@ -197,20 +115,45 @@ const CourseDashBoard = () => {
           <div className="my-courses mt-6">
             {courses.map((course, index) => (
               <div className="flex mb-6" key={index}>
-                <img src={course.thumbnail} className="object-cover" style={{width: "118px", height: "118px"}} />
+                <img src={course.thumbNail.secureURL} className="object-cover" style={{width: "209px", height: "118px"}} />
                 <div className="flex-1 border border-gray-400 p-2 flex relative">
                   <div className="content-block w-1/4 flex flex-col justify-between">
-                    <p className="font-bold text-sm">{course.name}</p>
-                    <p className="font-bold text-xs">{course.status}</p>
+                    <p className="font-bold text-sm line-clamp-2">{course.name}</p>
+                    {course.status === true ? (<p className="p-2 w-10 bg-black text-white font-bold text-xs">Live</p>): (<p className="font-bold text-xs">Draft</p>)}
                   </div>
-                  <div className="w-3/4 flex items-center">
-                    <p className="flex-none text-xs mr-2 font-bold">Finish your course</p>
-                    <div class=" flex-1 bg-gray-300 h-2  overflow-hidden">
-                      <div class="bg-blue-500 h-full w-1/2 "></div>
+                  {course.status === true ? (
+                    <div className="courseDetails flex flex-row w-full justify-between px-28">
+                      <div className="flex flex-row items-center">
+                        <div className="flex flex-col">
+                          <p className="text-xl font-bold">{course.totalStudent}</p>
+                          <p className="line-clamp-1">Enrollments this month</p>
+                        </div>
+                      </div>
+                      <div className="flex flex-row items-center">
+                        <div className="flex flex-col">
+                          <p className="text-xl font-bold">${course.totalRevenue.toString().padStart(2, '0')}</p>
+                          <p className="line-clamp-1">Total Revenue</p>
+                        </div>
+                      </div>
+                      <div className="flex flex-row items-center">
+                        <div className="flex flex-col">
+                          <div className="flex flex-row items-center">
+                            <p className="text-xl font-bold mr-2">{course.avgRating || 0}</p>
+                            <StarRatings rating={course.avgRating || 0}/>
+                          </div>
+                          <p className="line-clamp-1">Course rating</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <button className="edit-cover absolute top-0 left-0 w-full h-full bg-white opacity-0 hover:opacity-90 flex items-center justify-center hover:cursor-pointer">
-                    <a href="/instructor/course/123/manage/curriculum"><p className="font-bold text-purple-500">Edit / manage course</p></a>
+                  ) : 
+                  (<div className="w-3/4 flex items-center">
+                    <p className="flex-none text-xs mr-2 font-bold">Finish your course</p>
+                      <div class=" flex-1 bg-gray-300 h-2  overflow-hidden">
+                        <div class="bg-blue-500 h-full w-1/2 "></div>
+                      </div>
+                  </div>)}
+                  <button className="edit-cover absolute top-0 left-0 w-full h-full bg-white opacity-0 hover:opacity-90 flex items-center justify-center hover:cursor-pointer" onClick={() => handleCourseSelectionAndNav(course)}>
+                    <p className="font-bold text-purple-500">Edit / manage course</p>
                   </button>
                 </div>
               </div>
@@ -218,7 +161,7 @@ const CourseDashBoard = () => {
           </div>
         </div>
       )}
-      {!haveCourse && (<CreateCourseCard />)}
+      {!isHaveCourse && (<CreateCourseCard />)}
       
       <h2 className="mx-auto my-16 text-center">Based on your experience, we think these resources will be helpful.</h2>
 
@@ -274,4 +217,3 @@ const DropdownMenu = ({ onSelect }) => {
     </div>
   );
 };
-

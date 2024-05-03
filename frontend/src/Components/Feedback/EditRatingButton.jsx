@@ -4,17 +4,26 @@ import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
 import ViewReview from "./ViewReview";
 import React from "react";
-import StarRatings from "../StarRatings";
+import {StarRatings} from "../StarRatings";
 import ReviewForm from "./ReviewForm";
 import { useState } from "react";
 
 function EditRatingButton({ review }) {
   const [hover, setHover] = useState(false);
+
+  const handleMouseEnter = () => {
+    setHover(true);
+  };
+
+  const handleMouseLeave = () => {
+    setHover(false);
+  };
+
   return (
     <div>
       <Modal>
         {review ? (
-          <div className="flex flex-col items-end " onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+          <div className="flex flex-col items-end " onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <StarRatings rating={review.rating} />
 
             <span className="text-sm">

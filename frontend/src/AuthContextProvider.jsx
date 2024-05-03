@@ -3,7 +3,7 @@ import  secureLocalStorage  from  "react-secure-storage";
 
 const AuthContext = createContext();
 
-const AuthContextProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isLogged, setIsLogged] = useState(false);
     useEffect(() => {
@@ -53,4 +53,4 @@ const AuthContextProvider = ({ children }) => {
 
 const useAuth = () => useContext(AuthContext);
 
-export { AuthContextProvider, useAuth };
+export { AuthProvider, useAuth };

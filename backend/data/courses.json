@@ -1,0 +1,61 @@
+[
+  {
+    "_id": "60d5ecb7b484193dd2b8b77b",
+    "name": "Course 1",
+    "instructor": "662a157f0c4799100bbfd798",
+    "totalStudent": 100,
+    "introduction": "This is an introduction to Course 1",
+    "price": 50000,
+    "sectionList": ["60d8f8b8c2a7b113f475f080", "60d8f8b8c2a7b113f475f081"],
+    "promotionalVideo": {
+      "secureURL": "https://secure.example.com/video1.mp4",
+      "publicURL": "https://public.example.com/video1.mp4",
+      "type": "mp4",
+      "duration": 120
+    },
+    "category": "60d5ecb7b484193dd2b8b77f",
+    "totalLecture": 10,
+    "totalSection": 5,
+    "totalLength": 7,
+    "avgRating": 1,
+    "thumbNail": {
+      "secureURL": "https://res.cloudinary.com/dbgaeu07x/image/upload/v1712833227/hf64ddahbk1ia1ufimlr.jpg",
+      "publicURL": "https://res.cloudinary.com/dbgaeu07x/image/upload/v1712833227/hf64ddahbk1ia1ufimlr.jpg"
+    },
+    "status": true,
+    "createDate": "2024-04-11T00:00:00.000Z",
+    "totalRevenue": 5000,
+    "fiveStarCnt": 0,
+    "fourStarCnt": 0,
+    "threeStarCnt": 0,
+    "twoStarCnt": 0,
+    "oneStarCnt": 1
+  },
+  {
+    "_id": "60d5ecb7b484193dd2b8b781",
+    "name": "Course 2",
+    "instructor": "662a157f0c4799100bbfd798",
+    "totalStudent": 150,
+    "introduction": "This is an introduction to Course 2",
+    "price": 75000,
+    "sectionList": ["60d8f8b8c2a7b113f475f082"],
+    "promotionalVideo": null,
+    "category": "60d5ecb7b484193dd2b8b785",
+    "totalLecture": 15,
+    "totalSection": 7,
+    "totalLength": 10,
+    "avgRating": 4.5,
+    "thumbNail": {
+      "secureURL": "https://res.cloudinary.com/dbgaeu07x/image/upload/v1712833227/hf64ddahbk1ia1ufimlr.jpg",
+      "publicURL": "https://res.cloudinary.com/dbgaeu07x/image/upload/v1712833227/hf64ddahbk1ia1ufimlr.jpg"
+    },
+    "status": true,
+    "createDate": "2024-04-11T00:00:00.000Z",
+    "totalRevenue": 11250,
+    "fiveStarCnt": 1,
+    "fourStarCnt": 1,
+    "threeStarCnt": 0,
+    "twoStarCnt": 0,
+    "oneStarCnt": 0
+  }
+]

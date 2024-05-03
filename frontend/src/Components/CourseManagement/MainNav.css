@@ -1,0 +1,14 @@
+@media not all and (min-width: 868px) {
+    .container {
+        flex-direction: column !important;
+    }
+    .container .media {
+        order: 1;
+    }
+    .container .function {
+        order: 2;
+    }
+    .container .function .text {
+        margin-right: 0px !important;
+    }
+}

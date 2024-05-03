@@ -5,6 +5,7 @@ import eyeClose from "../../../Assets/eye_close.png";
 import axios from "axios";
 import { useAuth } from '../../../AuthContextProvider';
 import { useForm } from 'react-hook-form';
+import secureLocalStorage from 'react-secure-storage';
 
 const Register = () => {
   const {setUser, setIsLogged} = useAuth();
@@ -35,7 +36,7 @@ const Register = () => {
         const {userData} = await response.data;
         setUser(userData);
         setIsLogged(true);
-        localStorage.setItem('user', JSON.stringify(userData));
+        secureLocalStorage.setItem('user', JSON.stringify(userData));
         navigate("/home", {replace: true});
       }
     } catch (err)
@@ -45,10 +46,10 @@ const Register = () => {
     }
   }
   return (
-    <div className='flex flex-col w-full items-center pt-20 font-bold text-2xl'>
+    <div className='flex flex-col w-full items-center pt-20 font-bold text-2xl mb-48'>
       {isRegisterFailed === true ? (
         <div className='px-5 py-2 mb-5 bg-red-300'>
-          <p className='text-base'>Your email has been existed. Try with another!</p>
+          <p className='text-base'>There is something wrong. Try again!</p>
         </div>
       ) : (
         ""

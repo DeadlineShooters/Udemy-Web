@@ -1,0 +1,6 @@
+@media not all and (min-width: 1200px) {
+    .courseDetails {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+}

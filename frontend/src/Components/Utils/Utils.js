@@ -39,4 +39,13 @@ export const createImageFromInitials = (size, name, color = "#2D2F31") => {
 
   return canvas.toDataURL();
 };
-/* end */
+
+export const convertDecimal128ToNumber = (decimalValue) => {
+  // Round the number to have only one decimal place
+  if (decimalValue === 0) {
+    return "0.0";
+  }
+  const roundedNumber = Math.round(decimalValue * 10) / 10;
+
+  return roundedNumber;
+};

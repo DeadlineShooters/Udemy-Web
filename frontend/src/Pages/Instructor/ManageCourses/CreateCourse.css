@@ -1,0 +1,42 @@
+
+.container .function {
+    order: 1;
+}
+
+.container .media {
+    order: 2;
+}
+
+@media not all and (min-width: 868px) {
+    .container {
+        flex-direction: column !important;
+    }
+    .container .media {
+        order: 1;
+    }
+    .container .function {
+        order: 2;
+    }
+    .container .function .text {
+        margin-right: 0px !important;
+    }
+}
+
+@media not all and (min-width: 768px) {
+    .courseContent .sectionLength {
+        margin-right: 10px !important;
+    }
+}
+
+@media not all and (min-width: 670px) {
+    .mainContainer {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+    .container .function .price {
+        flex-direction: column !important;
+    }
+    .container .function .price .currency {
+        margin-right: 0px !important;
+    }
+}

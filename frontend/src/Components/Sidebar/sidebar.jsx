@@ -70,11 +70,11 @@ const Sidebar = () => {
         onMouseLeave={handleMouseLeave}
       >
         <div class="h-full overflow-hidden bg-[#2d2f31]">
-          <div class="hover:bg-[#3e4143] py-3">
-            <button class="flex items-center text-gray-900 rounded-lg text-white group" onClick={() => handleItemClick("courses")}>
-              <img src="https://svff.info/wp-content/uploads/2018/12/udemy-1-logo-png-transparent.png" class="w-16 p-3" alt="Flowbite Logo" />
-              <span className={`self-center text-2xl font-semibold whitespace-nowrap  ms-2 text-[#715c52] ${isExpanded || isOpen ? "fadeIn" : "fadeOut"}`}>
-                Udemy
+          <div class="items-center hover:bg-[#3e4143] py-3">
+            <button class="flex items-center px-6 text-gray-900 rounded-lg text-white group" onClick={() => handleItemClick("courses")}>
+              <img src="https://res.cloudinary.com/dqxtf297o/image/upload/v1714233336/udemy_short_p1.png" class="w-4" alt="Flowbite Logo" />
+              <span className={`self-center text-2xl font-semibold whitespace-nowrap text-[#715c52] ${isExpanded || isOpen ? "fadeIn" : "fadeOut"}`}>
+                <img src="https://res.cloudinary.com/dqxtf297o/image/upload/v1714233379/udemy_short_p2.png" class="w-20" alt="Flowbite Logo" />
               </span>
             </button>
           </div>

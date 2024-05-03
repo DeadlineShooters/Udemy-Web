@@ -16,7 +16,7 @@ const CircleProgressBar = ({ progress }) => {
     <div class="flex flex-row items-center">
       <svg className="w-10 h-10">
         <circle
-          className="stroke-current text-transparent"
+          className="stroke-current text-gray-700"
           strokeWidth="2"
           fill="transparent"
           r="18"
