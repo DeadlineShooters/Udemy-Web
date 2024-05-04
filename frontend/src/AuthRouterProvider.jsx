@@ -42,7 +42,7 @@ import Curriculum from "./Pages/Instructor/ManageCourses/Curriculum.jsx";
 import QuestionAndAnswer from "./Pages/Instructor/QA/QA.jsx";
 import CreateCourse from "./Pages/Instructor/ManageCourses/CreateCourse.jsx";
 import InstructorProfile from "./Pages/Instructor/InstructorProfile/InstructorProfile.jsx";
-import { useInView } from "react-intersection-observer";
+// import { useInView } from "react-intersection-observer";
 import ScrollContext from "./context/ScrollContext.js";
 
 // import fonts

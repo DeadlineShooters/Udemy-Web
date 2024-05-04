@@ -7,6 +7,7 @@ import 'react-quill/dist/quill.snow.css';
 import axios from "axios";
 import getTimeAgo from "../../../helper/TimeAgo";
 import { useAuth } from "../../../AuthContextProvider";
+import WarningModal from "./WarningModal";
 
 
 const QuestionAndAnswer = () => {
@@ -26,6 +27,10 @@ const QuestionAndAnswer = () => {
     const [isReplying, setIsReplying] = useState(false);
 
     const [newAnswer, setNewAnswer] = useState(null);
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+
+    const [selectedAnswerIdToDelete, setSelectedAnswerIdToDelete] = useState(null);
 
 
     const handleSelectingCourse = (event) => {
@@ -149,6 +154,26 @@ const QuestionAndAnswer = () => {
             console.error('Error editing the answer:', error);
         }
     }
+
+    const handleDeleteOption = (answerId) => {
+        // Show the delete modal and store the answer ID
+        setShowDeleteModal(true);
+        setSelectedAnswerIdToDelete(answerId);
+    };
+    
+    const handleCancelDelete = () => {
+        // Hide the delete modal and reset the selected answer ID
+        setShowDeleteModal(false);
+        setSelectedAnswerIdToDelete(null);
+    };
+    
+    const handleConfirmDelete = async () => {
+        // Hide the delete modal
+        setShowDeleteModal(false);
+    
+        // Call the delete request
+        await handleDeleteRequest(selectedAnswerIdToDelete);
+    };
 
     const handleDeleteRequest = async (answerId) => {
         try {
@@ -282,7 +307,7 @@ const QuestionAndAnswer = () => {
                                                             <button className="block text-left w-full py-2 px-4 text-sm text-gray-800 hover:bg-gray-200" onClick={() => handleEditOption(answer, index)}>
                                                                 Edit
                                                             </button>
-                                                            <button className="block text-left w-full py-2 px-4 text-sm text-gray-800 hover:bg-gray-200" onClick={() => handleDeleteRequest(answer._id)}>
+                                                            <button className="block text-left w-full py-2 px-4 text-sm text-gray-800 hover:bg-gray-200" onClick={() => handleDeleteOption(answer._id)}>
                                                                 Delete
                                                             </button>
                                                         </div>
@@ -328,6 +353,12 @@ const QuestionAndAnswer = () => {
                     )}
                 </div>
             </div>
+
+            <WarningModal
+                isOpen={showDeleteModal}
+                onCancel={handleCancelDelete}
+                onConfirm={handleConfirmDelete}
+            />
         </div>
     );
 };

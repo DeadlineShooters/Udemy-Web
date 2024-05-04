@@ -3,7 +3,6 @@ import cookieSession from "cookie-session";
 import mongoose from "mongoose";
 import "./passport.js";
 import authRoute from "./routes/user/authRoute.js";
-import instructorRoute from "./routes/instructorRoute.js";
 import passport from "passport";
 import cors from "cors";
 import chalk from "chalk";
