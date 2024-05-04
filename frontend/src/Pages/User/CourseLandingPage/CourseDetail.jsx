@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import { useParams, Link } from "react-router-dom";
@@ -48,6 +48,7 @@ const CourseDetail = () => {
   const allButtonRef = useRef(null);
 
   console.log("Rating filter: " + ratingFilter);
+  console.log("feedbacks: ", feedbacks);
   const handleFilterClick = (rating) => {
     setRatingFilter(rating);
   };
@@ -139,10 +140,26 @@ const CourseDetail = () => {
     return hours + "h" + minutes + "m" + seconds + "s";
   }
 
+  // useLayoutEffect(() => {
+  //   // Check if ratingFilter is null or not set
+  //   if (ratingFilter === null) {
+  //     const selectedButton = document.getElementById("all");
+  //     console.log("selectedButton", selectedButton);
+  //     selectedButton.classList.add("selected"); // Add selected class to 'All' button
+  //   } else {
+  //     // If ratingFilter is set, find the button corresponding to the filter and highlight it
+  //     const selectedButton = document.getElementById(`${ratingFilter}-star`);
+  //     console.log("rating filter : ", ratingFilter);
+  //     if (selectedButton) {
+  //       selectedButton.classList.add("selected"); // Add selected class to the button
+  //     }
+  //   }
+  // }, []);
   useEffect(
     () => async () => {
       if (allButtonRef.current) {
         allButtonRef.current.focus();
+        allButtonRef.current.click();
       }
 
       await axios
@@ -340,7 +357,7 @@ const CourseDetail = () => {
             instructor={course.instructor}
             profileImg={course.instructor.avatar ? course.instructor.avatar.public_id : createImageFromInitials(160, course.instructor.firstName + " " + course.instructor.lastName)}
           />
-          (
+
           <div id="reviews">
             <div className="border-b pb-2">
               <span className="price-number font-bold text-2xl text-slate-950">Student feedback</span>
@@ -358,26 +375,31 @@ const CourseDetail = () => {
               </div>
               <div class="rating-button-container flex flex-col h-full">
                 <div className="rating-row flex flex-row">
-                  <button ref={allButtonRef} onClick={() => handleFilterClick(null)} class="rating-button selected focus:text-purple-600 focus:border-purple-600 text-sm">
+                  <button
+                    id="all"
+                    ref={allButtonRef}
+                    onClick={() => handleFilterClick(null)}
+                    class={`rating-button active text-sm ${ratingFilter === null ? "text-purple-600 border-purple-600" : ""}`}
+                  >
                     All
                   </button>
-                  <button onClick={() => handleFilterClick(5)} class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">
+                  <button id="5-star" onClick={() => handleFilterClick(5)} class={`rating-button  text-sm ${ratingFilter === 5 ? "text-purple-600 border-purple-600" : ""}`}>
                     5 Stars - {course.fiveStarCnt}
                   </button>
-                  <button onClick={() => handleFilterClick(4)} class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">
+                  <button id="4-star" onClick={() => handleFilterClick(4)} class={`rating-button  text-sm ${ratingFilter === 4 ? "text-purple-600 border-purple-600" : ""}`}>
                     4 Stars - {course.fourStarCnt}
                   </button>
                 </div>
                 <div className="rating-row flex flex-row">
-                  <button onClick={() => handleFilterClick(3)} class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">
+                  <button id="3-star" onClick={() => handleFilterClick(3)} class={`rating-button  text-sm ${ratingFilter === 3 ? "text-purple-600 border-purple-600" : ""}`}>
                     3 Stars - {course.threeStarCnt}
                   </button>
 
-                  <button onClick={() => handleFilterClick(2)} class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">
-                    2 Stars -{course.twoStarCnt}
+                  <button id="2-star" onClick={() => handleFilterClick(2)} class={`rating-button  text-sm ${ratingFilter === 2 ? "text-purple-600 border-purple-600" : ""}`}>
+                    2 Stars - {course.twoStarCnt}
                   </button>
 
-                  <button onClick={() => handleFilterClick(1)} class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">
+                  <button id="1-star" onClick={() => handleFilterClick(1)} class={`rating-button  text-sm ${ratingFilter === 1 ? "text-purple-600 border-purple-600" : ""}`}>
                     1 Star - {course.oneStarCnt}
                   </button>
                 </div>
@@ -390,7 +412,6 @@ const CourseDetail = () => {
               <Pagination count={count} />
             </div>
           </div>
-          )
         </div>
       </div>
     </div>
