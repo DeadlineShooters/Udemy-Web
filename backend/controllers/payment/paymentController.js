@@ -9,7 +9,7 @@ const controller = {};
 
 controller.payment = async (request, response) => {
 	var userId = request.body.userId;
-	var amount = 1000;
+	var amount = request.body.amount;
 	var partnerCode = 'MOMO';
 	var accessKey = 'F8BBA842ECF85';
 	var secretkey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
@@ -102,7 +102,6 @@ controller.payment = async (request, response) => {
 	req.write(requestBody);
 	req.end();
 };
-
 controller.handlePayment = async (req, res) => {
 	if (req.query.resultCode == 0) {
 		let userId = req.query.extraData;
@@ -117,6 +116,13 @@ controller.handlePayment = async (req, res) => {
 					course.totalStudent += 1;
 					course.totalRevenue += course.price;
 					await course.save();
+
+					let instructor = await User.findById(course.instructor);
+					if (instructor) {
+						instructor.instructor.totalStudents += 1;
+						instructor.instructor.courseList.push(courseId);
+						await instructor.save();
+					}
 
 					let transaction = new Transaction({
 						student: user._id,

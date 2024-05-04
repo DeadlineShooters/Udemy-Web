@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect, useRef, useContext } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../../AuthContextProvider.jsx';
 import { useCart } from '../../../CartRouterProvider.js';
@@ -14,7 +14,6 @@ import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 import Section from '../../../Components/CourseLandingPage/Section';
 import ProfileCard from '../../../Components/CourseLandingPage/ProfileCard';
 import CourseReview from '../../../Components/CourseLandingPage/CourseReview';
-import HeartIcon from '../../../Components/CourseLandingPage/HeartIcon';
 import NotFound from '../../../Components/404/404';
 import Modal from '../../../Components/Feedback/Modal';
 import Spinner from '../../../Components/Spinner.jsx';
@@ -35,8 +34,8 @@ const CourseDetail = () => {
 	const { isFooterInView } = useContext(ScrollContext);
 	const { userData } = useAuth();
 	const [isFocused, setIsFocused] = useState(false);
-	const { cart, setCart } = useCart();
-	const { wishlist, setWishlist } = useWishlist();
+	const { setCart } = useCart();
+	const { setWishlist } = useWishlist();
 
 	const [isEnrolled, setIsEnrolled] = useState(false);
 	const [isCarted, setIsCarted] = useState(false);
@@ -105,6 +104,24 @@ const CourseDetail = () => {
 			removeFromCart();
 		} else {
 			addToCart();
+		}
+	};
+
+	const handlePayment = async () => {
+		try {
+			const exchangeRateResponse = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+			const exchangeRateData = await exchangeRateResponse.json();
+			const exchangeRate = exchangeRateData.rates.VND;
+
+			const response = await axios.post('http://localhost:5000/payment', {
+				userId: userData._id,
+				amount: parseInt(course.price * 0.8).toLocaleString() * exchangeRate,
+			});
+			if (response.data.success) {
+				window.location.href = response.data.payUrl;
+			}
+		} catch (error) {
+			console.error('Error:', error);
 		}
 	};
 
@@ -300,9 +317,9 @@ const CourseDetail = () => {
 										<FontAwesomeIcon icon={isWishlisted ? solidHeart : regularHeart} className='text-black ' size='lg' />
 									</button>
 								</div>
-								<Link to='/cart' className='flex items-center justify-center block w-full border border-black h-12 font-bold text-black'>
+								<button className='flex items-center justify-center block w-full border border-black h-12 font-bold text-black' onClick={handlePayment}>
 									Buy now
-								</Link>
+								</button>
 							</>
 						)}
 					</div>

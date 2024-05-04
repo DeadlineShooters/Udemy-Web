@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Sidebar from '../../../Components/Sidebar/sidebar';
 import Chart from 'react-apexcharts';
 import axios from 'axios';
 import { useAuth } from '../../../AuthContextProvider';
 
 const Statistics = () => {
-	const courseName = 'Docker & Kubernetes: The Practical Guide [2024 Edition]';
 	const dropdownRef = useRef(null);
 	const { userData } = useAuth();
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -134,6 +132,7 @@ const Statistics = () => {
 		const searchQuery = event.target.value;
 		if (searchQuery !== '') {
 			const results = courses.filter((course) => course.name.toLowerCase().includes(searchQuery.toLowerCase()));
+			console.log(results)
 			setSearchCourses(results);
 		} else {
 			setSearchCourses(courses);
@@ -246,15 +245,12 @@ const Statistics = () => {
 									id='dropdownSearch'
 									className='z-9999 absolute top-full mt-2 right-0 bg-white rounded-lg shadow w-full md:w-[32rem] dark:bg-gray-700'
 								>
-									{/* Dropdown content */}
 									<div className='p-3 '>
 										<label htmlFor='input-group-search' className='sr-only'>
 											Search
 										</label>
 										<div className='relative'>
-											{/* Input field */}
 											<div className='absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none'>
-												{/* Search icon */}
 												<svg
 													className='w-4 h-4 text-gray-500 dark:text-gray-400'
 													aria-hidden='true'
@@ -271,7 +267,6 @@ const Statistics = () => {
 													/>
 												</svg>
 											</div>
-											{/* Input field */}
 											<input
 												type='text'
 												id='input-group-search'
@@ -282,7 +277,7 @@ const Statistics = () => {
 										</div>
 									</div>
 									<ul class='max-h-96 px-3 pb-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200' aria-labelledby='dropdownSearchButton'>
-										{courses.map((course) => (
+										{searchCourses.map((course) => (
 											<button
 												class='w-full flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700'
 												onClick={() => handleDropdownItemClick(course)}
@@ -352,7 +347,8 @@ const Statistics = () => {
 									<span className='text-gray-500'>Instructor rating</span>
 									<span className='text-3xl sm:text-4xl  font-medium'>{avgRating ? avgRating.toLocaleString() : 0}</span>
 									<div className='text-gray-500'>
-										<span className='font-medium'>{totalFeedback ? totalFeedback.toLocaleString() : 0}</span> {totalFeedback && totalFeedback !== 1 ? 'ratings' : 'rating'} this month
+										<span className='font-medium'>{totalFeedback ? totalFeedback.toLocaleString() : 0}</span>{' '}
+										{totalFeedback && totalFeedback !== 1 ? 'ratings' : 'rating'} this month
 									</div>
 								</button>
 							</div>
