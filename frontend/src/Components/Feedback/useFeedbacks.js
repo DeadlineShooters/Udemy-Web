@@ -13,7 +13,7 @@ export function useFeedbacks(courseID, rating) {
 
   // QUERY
   const { isLoading, data, error } = useQuery({
-    queryKey: ["feedbacks", page],
+    queryKey: ["feedbacks", page, rating],
     queryFn: () =>
       axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${courseID}?page=${page}&rating=${rating}`).then((res) => {
         console.log("Data in use feedback", res.data);
@@ -27,13 +27,13 @@ export function useFeedbacks(courseID, rating) {
 
   if (page < pageCount)
     queryClient.prefetchQuery({
-      queryKey: ["feedbacks", page + 1],
+      queryKey: ["feedbacks", page + 1, rating],
       queryFn: () => axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${courseID}?page=${page + 1}&rating=${rating}`).then((res) => res.data),
     });
 
   if (page > 1)
     queryClient.prefetchQuery({
-      queryKey: ["feedbacks", page - 1],
+      queryKey: ["feedbacks", page - 1, rating],
       queryFn: () => axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${courseID}?page=${page - 1}&rating=${rating}`).then((res) => res.data),
     });
 
