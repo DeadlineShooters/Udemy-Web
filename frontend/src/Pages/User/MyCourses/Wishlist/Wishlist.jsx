@@ -1,12 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { RenderStars } from '../../../../Components/StarRatings';
 import { useWishlist } from '../../../../CartRouterProvider';
+import { Button } from "@material-tailwind/react";
 import './Wishlist.css';
 
 const Wishlist = () => {
 	const { wishlist, setWishlist } = useWishlist();
-
+	const navigate = useNavigate();
 	return (
 		<div>
 			<div className='upper-wishlist'>
@@ -24,66 +25,74 @@ const Wishlist = () => {
 				</div>
 			</div>
 			<div className='lower-wishlist cardContainer mx-auto flex flex-col'>
-				<form class='items-end lg:w-1/4 md:w-1/3 w-full ml-auto pb-8 px-2'>
-					<label for='default-search' class='mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white'>
-						Search
-					</label>
-					<div class='relative flex items-center'>
-						<input
-							type='search'
-							id='default-search'
-							class='block w-full p-2 ps-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-							placeholder='Search my course...'
-							required
-						/>
-						<button
-							type='submit'
-							class='text-white absolute end-1 bg-purple-900 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-2 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
-						>
-							<svg class='w-4 h-4 text-white dark:text-gray-400' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'>
-								<path
-									stroke='currentColor'
-									stroke-linecap='round'
-									stroke-linejoin='round'
-									stroke-width='2'
-									d='m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z'
-								/>
-							</svg>
-						</button>
+			{wishlist.length > 0 ? 
+				(<div> 
+					<form class='items-end lg:w-1/4 md:w-1/3 w-full ml-auto pb-8 px-2'>
+						<label for='default-search' class='mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white'>
+							Search
+						</label>
+						<div class='relative flex items-center'>
+							<input
+								type='search'
+								id='default-search'
+								class='block w-full p-2 ps-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+								placeholder='Search my course...'
+								required
+							/>
+							<button
+								type='submit'
+								class='text-white absolute end-1 bg-purple-900 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-2 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+							>
+								<svg class='w-4 h-4 text-white dark:text-gray-400' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'>
+									<path
+										stroke='currentColor'
+										stroke-linecap='round'
+										stroke-linejoin='round'
+										stroke-width='2'
+										d='m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z'
+									/>
+								</svg>
+							</button>
+						</div>
+					</form>
+					<div className='justify-center md:justify-start flex flex-wrap my-20'>
+						{wishlist.map((course) => (
+							<Link to={`/course/${course._id}`} className='bg-white lg:w-1/4 md:w-1/3 w-60 pb-8 px-2'>
+								<img class='object-cover object-center w-full h-img-carousel' src={course.thumbNail.secureURL} alt='' />
+								<div class='flex flex-col gap-1 pt-1.5'>
+									<h3 class='font-bold text-gray-900 line-clamp-2 leading-tight'>{course.name}</h3>
+									<p class='text-xs truncate text-gray-500'>
+										{course.instructor.firstName} {course.instructor.lastName}
+									</p>
+									<div class='flex gap-1 items-center'>
+										<span class='text-gray-900 font-bold text-sm'>{course.avgRating}</span>
+										<div class='flex gap-0.5'>{RenderStars({ rating: course.avgRating })}</div>
+										<span class='text-gray-500 font-medium text-xs inline-block align-middle'>({course.totalStudent.toLocaleString()})</span>
+									</div>
+									<div class='text-gray-500 text-xs align-middle'>
+										{course.totalLength} total hours • {course.totalLecture} lectures
+									</div>
+									<div class='flex items-center space-x-2'>
+										<span class='font-bold text-gray-900 '>
+											<span class='underline'>đ</span>
+											{(course.price * 0.8).toLocaleString()}
+										</span>
+										<span class='text-gray-500 line-through'>
+											<span class='underline'>đ</span>
+											{course.price.toLocaleString()}
+										</span>
+									</div>
+								</div>
+							</Link>
+						))}
 					</div>
-				</form>
-
-				<div className='justify-center md:justify-start flex flex-wrap'>
-					{wishlist.map((course) => (
-						<Link to={`/course/${course._id}`} className='bg-white lg:w-1/4 md:w-1/3 w-60 pb-8 px-2'>
-							<img class='object-cover object-center w-full h-img-carousel' src={course.thumbNail.secureURL} alt='' />
-							<div class='flex flex-col gap-1 pt-1.5'>
-								<h3 class='font-bold text-gray-900 line-clamp-2 leading-tight'>{course.name}</h3>
-								<p class='text-xs truncate text-gray-500'>
-									{course.instructor.firstName} {course.instructor.lastName}
-								</p>
-								<div class='flex gap-1 items-center'>
-									<span class='text-gray-900 font-bold text-sm'>{course.avgRating}</span>
-									<div class='flex gap-0.5'>{RenderStars({ rating: course.avgRating })}</div>
-									<span class='text-gray-500 font-medium text-xs inline-block align-middle'>({course.totalStudent.toLocaleString()})</span>
-								</div>
-								<div class='text-gray-500 text-xs align-middle'>
-									{course.totalLength} total hours • {course.totalLecture} lectures
-								</div>
-								<div class='flex items-center space-x-2'>
-									<span class='font-bold text-gray-900 '>
-										<span class='underline'>đ</span>
-										{(course.price * 0.8).toLocaleString()}
-									</span>
-									<span class='text-gray-500 line-through'>
-										<span class='underline'>đ</span>
-										{course.price.toLocaleString()}
-									</span>
-								</div>
-							</div>
-						</Link>
-					))}
 				</div>
+				) : 
+				(<div className='flex flex-col items-center my-20'>
+					<Button color="black" className="rounded-none hover:bg-violet-800" style={{ height: "48px" }} onClick={() => navigate("/", { replace: true })}>
+						<span className="font-bold text-base normal-case">Browse course now</span>
+					</Button>
+				</div>)}
 			</div>
 		</div>
 	);
