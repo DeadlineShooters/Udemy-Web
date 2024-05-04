@@ -33,7 +33,9 @@ const CourseDetail = () => {
   const { courseId } = useParams();
   const [course, setCourse] = useState(null);
   const [error, setError] = useState(null);
-  const { feedbacks, isLoading, count } = useFeedbacks(courseId);
+  const [ratingFilter, setRatingFilter] = useState(null);
+
+  const { feedbacks, isLoading, count } = useFeedbacks(courseId, ratingFilter);
   const { userData } = useAuth();
   const [isFocused, setIsFocused] = useState(false);
   const { cart, setCart } = useCart();
@@ -43,7 +45,12 @@ const CourseDetail = () => {
   const [isCarted, setIsCarted] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const userId = userData._id;
+  const allButtonRef = useRef(null);
 
+  console.log("Rating filter: " + ratingFilter);
+  const handleFilterClick = (rating) => {
+    setRatingFilter(rating);
+  };
   const toggleFocus = () => {
     setIsFocused(!isFocused);
   };
@@ -134,6 +141,10 @@ const CourseDetail = () => {
 
   useEffect(
     () => async () => {
+      if (allButtonRef.current) {
+        allButtonRef.current.focus();
+      }
+
       await axios
         .get(`${process.env.REACT_APP_BACKEND_HOST}/courses/${courseId}`)
         .then((response) => {
@@ -246,7 +257,7 @@ const CourseDetail = () => {
             <span className="text-lg">Created date {formattedDate}</span>
           </p>
         </div>
-        <div className="sidebar-container  sm:w-8/12 lg:w-3/12 lg:shadow-lg sm:shadow-md sm:-translate-y-0 lg:-translate-y-1/3 bg-white fixed  lg:right-6  ">
+        <div className="sidebar-container  sm:w-8/12 lg:w-3/12 lg:shadow-lg sm:shadow-md sm:-translate-y-0 lg:-translate-y-1/3 bg-white lg:fixed  lg:right-6  ">
           <Modal>
             <Modal.Open opens="view-course-preview">
               <button type="button" className="relative w-full h-full" onClick={handlePlayVideo}>
@@ -317,7 +328,6 @@ const CourseDetail = () => {
             <span className="text-lg price-number text-slate-950 ">{formatSecondsToHoursMinutesSeconds(course.totalLength)}</span>
             <span className="text-lg price-number text-slate-950 "> total length</span>
           </div>
-
           <div className="curriculum-container course-layout mb-5 ">
             {course.sectionList.map((section) => (
               <Section key={section._id} title={section.name} lectures={section.lectures} isLastSection={section.index === course.sectionList.length - 1} />
@@ -330,46 +340,57 @@ const CourseDetail = () => {
             instructor={course.instructor}
             profileImg={course.instructor.avatar ? course.instructor.avatar.public_id : createImageFromInitials(160, course.instructor.firstName + " " + course.instructor.lastName)}
           />
+          (
+          <div id="reviews">
+            <div className="border-b pb-2">
+              <span className="price-number font-bold text-2xl text-slate-950">Student feedback</span>
+            </div>
+            <div className="star-filter flex h-1/5 items-center my-3 ">
+              <div className="average-container h-full flex flex-col justify-between mr-5 ">
+                <span className="text-gray-500 font-bold text-lg w-1/4" id="average-text">
+                  Average
+                </span>
 
-          {count > 0 && (
-            <div id="reviews">
-              <div className="border-b pb-2">
-                <span className="price-number font-bold text-2xl text-slate-950">Student feedback</span>
-              </div>
-              <div className="star-filter flex h-1/5 items-center my-3 ">
-                <div className="average-container h-full flex flex-col justify-between mr-5 ">
-                  <span className="text-gray-500 font-bold text-lg w-1/4" id="average-text">
-                    Average
-                  </span>
-
-                  <div className="average flex flex-row justify-between items-center">
-                    <span className="price-number font-bold text-3xl text-slate-950">{convertDecimal128ToNumber(course.avgRating)}</span>
-                    <FontAwesomeIcon icon={faStar} className="text-amber-500" size="2xl" />
-                  </div>
-                </div>
-                <div class="rating-button-container flex flex-col h-full">
-                  <div className="rating-row flex flex-row">
-                    <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">All</button>
-                    <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">5 Stars - {course.fiveStarCnt}</button>
-                    <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">4 Stars - {course.fourStarCnt}</button>
-                  </div>
-                  <div className="rating-row flex flex-row">
-                    <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">3 Stars - {course.threeStarCnt}</button>
-
-                    <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">2 Stars -{course.twoStarCnt}</button>
-
-                    <button class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">1 Star - {course.oneStarCnt}</button>
-                  </div>
+                <div className="average flex flex-row justify-between items-center">
+                  <span className="price-number font-bold text-3xl text-slate-950">{convertDecimal128ToNumber(course.avgRating)}</span>
+                  <FontAwesomeIcon icon={faStar} className="text-amber-500" size="2xl" />
                 </div>
               </div>
-              <div id="reviews-container">
-                {feedbacks.map((review, index) => (
-                  <CourseReview key={index} review={review} />
-                ))}
-                <Pagination count={count} />
+              <div class="rating-button-container flex flex-col h-full">
+                <div className="rating-row flex flex-row">
+                  <button ref={allButtonRef} onClick={() => handleFilterClick(null)} class="rating-button selected focus:text-purple-600 focus:border-purple-600 text-sm">
+                    All
+                  </button>
+                  <button onClick={() => handleFilterClick(5)} class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">
+                    5 Stars - {course.fiveStarCnt}
+                  </button>
+                  <button onClick={() => handleFilterClick(4)} class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">
+                    4 Stars - {course.fourStarCnt}
+                  </button>
+                </div>
+                <div className="rating-row flex flex-row">
+                  <button onClick={() => handleFilterClick(3)} class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">
+                    3 Stars - {course.threeStarCnt}
+                  </button>
+
+                  <button onClick={() => handleFilterClick(2)} class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">
+                    2 Stars -{course.twoStarCnt}
+                  </button>
+
+                  <button onClick={() => handleFilterClick(1)} class="rating-button focus:text-purple-600 focus:border-purple-600 text-sm">
+                    1 Star - {course.oneStarCnt}
+                  </button>
+                </div>
               </div>
             </div>
-          )}
+            <div id="reviews-container">
+              {feedbacks.map((review, index) => (
+                <CourseReview key={index} review={review} />
+              ))}
+              <Pagination count={count} />
+            </div>
+          </div>
+          )
         </div>
       </div>
     </div>
