@@ -10,7 +10,7 @@ const questionSchema = mongoose.Schema({
     title: {type: String, require: true},
     description: { type: String },
     answers: [{ type: Schema.Types.ObjectId, ref: "Answer" }],
-    createdAt: {type: Date, default: Date.now()},
+    createdAt: {type: Date, default: Date.now},
 })
 
 // Middleware to remove associated answers when a question is deleted

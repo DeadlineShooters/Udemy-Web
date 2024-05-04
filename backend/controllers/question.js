@@ -30,11 +30,16 @@ export const getQuestions = async (req, res) => {
 
 export const addQuestion = async (req, res) => {
   const { courseId } = req.params;
+  const userId = req.get("user_id")
+  if (!userId) {
+    throw new ExpressError(404, "missing user_id in header")
+  }
 
   await checkCourseExist(courseId);
 
   const question = new Question(req.body);
   question.course = courseId;
+  question.user = userId;
   const savedQuestion = await question.save();
 
   res.status(200).json({

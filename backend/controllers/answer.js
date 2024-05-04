@@ -30,6 +30,11 @@ export const addAnswer = async (req, res) => {
   answer.user = userId;
   const savedAnswer = await answer.save();
 
+  const question = await Question.findById(questionId);
+  // Update the question's answers array
+  question.answers.push(savedAnswer._id);
+  await question.save();
+
   res.status(200).json({
     message: "Answer created successully",
     answer: savedAnswer
@@ -69,6 +74,15 @@ export const deleteAnswer = async (req, res) => {
 
   // Delete the answer
   await Answer.findByIdAndDelete(answerId);
+
+  const question = await Question.findById(questionId);
+  // Remove the answer ID from the question's answers array
+  const answerIndex = question.answers.indexOf(answerId);
+  if (answerIndex !== -1) {
+    question.answers.splice(answerIndex, 1);
+  }
+  // Save the updated question
+  await question.save();
 
   res.status(200).json({ message: "Answer deleted successfully" });
 };
