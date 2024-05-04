@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "@material-tailwind/react";
+import { Image } from "cloudinary-react";
 
 
 export default function ResourceCard({ props }) {

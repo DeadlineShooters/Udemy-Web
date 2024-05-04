@@ -4,7 +4,7 @@ import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
 import ViewReview from "./ViewReview";
 import React from "react";
-import StarRatings from "../StarRatings";
+import {StarRatings} from "../StarRatings";
 import ReviewForm from "./ReviewForm";
 import { useState, useEffect } from "react";
 import axios from "axios";

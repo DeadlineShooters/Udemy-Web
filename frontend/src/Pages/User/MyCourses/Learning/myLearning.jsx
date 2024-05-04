@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, Transition } from "@headlessui/react";
-import { Fragment } from "react";
-import "./myLearning.css";
-import course_placeholder1 from "../../../../Assets/Course.jpg";
-import course_placeholder2 from "../../../../Assets/Course2.png";
-import course_placeholder3 from "../../../../Assets/Course3.jpg";
-import course_overlay from "../../../../Assets/CourseOverlay.png";
-import more_actions from "../../../../Assets/more_actions.png";
-import share from "../../../../Assets/share.png";
-import archive from "../../../../Assets/archive.png";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
-import EditRatingButton from "../../../../Components/Feedback/EditRatingButton";
-import { IconDotsVertical } from "@tabler/icons-react";
-import { useAuth } from "../../../../AuthContextProvider";
-import { useCourse } from "../../../../CourseContextProvider";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Menu, Transition } from '@headlessui/react';
+import { Fragment } from 'react';
+import './myLearning.css';
+import course_placeholder1 from '../../../../Assets/Course.jpg';
+import course_placeholder2 from '../../../../Assets/Course2.png';
+import course_placeholder3 from '../../../../Assets/Course3.jpg';
+import course_overlay from '../../../../Assets/CourseOverlay.png';
+import more_actions from '../../../../Assets/more_actions.png';
+import share from '../../../../Assets/share.png';
+import archive from '../../../../Assets/archive.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
+import EditRatingButton from '../../../../Components/Feedback/EditRatingButton';
+import { IconDotsVertical } from '@tabler/icons-react';
+import { useAuth } from '../../../../AuthContextProvider';
+import { useCourse } from '../../../../CourseContextProvider';
+import axios from 'axios';
 
 const MyLearning = () => {
   const { userData } = useAuth();
@@ -152,8 +152,9 @@ const MyLearning = () => {
           const lectureKey = selectLecture ? Object.keys(selectLecture)[0] : null;
           if (!lectureKey) {
             const newRecentVideoId = response.data.course.sectionList[0].lectureList[0].index;
-            localStorage.setItem("selectLecture", newRecentVideoId);
-            navigate(`/course/${response.data.course.slugName}/learn/${newRecentVideoId}#overview`, { state: { course: response.data.course } });
+            const saveKey = { [newRecentVideoId]: "true" };
+            localStorage.setItem('selectLecture', JSON.stringify(saveKey));
+            navigate(`/course/${response.data.course.slugName}/learn/${newRecentVideoId}#overview`, {state: {course: response.data.course}});
           } else {
             navigate(`/course/${response.data.course.slugName}/learn/${lectureKey}#overview`, { state: { course: response.data.course } });
           }
@@ -285,8 +286,8 @@ const MyLearning = () => {
                   {oneCourse.progress > 0 ? (
                     <div>
                       <div className="w-full bg-gray-200 rounded-full h-1 mt-3 dark:bg-gray-700">
-                        <div className="bg-blue-600 h-[2px] rounded-full" style={{ width: oneCourse.progress * 100 + "%" }}></div>
-                        <p className="text-slate-500  text-sm">{oneCourse.progress.toPrecision(4) * 100}% Complete</p>
+                        <div className="bg-blue-600 h-[2px] rounded-full" style={{ width: oneCourse.progress + "%" }}></div>
+                        <p className="text-slate-500  text-sm">{oneCourse.progress.toPrecision(4)}% Complete</p>
                       </div>
 
                       <div className="flex flex-row items-start justify-end mt-1">

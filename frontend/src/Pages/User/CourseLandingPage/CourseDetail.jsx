@@ -56,89 +56,89 @@ const CourseDetail = () => {
     setIsFocused(!isFocused);
   };
 
-  const addToCart = async () => {
-    try {
-      const response = await axios.post("http://localhost:5000/cart/add-to-cart", {
-        userId,
-        courseId,
-      });
-      if (response.data.success) {
-        setIsCarted(true);
-        setCart((oldCart) => [...oldCart, response.data.course]);
-        toast.success("Course added to cart successfully");
-      } else {
-        toast.error("Failed to add course to cart");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error("Error adding course to cart");
-    }
-  };
+	const addToCart = async () => {
+		try {
+			const response = await axios.post('http://localhost:5000/cart/add-to-cart', {
+				userId,
+				courseId,
+			});
+			if (response.data.success) {
+				setIsCarted(true);
+				setCart((oldCart) => [...oldCart, response.data.course]);
+				toast.success('Course added to cart successfully');
+			} else {
+				toast.error('Failed to add course to cart');
+			}
+		} catch (error) {
+			console.error('Error:', error);
+			toast.error('Error adding course to cart');
+		}
+	};
 
-  const removeFromCart = async () => {
-    const userId = JSON.parse(localStorage.getItem("user"))._id;
-    try {
-      const response = await axios.post("http://localhost:5000/cart/remove-from-cart", {
-        userId,
-        courseId,
-      });
-      if (response.data.success) {
-        setIsCarted(false);
-        setCart((oldCart) => oldCart.filter((course) => course._id !== courseId));
-        toast.success("Course removed from cart successfully");
-      } else {
-        toast.error("Failed to remove course from cart");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error("Error adding course from cart");
-    }
-  };
+	const removeFromCart = async () => {
+		const userId = JSON.parse(localStorage.getItem('user'))._id;
+		try {
+			const response = await axios.post('http://localhost:5000/cart/remove-from-cart', {
+				userId,
+				courseId,
+			});
+			if (response.data.success) {
+				setIsCarted(false);
+				setCart((oldCart) => oldCart.filter((course) => course._id !== courseId));
+				toast.success('Course removed from cart successfully');
+			} else {
+				toast.error('Failed to remove course from cart');
+			}
+		} catch (error) {
+			console.error('Error:', error);
+			toast.error('Error adding course from cart');
+		}
+	};
 
-  const handleWishlist = async () => {
-    const userId = JSON.parse(localStorage.getItem("user"))._id;
-    const url = isWishlisted ? "http://localhost:5000/wishlist/remove-from-wishlist" : "http://localhost:5000/wishlist/add-to-wishlist";
-    try {
-      const response = await axios.post(url, { userId, courseId });
-      if (response.data.success) {
-        setIsWishlisted(!isWishlisted);
-        setWishlist((oldWishlist) => (isWishlisted ? oldWishlist.filter((course) => course._id !== courseId) : [...oldWishlist, response.data.course]));
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+	const handleWishlist = async () => {
+		const userId = JSON.parse(localStorage.getItem('user'))._id;
+		const url = isWishlisted ? 'http://localhost:5000/wishlist/remove-from-wishlist' : 'http://localhost:5000/wishlist/add-to-wishlist';
+		try {
+			const response = await axios.post(url, { userId, courseId });
+			if (response.data.success) {
+				setIsWishlisted(!isWishlisted);
+				setWishlist((oldWishlist) => (isWishlisted ? oldWishlist.filter((course) => course._id !== courseId) : [...oldWishlist, response.data.course]));
+			}
+		} catch (error) {
+			console.error('Error:', error);
+		}
+	};
 
-  const handleCart = () => {
-    if (isCarted) {
-      removeFromCart();
-    } else {
-      addToCart();
-    }
-  };
+	const handleCart = () => {
+		if (isCarted) {
+			removeFromCart();
+		} else {
+			addToCart();
+		}
+	};
 
-  if (!isLoading) {
-    console.log("feedbacks: ", feedbacks);
-  }
+	if (!isLoading) {
+		console.log('feedbacks: ', feedbacks);
+	}
 
-  console.log("isloading: " + isLoading);
+	console.log('isloading: ' + isLoading);
 
-  console.log(process.env.REACT_APP_BACKEND_HOST);
+	console.log(process.env.REACT_APP_BACKEND_HOST);
 
-  const handlePlayVideo = () => {
-    document.body.style.overflow = "hidden";
-    if (videoRef.current) {
-      videoRef.current.src = course.promotionalVideo.secureURL;
-      videoRef.current.play();
-    }
-  };
+	const handlePlayVideo = () => {
+		document.body.style.overflow = 'hidden';
+		if (videoRef.current) {
+			videoRef.current.src = course.promotionalVideo.secureURL;
+			videoRef.current.play();
+		}
+	};
 
-  function formatSecondsToHoursMinutesSeconds(seconds) {
-    var hours = Math.floor(seconds / 3600);
-    var minutes = Math.floor((seconds % 3600) / 60);
-    seconds = seconds % 60;
-    return hours + "h" + minutes + "m" + seconds + "s";
-  }
+	function formatSecondsToHoursMinutesSeconds(seconds) {
+		var hours = Math.floor(seconds / 3600);
+		var minutes = Math.floor((seconds % 3600) / 60);
+		seconds = seconds % 60;
+		return hours + 'h' + minutes + 'm' + seconds + 's';
+	}
 
   // useLayoutEffect(() => {
   //   // Check if ratingFilter is null or not set
@@ -178,86 +178,86 @@ const CourseDetail = () => {
     [courseId]
   );
 
-  useEffect(
-    () => async () => {
-      try {
-        const response = await axios.post("http://localhost:5000/courses/is-enrolled", {
-          userId: userData._id,
-          courseId,
-        });
-        if (response.data.success) {
-          setIsEnrolled(true);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    },
-    []
-  );
+	useEffect(
+		() => async () => {
+			try {
+				const response = await axios.post('http://localhost:5000/courses/is-enrolled', {
+					userId: userData._id,
+					courseId,
+				});
+				if (response.data.success) {
+					setIsEnrolled(true);
+				}
+			} catch (error) {
+				console.error('Error:', error);
+			}
+		},
+		[]
+	);
 
-  useEffect(
-    () => async () => {
-      try {
-        const response = await axios.post("http://localhost:5000/courses/is-carted", {
-          userId: userData._id,
-          courseId,
-        });
-        if (response.data.success) {
-          setIsCarted(true);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    },
-    [isWishlisted]
-  );
+	useEffect(
+		() => async () => {
+			try {
+				const response = await axios.post('http://localhost:5000/courses/is-carted', {
+					userId: userData._id,
+					courseId,
+				});
+				if (response.data.success) {
+					setIsCarted(true);
+				}
+			} catch (error) {
+				console.error('Error:', error);
+			}
+		},
+		[isWishlisted]
+	);
 
-  useEffect(
-    () => async () => {
-      try {
-        const response = await axios.post("http://localhost:5000/courses/is-wishlisted", {
-          userId: userData._id,
-          courseId,
-        });
-        if (response.data.success) {
-          setIsWishlisted(true);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    },
-    [isCarted]
-  );
+	useEffect(
+		() => async () => {
+			try {
+				const response = await axios.post('http://localhost:5000/courses/is-wishlisted', {
+					userId: userData._id,
+					courseId,
+				});
+				if (response.data.success) {
+					setIsWishlisted(true);
+				}
+			} catch (error) {
+				console.error('Error:', error);
+			}
+		},
+		[isCarted]
+	);
 
-  if (!course) {
-    return <Spinner />;
-  }
+	if (!course) {
+		return <Spinner />;
+	}
 
-  if (isLoading) return <Spinner />;
+	if (isLoading) return <Spinner />;
 
-  if (error) {
-    return <NotFound />;
-  }
+	if (error) {
+		return <NotFound />;
+	}
 
-  // Convert the createDate string to a Date object
-  const date = new Date(course.createDate);
+	// Convert the createDate string to a Date object
+	const date = new Date(course.createDate);
 
-  const sanitizedHTML = DOMPurify.sanitize(course.description);
+	const sanitizedHTML = DOMPurify.sanitize(course.description);
 
-  // Format the date
-  const formattedDate = `${date.toLocaleString("default", { month: "short" })} ${date.getDate()}, ${date.getFullYear()}`;
+	// Format the date
+	const formattedDate = `${date.toLocaleString('default', { month: 'short' })} ${date.getDate()}, ${date.getFullYear()}`;
 
-  return (
-    <div className={`w-full h-full course-title-container`}>
-      <div
-        className="course-detail-container w-full lg:bg-course-title-bg-grey
-        lg:py-5 lg:px-20 sm:mt-5 sm:mb-5 sm:px-5 sm:text-black lg:text-white sm:flex sm:flex-col sm:items-center lg:block "
-      >
-        <div id="short-description" className=" relative lg:px-10 w-full px-6 sm:mb-5 lg:w-1/2">
-          <h1 className="course-title font-bold text-3xl">{course.name}</h1>
-          <br />
-          <p className="course-description text-xl">{course.introduction}</p>
-          <br />
+	return (
+		<div className={`w-full h-full course-title-container`}>
+			<div
+				className='course-detail-container w-full lg:bg-course-title-bg-grey
+        lg:py-5 lg:px-20 sm:mt-5 sm:mb-5 sm:px-5 sm:text-black lg:text-white sm:flex sm:flex-col sm:items-center lg:block '
+			>
+				<div id='short-description' className=' relative lg:px-10 w-full px-6 sm:mb-5 lg:w-1/2'>
+					<h1 className='course-title font-bold text-3xl'>{course.name}</h1>
+					<br />
+					<p className='course-description text-xl'>{course.introduction}</p>
+					<br />
 
           <div className="course-rating flex items-center">
             <div className="text-amber-500 font-bold mr-1 text-lg">
