@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import StarRatings from "../StarRatings";
+import {StarRatings} from "../StarRatings";
 
 const ViewReview = ({ review, onCloseModal, setReload }) => {
   const [isDeleting, setIsDeleting] = useState(false);

@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { toPng } from 'html-to-image';
-import { Image, Video } from "cloudinary-react";
+import { Image } from "cloudinary-react";
 import { getColor, createImageFromInitials } from "../../../Components/Utils/Utils.js";
 import { IconFileDownload } from '@tabler/icons-react';
 import { Button } from "@material-tailwind/react";
-import StarRatings from '../../../Components/StarRatings.jsx';
+import {StarRatings} from '../../../Components/StarRatings.jsx';
 import axios from 'axios';
 
 const Certificate = () => {
@@ -29,11 +29,12 @@ const Certificate = () => {
     getCertificate();
   }, []);
   const ref = useRef(null)
+  const pdfRef = useRef();
+
   const onButtonClick = useCallback(() => {
     if (ref.current === null) {
       return
     }
-
     toPng(ref.current, { cacheBust: true, })
       .then((dataUrl) => {
         const link = document.createElement('a')
@@ -49,45 +50,47 @@ const Certificate = () => {
   return (
     <div className='flex flex-row ml-20 mt-5 mb-10 overflow-hidden'>
       <div>
-        <div ref={ref}>
-          <div className='flex flex-row w-[960px] h-[600px] border border-gray-400 bg-white items-center justify-center p-5'>
-            <div className='flex flex-col w-full h-full bg-gray-100 p-5'>
-              <div className='flex flex-row justify-between items-center'>
-                <div>
-                  <Image cloudName={process.env.REACT_APP_CLOUDINARY_CLOUD_NAME} publicId="Udemy-important/udemy-logo" width="120" crop="fit"/>
+        <div ref={pdfRef}>
+          <div ref={ref}>
+            <div className='flex flex-row w-[960px] h-[600px] border border-gray-400 bg-white items-center justify-center p-5'>
+              <div className='flex flex-col w-full h-full bg-gray-100 p-5'>
+                <div className='flex flex-row justify-between items-center'>
+                  <div>
+                    <Image cloudName={process.env.REACT_APP_CLOUDINARY_CLOUD_NAME} publicId="Udemy-important/udemy-logo" width="120" crop="fit"/>
+                  </div>
+                  <div className='flex flex-col justify-end items-end text-sm'>
+                    <p>Certificate No. {data?.signature}</p>
+                    <p>udemy.co/{data?.signature}</p>
+                  </div>
                 </div>
-                <div className='flex flex-col justify-end items-end text-sm'>
-                  <p>Certificate No. {data?.signature}</p>
-                  <p>udemy.co/{data?.signature}</p>
+                <div className='mt-24'>
+                  <div className='font-sans font-bold text-md text-gray-600'>
+                    <p>CERTIFICATE OF COMPLETION</p>
+                  </div>
+                  <div className='font-bold font-serif text-4xl max-w-3xl line-clamp-2 my-3'>
+                    <p>{data?.course?.name}</p>
+                  </div>
+                  <div className='flex flex-row font-sans font-bold text-sm text-gray-600'>
+                    <p>Instructors</p>
+                    <p className='mx-2 font-bold text-black'>{data?.course?.instructor.firstName + " " + data?.course?.instructor.lastName}</p>
+                  </div>
                 </div>
-              </div>
-              <div className='mt-24'>
-                <div className='font-sans font-bold text-md text-gray-600'>
-                  <p>CERTIFICATE OF COMPLETION</p>
-                </div>
-                <div className='font-bold font-serif text-4xl max-w-3xl line-clamp-2 my-3'>
-                  <p>{data?.course?.name}</p>
-                </div>
-                <div className='flex flex-row font-sans font-bold text-sm text-gray-600'>
-                  <p>Instructors</p>
-                  <p className='mx-2 font-bold text-black'>{data?.course?.instructor.firstName + " " + data?.course?.instructor.lastName}</p>
-                </div>
-              </div>
-              <div className='mt-24'>
-                <div className='font-sans font-bold text-2xl max-w-3xl line-clamp-2 my-3'>
-                  <p>{data?.user?.firstName + " " + data?.user?.lastName}</p>
-                </div>
-                <div className='flex flex-row font-sans font-bold text-sm text-gray-600'>
-                  <p>Date</p>
-                  <p className='mx-2 font-bold text-black'>{new Date(data?.completionDate).toLocaleDateString("en-US", {
-                    month: 'short',
-                    day: '2-digit',
-                    year: 'numeric'})}
-                  </p>
-                </div>
-                <div className='flex flex-row font-sans font-bold text-sm text-gray-600'>
-                  <p>Length</p>
-                  <p className='mx-2 font-bold text-black'>{data?.course.totalLength} total hours</p>
+                <div className='mt-24'>
+                  <div className='font-sans font-bold text-2xl max-w-3xl line-clamp-2 my-3'>
+                    <p>{data?.user?.firstName + " " + data?.user?.lastName}</p>
+                  </div>
+                  <div className='flex flex-row font-sans font-bold text-sm text-gray-600'>
+                    <p>Date</p>
+                    <p className='mx-2 font-bold text-black'>{new Date(data?.completionDate).toLocaleDateString("en-US", {
+                      month: 'short',
+                      day: '2-digit',
+                      year: 'numeric'})}
+                    </p>
+                  </div>
+                  <div className='flex flex-row font-sans font-bold text-sm text-gray-600'>
+                    <p>Length</p>
+                    <p className='mx-2 font-bold text-black'>{data?.course.totalLength} total hours</p>
+                  </div>
                 </div>
               </div>
             </div>

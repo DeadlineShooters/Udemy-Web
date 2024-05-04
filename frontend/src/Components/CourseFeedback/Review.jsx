@@ -1,6 +1,6 @@
 import React from "react";
 import { createImageFromInitials } from "../Utils/Utils";
-import StarRatings from "../StarRatings";
+import {StarRatings} from "../StarRatings";
 import { useState } from "react";
 import InstructorResponse from "./InstructorResponse";
 import ButtonDefault from "./ButtonDefault";

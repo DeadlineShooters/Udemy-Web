@@ -21,6 +21,7 @@ const CourseDashBoard = () => {
   const [selectedFilter, setSelectedFilter] = useState("");
   const [isHaveCourse, setHaveCourse] = useState(false);
   const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { setSelectedCourse } = useCourse();
 
@@ -96,6 +97,7 @@ const CourseDashBoard = () => {
           </div>
         </div>
         {/* <a href="/instructor/course/123/manage/curriculum">Edit course</a> */}
+        <svg class="animate-spin h-5 w-5 mr-3 rounded-full border border-black" viewBox="0 0 24 24"></svg>
         {isHaveCourse && (
           <div>
             <div className="mt-2 flex justify-between">
