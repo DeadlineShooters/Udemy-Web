@@ -15,7 +15,7 @@ export function useFeedbacks(courseID) {
   const { isLoading, data, error } = useQuery({
     queryKey: ["feedbacks", page],
     queryFn: () =>
-      axios.get(`${process.env.REACT_APP_BACKEND_HOST}feedback/${courseID}?page=${page}`).then((res) => {
+      axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${courseID}?page=${page}`).then((res) => {
         console.log("Data in use feedback", res.data);
         return res.data;
       }),

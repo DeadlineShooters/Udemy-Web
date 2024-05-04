@@ -134,7 +134,7 @@ const CourseDetail = () => {
 	useEffect(
 		() => async () => {
 			await axios
-				.get(`${process.env.REACT_APP_BACKEND_HOST}courses/${courseId}`)
+				.get(`${process.env.REACT_APP_BACKEND_HOST}/courses/${courseId}`)
 				.then((response) => {
 					setCourse(response.data);
 				})

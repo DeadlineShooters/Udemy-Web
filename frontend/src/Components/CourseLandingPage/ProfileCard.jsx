@@ -11,7 +11,7 @@ const ProfileCard = ({ instructor }) => {
           {instructor.firstName + " " + instructor.lastName}
         </a>
 
-        {/* <p className="text-sm text-gray-500 mb-2">{instructor.instructor.headline}</p> */}
+        <p className="text-sm text-gray-500 mb-2">{instructor.instructor.headline}</p>
       </div>
       <div className="flex items-center mb-2">
         <img
@@ -22,15 +22,15 @@ const ProfileCard = ({ instructor }) => {
         <div className="stats flex flex-col">
           <div className="reviews flex items-center">
             <FontAwesomeIcon icon={faStar} className="mr-2" />
-            {/* <span className="mr-1">{instructor.instructor.totalReviews}</span> <span>Reviews</span> */}
+            <span className="mr-1">{instructor.instructor.totalReviews}</span> <span>Reviews</span>
           </div>
           <div className="reviews flex items-center">
             <FontAwesomeIcon icon={faGraduationCap} className="mr-2" />
-            {/* <span className="mr-1">{instructor.instructor.totalStudents}</span> <span>Students</span> */}
+            <span className="mr-1">{instructor.instructor.totalStudents}</span> <span>Students</span>
           </div>
         </div>
       </div>
-      {/* <div className="bio">{instructor.instructor.bio}</div> */}
+      <div className="bio">{instructor.instructor.bio}</div>
     </div>
   );
 };

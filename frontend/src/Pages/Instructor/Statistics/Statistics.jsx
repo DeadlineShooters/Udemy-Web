@@ -16,6 +16,7 @@ const Statistics = () => {
 	const [avgRatings, setAvgRatings] = useState([]);
 	const [totalRevenue, setTotalRevenue] = useState([]);
 	const [totalEnrollments, setTotalEnrollments] = useState([]);
+	const [totalFeedback, setTotalFeedback] = useState([]);
 	const [avgRating, setAvgRating] = useState([]);
 	const [courses, setCourses] = useState([]);
 	const [searchCourses, setSearchCourses] = useState(null);
@@ -57,6 +58,7 @@ const Statistics = () => {
 					courseId: selectedCourseRef.current ? selectedCourseRef.current._id : '',
 				});
 				if (response.data.success) {
+					console.log(response.data);
 					setTotalRevenue(response.data.totalRevenue);
 					setTotalEnrollments(response.data.totalEnrollments);
 					setAvgRating(response.data.avgRating);
@@ -75,10 +77,10 @@ const Statistics = () => {
 					courseId: selectedCourseRef.current ? selectedCourseRef.current._id : '',
 				});
 				if (response.data.success) {
-					console.log(response.data);
-					setRevenues(fillData(response.data.revenues));
-					setEnrollments(fillData(response.data.enrollments));
-					setAvgRatings(fillData(response.data.ratings));
+					setRevenues(response.data.revenues);
+					setEnrollments(response.data.enrollments);
+					setAvgRatings(response.data.ratings);
+					setTotalFeedback(response.data.totalFeedback);
 				}
 			} catch (error) {
 				console.error('Error:', error);
@@ -149,15 +151,6 @@ const Statistics = () => {
 		}
 
 		return months;
-	};
-
-	const fillData = (data, count = 12) => {
-		const filledData = new Array(count).fill(0);
-		const start = count - data.length;
-		for (let i = 0; i < data.length; i++) {
-			filledData[start + i] = data[i];
-		}
-		return filledData;
 	};
 
 	const options = {
@@ -328,7 +321,7 @@ const Statistics = () => {
 									<span className='text-gray-500'>Total revenue</span>
 									<span className='text-3xl sm:text-4xl font-medium'>${totalRevenue ? totalRevenue.toLocaleString() : 0}</span>
 									<div className='text-gray-500'>
-										<span className='font-medium'>${revenues[11] ? revenues[11].toLocaleString() : 0}</span> this month
+										<span className='font-medium'>${revenues[11] ? (revenues[11] - revenues[10]).toLocaleString() : 0}</span> this month
 									</div>
 								</button>
 
@@ -343,7 +336,8 @@ const Statistics = () => {
 									<span className='text-gray-500'>Total enrollments</span>
 									<span className='text-3xl sm:text-4xl  font-medium'>{totalEnrollments ? totalEnrollments.toLocaleString() : 0}</span>
 									<div className='text-gray-500'>
-										<span className='font-medium'>{enrollments[11] ? enrollments[11].toLocaleString() : 0}</span> this month
+										<span className='font-medium'>{enrollments[11] ? (enrollments[11] - enrollments[10]).toLocaleString() : 0}</span>{' '}
+										{enrollments[11] && enrollments[11] - enrollments[10] !== 1 ? 'students' : 'student'} this month
 									</div>
 								</button>
 
@@ -358,7 +352,7 @@ const Statistics = () => {
 									<span className='text-gray-500'>Instructor rating</span>
 									<span className='text-3xl sm:text-4xl  font-medium'>{avgRating ? avgRating.toLocaleString() : 0}</span>
 									<div className='text-gray-500'>
-										<span className='font-medium'>{avgRatings[11] ? avgRatings[11].toLocaleString() : 0}</span> ratings this month
+										<span className='font-medium'>{totalFeedback ? totalFeedback.toLocaleString() : 0}</span> {totalFeedback && totalFeedback !== 1 ? 'ratings' : 'rating'} this month
 									</div>
 								</button>
 							</div>
