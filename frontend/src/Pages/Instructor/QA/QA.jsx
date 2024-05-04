@@ -68,11 +68,11 @@ const QuestionAndAnswer = () => {
     useEffect(() => {
         const fetchData = async () => {
             if (!selectedCourseId) return;
-    
+
             try {
                 // Define the sort order based on the state
                 const sortOrder = sortOldest ? "asc" : "desc";
-    
+
                 // Construct the URL with the sort order query parameter
                 const res = await axios.get(`http://localhost:5000/questions/${selectedCourseId}?sort=${sortOrder}`);
                 const resQuestions = res.data;
@@ -82,10 +82,10 @@ const QuestionAndAnswer = () => {
                 console.error('Error fetching questions:', error);
             }
         };
-    
+
         fetchData(); // Call the async function
     }, [selectedCourseId, sortOldest]);
-    
+
 
     const getAnswers = async () => {
         if (!selectedQuestion) return;
@@ -203,6 +203,13 @@ const QuestionAndAnswer = () => {
         }
     }
 
+    const [showMoreAnswers, setShowMoreAnswers] = useState(false);
+
+    // Logic to toggle show more answers
+    const toggleShowMoreAnswers = () => {
+        setShowMoreAnswers(!showMoreAnswers);
+    };
+
 
     return (
         <div className="flex w-full">
@@ -249,7 +256,7 @@ const QuestionAndAnswer = () => {
                 </div>
                 <div className="flex flex-grow flex-row mt-3 h-[1000px] border border-black">
                     <div className="border-r border-black w-[400px] h-full flex flex-col">
-                        <div className="flex justify-between border-black border-b border-r">
+                        {/* <div className="flex justify-between border-black border-b border-r">
                             <input
                                 type="search"
                                 id="default-search"
@@ -258,7 +265,7 @@ const QuestionAndAnswer = () => {
                                 required
                             />
                             <button className="p-2 border-black border-l-[1px]"><IconSearch stroke={2} color="#3d07bb" /></button>
-                        </div>
+                        </div> */}
                         <div className="overflow-y-auto flex-grow">
                             {selectedCourseId && questions.map((question) => (
                                 <div key={question._id} onClick={() => { }}>
@@ -301,7 +308,7 @@ const QuestionAndAnswer = () => {
 
                             <h2 className="font-bold text-lg p-3 shadow-md">{answers.length} replies</h2>
                             <div className="p-2 overflow-y-auto flex-grow flex flex-col">
-                                {answers && answers.map((answer, index) => (
+                                {answers && answers.slice(0, showMoreAnswers ? answers.length : 5).map((answer, index) => (
                                     <div className="flex flex-row ml-3">
                                         <div className="w-[50px]">
                                             <img id='preview' src={createImageFromInitials(160, answer.user.firstName + " " + answer.user.lastName, getColor())} alt='profile-pic' className='avatar w-10' />
@@ -347,6 +354,11 @@ const QuestionAndAnswer = () => {
                                         </div>
                                     </div>
                                 ))}
+                                {answers.length > 5 && (
+                                    <div className="mt-2 mb-4 text-purple-500 cursor-pointer text-center" onClick={toggleShowMoreAnswers}>
+                                        {showMoreAnswers ? 'Show less' : 'Show more'}
+                                    </div>
+                                )}
                                 <div className="ml-3">
                                     {isReplying === true ? (
                                         <div>

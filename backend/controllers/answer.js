@@ -5,7 +5,7 @@ import Answer from '../models/answer.js';
 
 export const getAnswers = async (req, res) => {
   const { questionId } = req.params;
-  const { page = 1, limit = 10 } = req.query; // Default page is 1, default limit is 10
+  const { page = 1, limit = 100 } = req.query; // Default page is 1, default limit is 10
 
   await checkQuestionExist(questionId);
 
