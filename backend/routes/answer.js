@@ -8,7 +8,7 @@ router.get('', catchAsync(answers.getAnswers));
 
 router.post('', catchAsync(answers.addAnswer));
 
-router.patch('/:answerId', catchAsync(answers.updateAnswer));
+router.put('/:answerId', catchAsync(answers.updateAnswer));
 
 router.delete('/:answerId', catchAsync(answers.deleteAnswer));
 

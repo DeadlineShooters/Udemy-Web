@@ -7,20 +7,23 @@ export const getAnswers = async (req, res) => {
   const { questionId } = req.params;
   const { page = 1, limit = 10 } = req.query; // Default page is 1, default limit is 10
 
-  checkQuestionExist(questionId);
+  await checkQuestionExist(questionId);
 
   const skip = (page - 1) * limit;
 
-  const answers = await Answer.find({ question: questionId }).skip(skip).limit(parseInt(limit));
+  const answers = await Answer.find({ question: questionId }).skip(skip).limit(parseInt(limit)).populate('user');
 
   res.status(200).json(answers);
 }
 export const addAnswer = async (req, res) => {
   const { questionId } = req.params;
   const userId = req.get("user_id")
-  console.log(questionId)
+  if (!userId) {
+    throw new ExpressError(404, "missing user_id in header")
+  }
+  console.log("@addAnswer: "+questionId)
 
-  checkQuestionExist(questionId);
+  await checkQuestionExist(questionId);
 
   const answer = new Answer(req.body);
   answer.question = questionId;
@@ -37,7 +40,7 @@ export const updateAnswer = async (req, res) => {
   const { questionId, answerId } = req.params;
   console.log("@UpdateAnswer: ", answerId)
 
-  checkQuestionExist(questionId);
+  await checkQuestionExist(questionId);
 
   const updatedAnswer = await Answer.findByIdAndUpdate(answerId, req.body, { new: true });
 
@@ -55,7 +58,7 @@ export const deleteAnswer = async (req, res) => {
   const { questionId, answerId } = req.params;
   console.log("@DeleteAnswer: ", answerId)
 
-  checkQuestionExist(questionId);
+  await checkQuestionExist(questionId);
 
   // Find the answer
   const answer = await Answer.findById(answerId);
@@ -72,6 +75,9 @@ export const deleteAnswer = async (req, res) => {
 
 
 const checkQuestionExist = async (questionId) => {
+  if (!questionId) {
+    throw new ExpressError(404, "questionId invalid")
+  }
   const question = await Question.findById(questionId);
   if (!question) {
     throw new ExpressError(404, "questionId not found")

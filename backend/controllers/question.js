@@ -7,22 +7,25 @@ export const getQuestions = async (req, res) => {
   const { courseId } = req.params;
   const { page = 1, limit = 10 } = req.query; // Default page is 1, default limit is 10
 
-  checkCourseExist(courseId);
+  await checkCourseExist(courseId);
 
   const skip = (page - 1) * limit;
 
-  try {
-    const questions = await Question.find({ course: courseId }).skip(skip).limit(parseInt(limit));
+  const questions = await Question.find({ course: courseId })
+  .skip(skip)
+  .limit(parseInt(limit))
+  .populate('user')
+  .populate({
+    path: 'answers',
+    populate: { path: 'user' } // Populate the 'user' field in the 'answers' array
+  });
 
-    res.status(200).json(questions);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+  res.status(200).json(questions);
 }
 export const addQuestion = async (req, res) => {
   const { courseId } = req.params;
 
-  checkCourseExist(courseId);
+  await checkCourseExist(courseId);
 
   const question = new Question(req.body);
   question.course = courseId;
@@ -37,7 +40,7 @@ export const addQuestion = async (req, res) => {
 export const updateQuestion = async (req, res) => {
   const { courseId, questionId } = req.params;
 
-  checkCourseExist(courseId);
+  await checkCourseExist(courseId);
 
   const updatedQuestion = await Question.findByIdAndUpdate(questionId, req.body, { new: true });
 
@@ -54,7 +57,7 @@ export const updateQuestion = async (req, res) => {
 export const deleteQuestion = async (req, res) => {
   const { courseId, questionId } = req.params;
 
-  checkCourseExist(courseId);
+  await checkCourseExist(courseId);
 
   // Find the question
   const question = await Question.findById(questionId);
@@ -71,6 +74,9 @@ export const deleteQuestion = async (req, res) => {
 
 
 const checkCourseExist = async (courseId) => {
+  if (!courseId) {
+    throw new ExpressError(404, "courseId is invalid");
+  }
   const course = await Course.findById(courseId);
   if (!course) {
     throw new ExpressError(404, "courseId not found")

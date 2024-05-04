@@ -6,6 +6,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "antd": "^5.15.2",
+    "javascript-time-ago": "^2.5.10",
     "react-player": "^2.15.1",
     "react-quill": "^2.0.0",
     "styled-components": "^6.1.8"

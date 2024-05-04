@@ -38,7 +38,8 @@ async function createMockData() {
     await Question.deleteMany({});
     await Answer.deleteMany({});
     
-    const courseId = "6635a078ddb253c2d1f995ad";
+    const courseId = "662b4c7d6cbd7b1650afdc13";
+    const userId = "65fbbd6e2eae6fe060e0a3ed";
 
     for (const course of courseData) {
 
@@ -47,12 +48,13 @@ async function createMockData() {
           course: courseId,
           title: question.title,
           description: question.description,
+          user: userId
         });
 
         const answers = [];
         for (let i = 0; i < question.answerCount; i++) {
           const newAnswer = await Answer.create({
-            user: new ObjectId(), // Replace with actual user ID
+            user: userId, // Replace with actual user ID
             content: `Answer ${i + 1} for ${question.title}`,
             question: newQuestion._id, // Assign the question ID to the answer
           });
