@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import "react-multi-carousel/lib/styles.css";
 import "./Home.css";
+import { convertDecimal128ToNumber } from "../../../Components/Utils/Utils";
 
 const responsive = {
   xl: {
@@ -207,7 +208,7 @@ const Home = () => {
                             {course.instructor.firstName} {course.instructor.lastName}
                           </p>
                           <div class="flex gap-1 items-center">
-                            <span class="text-gray-900 font-bold text-sm">{course.avgRating}</span>
+                            <span class="text-gray-900 font-bold text-sm">{Number(convertDecimal128ToNumber(course.avgRating)).toFixed(1)}</span>
                             <div class="flex gap-0.5">{RenderStars({ rating: course.avgRating })}</div>
                             <span class="text-gray-500 font-medium text-xs inline-block align-middle">({course.totalStudent.toLocaleString()})</span>
                           </div>

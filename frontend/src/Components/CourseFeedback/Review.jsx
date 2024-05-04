@@ -5,19 +5,14 @@ import { useState } from "react";
 import InstructorResponse from "./InstructorResponse";
 import ButtonDefault from "./ButtonDefault";
 import moment from "moment";
+import { useAuth } from "../../AuthContextProvider";
 
-const instructor = {
-  firstName: "Nozo",
-  lastName: "Pham",
-  heading: "Software engineer",
-  description: "",
-  email: "tomato09@gmail.com",
-};
 const Review = ({ reviewParam }) => {
   const [showResponse, setShowResponse] = useState(false);
   const [showResponseInput, setShowResponseInput] = useState(false);
   const [responseContent, setResponseContent] = useState("");
   const [review, setReview] = useState(reviewParam);
+  const { userData } = useAuth();
 
   console.log("Review current: ", reviewParam);
   const handleSeeResponseClick = () => {
@@ -40,7 +35,7 @@ const Review = ({ reviewParam }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          instructorId: instructor._id,
+          instructorId: userData._id,
           content: responseContent,
         }),
       });
@@ -81,7 +76,7 @@ const Review = ({ reviewParam }) => {
             {review.instructorResponse && showResponse && <InstructorResponse response={review.instructorResponse} parent={"instructor-feedback"} />}
             {showResponseInput && (
               <div className="mt-3 flex">
-                <img src={createImageFromInitials(160, instructor.firstName + " " + instructor.lastName)} alt="avatar" className="w-10 h-10 rounded-full mr-2" />
+                <img src={createImageFromInitials(160, userData.firstName + " " + userData.lastName)} alt="avatar" className="w-10 h-10 rounded-full mr-2" />
 
                 <div className="w-full">
                   <textarea placeholder="Add a reply..." className="w-full p-2 border rounded mb-2" value={responseContent} onChange={(e) => setResponseContent(e.target.value)}></textarea>
