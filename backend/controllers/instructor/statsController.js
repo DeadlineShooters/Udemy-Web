@@ -26,7 +26,7 @@ controller.stats = async (req, res) => {
 		let totalRatingsCount = 0;
 
 		courses.forEach((course) => {
-			totalRevenue += course.price * course.totalStudent;
+			totalRevenue += course.price * 0.8 * course.totalStudent;
 			totalEnrollments += course.totalStudent;
 			let courseRatingsCount = course.fiveStarCnt + course.fourStarCnt + course.threeStarCnt + course.twoStarCnt + course.oneStarCnt;
 			totalRating += course.avgRating * courseRatingsCount;
@@ -34,6 +34,9 @@ controller.stats = async (req, res) => {
 		});
 
 		let avgRating = totalRating / totalRatingsCount;
+
+		totalRevenue = parseFloat(totalRevenue.toFixed(2));
+		avgRating = parseFloat(avgRating.toFixed(1));
 
 		res.json({ success: true, totalRevenue, totalEnrollments, avgRating });
 	} catch (error) {
@@ -84,13 +87,13 @@ controller.statsByMonth = async (req, res) => {
 
 		for (let stat of stats) {
 			let monthDiff = currentDate.getMonth() + 1 - stat._id.month + 12 * (currentDate.getFullYear() - stat._id.year);
-			acml['revenue'] += stat.totalRevenue;
+			acml['revenue'] += stat.totalRevenue * 0.8;
 			acml['enrollment'] += stat.totalEnrollments;
 			if (monthDiff >= 0 && monthDiff < 12) {
 				revenues[monthDiff] = acml['revenue'];
 				enrollments[monthDiff] = acml['enrollment'];
 				if (firstMonth.assign === false) {
-					firstMonth['revenue'] = acml['revenue'] - stat.totalRevenue;
+					firstMonth['revenue'] = acml['revenue'] - stat.totalRevenue * 0.8;
 					firstMonth['enrollment'] = acml['enrollment'] - stat.totalEnrollments;
 					firstMonth['assign'] = true;
 				}
@@ -134,7 +137,7 @@ controller.statsByMonth = async (req, res) => {
 		let firstMonthRating = 0;
 		let firstMonthAssign = false;
 
-		console.log(feedbacks)
+		console.log(feedbacks);
 
 		for (let feedback of feedbacks) {
 			let monthDiff = currentDate.getMonth() + 1 - feedback._id.month + 12 * (currentDate.getFullYear() - feedback._id.year);
@@ -157,6 +160,9 @@ controller.statsByMonth = async (req, res) => {
 				ratings[i] = ratings[i - 1];
 			}
 		}
+
+		revenues = revenues.map(revenue => parseFloat(revenue.toFixed(2)));
+		ratings = ratings.map(rating => parseFloat(rating.toFixed(1)));
 
 		res.json({ success: true, revenues, enrollments, ratings, totalFeedback: feedbacks[feedbacks.length - 1].totalFeedbacks });
 	} catch (error) {

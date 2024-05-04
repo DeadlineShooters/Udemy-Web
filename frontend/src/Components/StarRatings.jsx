@@ -8,16 +8,16 @@ const StarRatings = ({ rating }) => {
 	const solidStars = Math.round(rating);
 	const regularStars = totalStars - solidStars;
 
-	return (
-		<div className='flex text-sm flex-row'>
-			{[...Array(solidStars)].map((_, i) => (
-				<FontAwesomeIcon key={i} icon={faStarSolid} className='text-yellow-500' />
-			))}
-			{[...Array(regularStars)].map((_, i) => (
-				<FontAwesomeIcon key={i + solidStars} icon={faStarRegular} className='text-yellow-500' />
-			))}
-		</div>
-	);
+  return (
+    <div className="flex text-sm flex-row">
+      {[...Array(solidStars)].map((_, i) => (
+        <FontAwesomeIcon key={i} icon={faStarSolid} className="text-yellow-500 text-lg" />
+      ))}
+      {[...Array(regularStars)].map((_, i) => (
+        <FontAwesomeIcon key={i + solidStars} icon={faStarRegular} className="text-yellow-500 text-lg" />
+      ))}
+    </div>
+  );
 };
 
 function FullStarIcon() {

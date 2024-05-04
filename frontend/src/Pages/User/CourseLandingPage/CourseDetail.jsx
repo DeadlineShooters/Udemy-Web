@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { useState, useEffect, useRef, useContext } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../../AuthContextProvider.jsx';
 import { useCart } from '../../../CartRouterProvider.js';
@@ -14,6 +14,7 @@ import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 import Section from '../../../Components/CourseLandingPage/Section';
 import ProfileCard from '../../../Components/CourseLandingPage/ProfileCard';
 import CourseReview from '../../../Components/CourseLandingPage/CourseReview';
+import HeartIcon from '../../../Components/CourseLandingPage/HeartIcon';
 import NotFound from '../../../Components/404/404';
 import Modal from '../../../Components/Feedback/Modal';
 import Spinner from '../../../Components/Spinner.jsx';
@@ -24,24 +25,33 @@ import { useFeedbacks } from '../../../Components/Feedback/useFeedbacks.js';
 import Pagination from '../../../Components/Pagination.jsx';
 import DOMPurify from 'dompurify';
 import ScrollContext from '../../../context/ScrollContext.js';
+import ProtectedRoutes from '../../../Components/Utils/AuthSecure.jsx';
+import { Navigate } from 'react-router-dom';
 
 const CourseDetail = () => {
 	const videoRef = useRef();
 	const { courseId } = useParams();
 	const [course, setCourse] = useState(null);
 	const [error, setError] = useState(null);
-	const { feedbacks, isLoading, count } = useFeedbacks(courseId);
-	const { isFooterInView } = useContext(ScrollContext);
+	const [ratingFilter, setRatingFilter] = useState(null);
+
+	const { feedbacks, isLoading, count } = useFeedbacks(courseId, ratingFilter);
 	const { userData } = useAuth();
 	const [isFocused, setIsFocused] = useState(false);
-	const { setCart } = useCart();
-	const { setWishlist } = useWishlist();
+	const { cart, setCart } = useCart();
+	const { wishlist, setWishlist } = useWishlist();
 
 	const [isEnrolled, setIsEnrolled] = useState(false);
 	const [isCarted, setIsCarted] = useState(false);
 	const [isWishlisted, setIsWishlisted] = useState(false);
 	const userId = userData._id;
+	const allButtonRef = useRef(null);
 
+	console.log('Rating filter: ' + ratingFilter);
+	console.log('feedbacks: ', feedbacks);
+	const handleFilterClick = (rating) => {
+		setRatingFilter(rating);
+	};
 	const toggleFocus = () => {
 		setIsFocused(!isFocused);
 	};
@@ -148,8 +158,28 @@ const CourseDetail = () => {
 		return hours + 'h' + minutes + 'm' + seconds + 's';
 	}
 
+	// useLayoutEffect(() => {
+	//   // Check if ratingFilter is null or not set
+	//   if (ratingFilter === null) {
+	//     const selectedButton = document.getElementById("all");
+	//     console.log("selectedButton", selectedButton);
+	//     selectedButton.classList.add("selected"); // Add selected class to 'All' button
+	//   } else {
+	//     // If ratingFilter is set, find the button corresponding to the filter and highlight it
+	//     const selectedButton = document.getElementById(`${ratingFilter}-star`);
+	//     console.log("rating filter : ", ratingFilter);
+	//     if (selectedButton) {
+	//       selectedButton.classList.add("selected"); // Add selected class to the button
+	//     }
+	//   }
+	// }, []);
 	useEffect(
 		() => async () => {
+			if (allButtonRef.current) {
+				allButtonRef.current.focus();
+				allButtonRef.current.click();
+			}
+
 			await axios
 				.get(`${process.env.REACT_APP_BACKEND_HOST}/courses/${courseId}`)
 				.then((response) => {
@@ -262,11 +292,7 @@ const CourseDetail = () => {
 						<span className='text-lg'>Created date {formattedDate}</span>
 					</p>
 				</div>
-				<div
-					className={`sidebar-container  sm:w-8/12 lg:w-3/12 lg:shadow-lg sm:shadow-md sm:-translate-y-0 lg:-translate-y-1/3 bg-white ${
-						isFooterInView ? '' : 'lg:fixed'
-					}  lg:right-6  `}
-				>
+				<div className='sidebar-container  sm:w-8/12 lg:w-3/12 lg:shadow-lg sm:shadow-md sm:-translate-y-0 lg:-translate-y-1/3 bg-white lg:fixed  lg:right-6  '>
 					<Modal>
 						<Modal.Open opens='view-course-preview'>
 							<button type='button' className='relative w-full h-full' onClick={handlePlayVideo}>
@@ -301,7 +327,7 @@ const CourseDetail = () => {
 								</>
 							)}
 						</div>
-						{isEnrolled ? (
+						{isEnrolled || course.instructor._id === userId ? (
 							<Link to={`/course/${courseId}`} className='flex items-center justify-center block w-full border bg-black h-12 font-bold text-white'>
 								Go to Course
 							</Link>
@@ -337,7 +363,6 @@ const CourseDetail = () => {
 						<span className='text-lg price-number text-slate-950 '>{formatSecondsToHoursMinutesSeconds(course.totalLength)}</span>
 						<span className='text-lg price-number text-slate-950 '> total length</span>
 					</div>
-
 					<div className='curriculum-container course-layout mb-5 '>
 						{course.sectionList.map((section) => (
 							<Section key={section._id} title={section.name} lectures={section.lectures} isLastSection={section.index === course.sectionList.length - 1} />
@@ -355,45 +380,80 @@ const CourseDetail = () => {
 						}
 					/>
 
-					{count > 0 && (
-						<div id='reviews'>
-							<div className='border-b pb-2'>
-								<span className='price-number font-bold text-2xl text-slate-950'>Student feedback</span>
-							</div>
-							<div className='star-filter flex h-1/5 items-center my-3 '>
-								<div className='average-container h-full flex flex-col justify-between mr-5 '>
-									<span className='text-gray-500 font-bold text-lg w-1/4' id='average-text'>
-										Average
-									</span>
+					<div id='reviews'>
+						<div className='border-b pb-2'>
+							<span className='price-number font-bold text-2xl text-slate-950'>Student feedback</span>
+						</div>
+						<div className='star-filter flex h-1/5 items-center my-3 '>
+							<div className='average-container h-full flex flex-col justify-between mr-5 '>
+								<span className='text-gray-500 font-bold text-lg w-1/4' id='average-text'>
+									Average
+								</span>
 
-									<div className='average flex flex-row justify-between items-center'>
-										<span className='price-number font-bold text-3xl text-slate-950'>{convertDecimal128ToNumber(course.avgRating)}</span>
-										<FontAwesomeIcon icon={faStar} className='text-amber-500' size='lg' />
-									</div>
-								</div>
-								<div class='rating-button-container flex flex-col h-full'>
-									<div className='rating-row flex flex-row'>
-										<button class='rating-button focus:text-purple-600 focus:border-purple-600 text-sm'>All</button>
-										<button class='rating-button focus:text-purple-600 focus:border-purple-600 text-sm'>5 Stars - {course.fiveStarCnt}</button>
-										<button class='rating-button focus:text-purple-600 focus:border-purple-600 text-sm'>4 Stars - {course.fourStarCnt}</button>
-									</div>
-									<div className='rating-row flex flex-row'>
-										<button class='rating-button focus:text-purple-600 focus:border-purple-600 text-sm'>3 Stars - {course.threeStarCnt}</button>
-
-										<button class='rating-button focus:text-purple-600 focus:border-purple-600 text-sm'>2 Stars -{course.twoStarCnt}</button>
-
-										<button class='rating-button focus:text-purple-600 focus:border-purple-600 text-sm'>1 Star - {course.oneStarCnt}</button>
-									</div>
+								<div className='average flex flex-row justify-between items-center'>
+									<span className='price-number font-bold text-3xl text-slate-950'>{convertDecimal128ToNumber(course.avgRating)}</span>
+									<FontAwesomeIcon icon={faStar} className='text-amber-500' size='2xl' />
 								</div>
 							</div>
-							<div id='reviews-container'>
-								{feedbacks.map((review, index) => (
-									<CourseReview key={index} review={review} />
-								))}
-								<Pagination count={count} />
+							<div class='rating-button-container flex flex-col h-full'>
+								<div className='rating-row flex flex-row'>
+									<button
+										id='all'
+										ref={allButtonRef}
+										onClick={() => handleFilterClick(null)}
+										class={`rating-button active text-sm ${ratingFilter === null ? 'text-purple-600 border-purple-600' : ''}`}
+									>
+										All
+									</button>
+									<button
+										id='5-star'
+										onClick={() => handleFilterClick(5)}
+										class={`rating-button  text-sm ${ratingFilter === 5 ? 'text-purple-600 border-purple-600' : ''}`}
+									>
+										5 Stars - {course.fiveStarCnt}
+									</button>
+									<button
+										id='4-star'
+										onClick={() => handleFilterClick(4)}
+										class={`rating-button  text-sm ${ratingFilter === 4 ? 'text-purple-600 border-purple-600' : ''}`}
+									>
+										4 Stars - {course.fourStarCnt}
+									</button>
+								</div>
+								<div className='rating-row flex flex-row'>
+									<button
+										id='3-star'
+										onClick={() => handleFilterClick(3)}
+										class={`rating-button  text-sm ${ratingFilter === 3 ? 'text-purple-600 border-purple-600' : ''}`}
+									>
+										3 Stars - {course.threeStarCnt}
+									</button>
+
+									<button
+										id='2-star'
+										onClick={() => handleFilterClick(2)}
+										class={`rating-button  text-sm ${ratingFilter === 2 ? 'text-purple-600 border-purple-600' : ''}`}
+									>
+										2 Stars - {course.twoStarCnt}
+									</button>
+
+									<button
+										id='1-star'
+										onClick={() => handleFilterClick(1)}
+										class={`rating-button  text-sm ${ratingFilter === 1 ? 'text-purple-600 border-purple-600' : ''}`}
+									>
+										1 Star - {course.oneStarCnt}
+									</button>
+								</div>
 							</div>
 						</div>
-					)}
+						<div id='reviews-container'>
+							{feedbacks.map((review, index) => (
+								<CourseReview key={index} review={review} />
+							))}
+							<Pagination count={count} />
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

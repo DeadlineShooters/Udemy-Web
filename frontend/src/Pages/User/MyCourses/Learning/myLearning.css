@@ -1,70 +1,73 @@
 .upper-mylearning {
-    background-color: #151b32; /* Deep Blue */
-    color: #fff; /* White text */
-    width: 100%;
-    min-width: 100%;
-    max-width: 100%;
+  background-color: #151b32; /* Deep Blue */
+  color: #fff; /* White text */
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
 }
 .lower-mylearning {
-    background-color: #fff; /* White */
-    padding: 20px;
+  background-color: #fff; /* White */
+  padding: 20px;
 }
 .upper-mylearning .title {
-    padding-left: 21%;
+  padding-left: 21%;
 }
 .upper-mylearning .filter {
-    padding-left: 21%;
+  padding-left: 21%;
 }
 
 @media (max-width: 768px) {
-    .upper-mylearning .title {
-        padding-left: 5%;
-    }
-    .upper-mylearning .filter {
-        padding-left: 5%;
-    }
+  .upper-mylearning .title {
+    padding-left: 5%;
+  }
+  .upper-mylearning .filter {
+    padding-left: 5%;
+  }
 }
 
-
 @media (min-width: 1024px) {
-    .lg\:pb-100 {
-        padding-bottom: 40rem; 
-    }
+  .lg\:pb-100 {
+    padding-bottom: 40rem;
+  }
 }
 
 @media (max-width: 375px) {
-    .functionbar {
-        flex-direction: column !important;
-    }
-    .functionbar .filter {
-        padding-left: 0px !important;
-        padding-right: 0px !important;
-    }
-    .formsearch {
-        width: 18rem !important;
-    }
-    .filter {
-        margin-right: 0 !important;
-        margin-bottom: 1rem !important;
-    }
+  .functionbar {
+    flex-direction: column !important;
+  }
+  .functionbar .filter {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+  }
+  .formsearch {
+    width: 18rem !important;
+  }
+  .filter {
+    margin-right: 0 !important;
+    margin-bottom: 1rem !important;
+  }
 }
 
 .imgContainer {
-    width: '150px';
-    height: '150px';
-    overflow: 'hidden';
+  width: "150px";
+  height: "150px";
+  overflow: "hidden";
 }
 
 .card {
-    width: 300px;
-    min-width: 300px;
-    max-width: 300px;
-    padding: 10px;
+  width: 300px;
+  min-width: 300px;
+  max-width: 300px;
+  padding: 10px;
 }
 
 .card .thumbnail {
-    width: 100%;
-    height: 150px;
-    object-fit: fill;
-    margin: 20px 0px;
+  width: 100%;
+  height: 150px;
+  object-fit: fill;
+  margin: 20px 0px;
+}
+
+.bold-option {
+  font-weight: bold;
 }

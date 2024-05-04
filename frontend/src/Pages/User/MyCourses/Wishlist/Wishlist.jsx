@@ -21,7 +21,6 @@ const Wishlist = () => {
 	useEffect(() => {
 		setSearchCourses(wishlist);
 	}, [wishlist]);
-
 	return (
 		<div>
 			<div className='upper-wishlist'>

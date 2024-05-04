@@ -3,6 +3,7 @@ import Carousel from 'react-multi-carousel';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { RenderStars } from '../../../Components/StarRatings';
+import PreLoader from '../../../Components/PreLoader';
 import 'react-multi-carousel/lib/styles.css';
 import './Home.css';
 
@@ -40,7 +41,7 @@ const Home = () => {
 	const [categoryInd, setCategoryInd] = useState(null);
 	const refContainer = useRef();
 	const [containerWidth, setContainerWidth] = useState(0);
-
+	const [loading, setLoading] = useState(true);
 	useEffect(() => {
 		setContainerWidth(refContainer.current.offsetWidth);
 
@@ -76,6 +77,8 @@ const Home = () => {
 					})
 					.catch((error) => {
 						console.error('Error:', error);
+					}).finally(() => {
+						setLoading(false);
 					});
 			});
 		}
@@ -148,7 +151,7 @@ const Home = () => {
 			</div>
 			<div ref={refContainer} className='px-8 max-w-[1340px] mx-auto'>
 				<span className='font-bold text-3xl text-gray-800 mb-8 block'>What to learn next</span>
-				{categories &&
+				{(!loading && categories) ?
 					categories.map((category) =>
 						courses && courses[category.name] && courses[category.name].length > 0 ? (
 							<div className='mb-12'>
@@ -201,7 +204,7 @@ const Home = () => {
 								</Carousel>
 							</div>
 						) : null
-					)}
+					) : (<PreLoader />)}
 			</div>
 		</>
 	);
