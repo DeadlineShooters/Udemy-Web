@@ -261,7 +261,7 @@ const CourseDetail = () => {
 
           <div className="course-rating flex items-center">
             <div className="text-amber-500 font-bold mr-1 text-lg">
-              <span className="mr-1">{convertDecimal128ToNumber(course.avgRating)}</span>
+              <span className="mr-1">{Number(convertDecimal128ToNumber(course.avgRating)).toFixed(1)}</span>
               <FontAwesomeIcon icon={faStar} />
             </div>
             <a href="#reviews" className="mr-3 text-violet-500 underline  text-purple-200 text-lg">
