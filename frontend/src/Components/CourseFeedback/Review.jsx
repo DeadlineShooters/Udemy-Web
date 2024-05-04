@@ -7,11 +7,11 @@ import ButtonDefault from "./ButtonDefault";
 import moment from "moment";
 
 const instructor = {
-  firstName: "Nozo",
-  lastName: "Pham",
-  heading: "Software engineer",
-  description: "",
-  email: "tomato09@gmail.com",
+	firstName: 'Nozo',
+	lastName: 'Pham',
+	heading: 'Software engineer',
+	description: '',
+	email: 'tomato09@gmail.com',
 };
 const Review = ({ reviewParam }) => {
   const [showResponse, setShowResponse] = useState(false);
@@ -24,13 +24,13 @@ const Review = ({ reviewParam }) => {
     setShowResponse((prevShowResponse) => !prevShowResponse);
   };
 
-  const handleRespondClick = () => {
-    setShowResponseInput(true);
-  };
+	const handleRespondClick = () => {
+		setShowResponseInput(true);
+	};
 
-  const handleCancelClick = () => {
-    setShowResponseInput(false);
-  };
+	const handleCancelClick = () => {
+		setShowResponseInput(false);
+	};
 
   const handleSaveClick = async () => {
     try {
