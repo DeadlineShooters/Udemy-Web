@@ -210,6 +210,13 @@ const QuestionAndAnswer = () => {
         setShowMoreAnswers(!showMoreAnswers);
     };
 
+    const [showMoreQuestions, setShowMoreQuestions] = useState(false);
+
+    // Logic to toggle show more questions
+    const toggleShowMoreQuestions = () => {
+        setShowMoreQuestions(!showMoreQuestions);
+    };
+
 
     return (
         <div className="flex w-full">
@@ -267,7 +274,7 @@ const QuestionAndAnswer = () => {
                             <button className="p-2 border-black border-l-[1px]"><IconSearch stroke={2} color="#3d07bb" /></button>
                         </div> */}
                         <div className="overflow-y-auto flex-grow">
-                            {selectedCourseId && questions.map((question) => (
+                            {selectedCourseId && questions.slice(0, showMoreQuestions ? questions.length : 5).map((question) => (
                                 <div key={question._id} onClick={() => { }}>
                                     <div className={`${question._id == selectedQuestion?._id ? "bg-gray-300" : ""} flex flex-row py-2 border-gray-600 border-b-[1px] hover:cursor-pointer hover:bg-gray-200`} onClick={() => handleSelectingQuestion(question)}>
                                         <div className="mx-2 w-[40px]">
@@ -285,6 +292,11 @@ const QuestionAndAnswer = () => {
                                     </div>
                                 </div>
                             ))}
+                            {questions.length > 5 && (
+                                <div className="mt-2 mb-4 text-purple-500 cursor-pointer text-center" onClick={toggleShowMoreQuestions}>
+                                    {showMoreQuestions ? 'Show less' : 'Show more'}
+                                </div>
+                            )}
                         </div>
                     </div>
 
