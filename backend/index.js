@@ -10,6 +10,10 @@ import dotenv from "dotenv";
 import accountRoute from "./routes/user/accountRoute.js"
 import courseRoute from './routes/course/courseRoute.js';
 import cloudinary from "cloudinary";
+
+import questionRoute from './routes/question.js';
+import answerRoute from './routes/answer.js';
+
 dotenv.config();
 
 const mongoURI = process.env.MONGODB_URI;
@@ -51,6 +55,21 @@ app.use("/auth", authRoute);
 app.use("/user", accountRoute);
 app.use('/courses', courseRoute);
 app.use("/instructor", instructorRoute);
+
+app.use("/questions/:courseId", questionRoute)
+app.use("/questions/:questionId/answers", answerRoute)
+
+app.use((err, req, res, next) => {
+  const { statusCode = 500 } = err;
+  if (!err.message) err.message = 'Something has gone wrong. Please try to restart or check the internet connection.';
+  console.log(err.message);
+	res.status(statusCode).json({
+		"status": "BAD_REQUEST",
+		"error": err
+	});
+});
+
+
 
 app.listen(5000, () => {
 	console.log('Server is running');

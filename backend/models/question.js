@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
-import User from "./user";
-import Course from "./course";
-import Answer from "./answer";
+import User from "./user.js";
+import Course from "./course.js";
+import Answer from "./answer.js";
 
 
 const questionSchema = mongoose.Schema({
@@ -13,4 +13,12 @@ const questionSchema = mongoose.Schema({
     createdAt: {type: Date, default: Date.now()},
 })
 
-export default Question = mongoose.model("Instructor", questionSchema);
+// Middleware to remove associated answers when a question is deleted
+questionSchema.pre('remove', function(next) {
+    // 'this' refers to the document being removed (the question)
+    // Remove all associated answers
+    this.model('Answer').deleteMany({ _id: { $in: this.answers } }, next);
+});
+
+const Question = mongoose.model("Question", questionSchema);
+export default Question;
