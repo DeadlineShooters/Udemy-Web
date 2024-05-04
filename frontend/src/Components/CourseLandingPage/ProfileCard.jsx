@@ -4,6 +4,7 @@ import { faStar, faGraduationCap } from "@fortawesome/free-solid-svg-icons";
 import { createImageFromInitials } from "../Utils/Utils";
 
 const ProfileCard = ({ instructor }) => {
+  console.log("instructor in profile card: ", instructor);
   return (
     <div className="bg-white   mb-5">
       <div>
@@ -11,7 +12,7 @@ const ProfileCard = ({ instructor }) => {
           {instructor.firstName + " " + instructor.lastName}
         </a>
 
-        {/* <p className="text-sm text-gray-500 mb-2">{instructor.instructor.headline}</p> */}
+        <p className="text-sm text-gray-500 mb-2">{instructor.instructor?.headline}</p>
       </div>
       <div className="flex items-center mb-2">
         <img

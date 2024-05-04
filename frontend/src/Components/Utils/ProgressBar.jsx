@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { IconTrophyFilled } from '@tabler/icons-react';
 
 const CircleProgressBar = ({ progress }) => {
   const [offset, setOffset] = useState(0);
@@ -24,8 +25,10 @@ const CircleProgressBar = ({ progress }) => {
           cy="20"
           ref={circleRef}
         />
+        {/* Insert your character here */}
+        {progress === 100 && <IconTrophyFilled  x="8" y ="8" color="#A334EF"/>}
         <circle
-          className="stroke-current text-blue-500"
+          className="stroke-current text-gray-300"
           strokeWidth="2"
           fill="transparent"
           r="18"

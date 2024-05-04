@@ -107,7 +107,7 @@ ul li {
         justify-content: center;
     }
     .logo-udemy {
-        margin: auto;
+        margin: auto !important;
     }
     .category {
         display: none;
