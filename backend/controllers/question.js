@@ -11,17 +11,23 @@ export const getQuestions = async (req, res) => {
 
   const skip = (page - 1) * limit;
 
-  const questions = await Question.find({ course: courseId })
-  .skip(skip)
-  .limit(parseInt(limit))
-  .populate('user')
-  .populate({
-    path: 'answers',
-    populate: { path: 'user' } // Populate the 'user' field in the 'answers' array
-  });
+  let query = Question.find({ course: courseId })
+    .populate('user')
+    .populate({
+      path: 'answers',
+      populate: { path: 'user' } // Populate the 'user' field in the 'answers' array
+    });
+
+  // Sorting based on creation date
+  if (req.query.sort === 'desc') {
+    query = query.sort({ createdAt: -1 }); // Ascending order (oldest first)
+  }
+
+  const questions = await query.skip(skip).limit(parseInt(limit));
 
   res.status(200).json(questions);
 }
+
 export const addQuestion = async (req, res) => {
   const { courseId } = req.params;
 

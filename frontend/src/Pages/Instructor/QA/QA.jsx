@@ -32,6 +32,10 @@ const QuestionAndAnswer = () => {
 
     const [selectedAnswerIdToDelete, setSelectedAnswerIdToDelete] = useState(null);
 
+    const [sortOldest, setSortOldest] = useState(false);
+
+
+
 
     const handleSelectingCourse = (event) => {
         setSelectedCourseId(event.target.value); // Update state with selected option value
@@ -64,9 +68,13 @@ const QuestionAndAnswer = () => {
     useEffect(() => {
         const fetchData = async () => {
             if (!selectedCourseId) return;
-
+    
             try {
-                const res = await axios.get(`http://localhost:5000/questions/${selectedCourseId}`);
+                // Define the sort order based on the state
+                const sortOrder = sortOldest ? "asc" : "desc";
+    
+                // Construct the URL with the sort order query parameter
+                const res = await axios.get(`http://localhost:5000/questions/${selectedCourseId}?sort=${sortOrder}`);
                 const resQuestions = res.data;
                 setQuestions(resQuestions);
                 setSelectedQuestion(resQuestions[0]); // Update the selected question with the first question from the response
@@ -74,10 +82,11 @@ const QuestionAndAnswer = () => {
                 console.error('Error fetching questions:', error);
             }
         };
-
-        fetchData(); // Call the async function
-    }, [selectedCourseId]);
     
+        fetchData(); // Call the async function
+    }, [selectedCourseId, sortOldest]);
+    
+
     const getAnswers = async () => {
         if (!selectedQuestion) return;
 
@@ -93,7 +102,7 @@ const QuestionAndAnswer = () => {
 
         getAnswers(); // Call the async function
     }, [selectedQuestion]);
-    
+
 
     const handleEditOption = (answer, index) => {
         // Implement your edit logic here
@@ -112,9 +121,9 @@ const QuestionAndAnswer = () => {
             try {
                 let config = {
                     headers: {
-                      user_id: userData._id,
+                        user_id: userData._id,
                     }
-                  }
+                }
                 const res = await axios.post(`http://localhost:5000/questions/${selectedQuestion._id}/answers`, answer, config);
                 return res.data; // Return the added answer data
             } catch (error) {
@@ -122,7 +131,7 @@ const QuestionAndAnswer = () => {
                 throw error; // Rethrow the error to be caught by the caller
             }
         }
-    
+
         try {
             await addAnswer({ content: newAnswer });
             setNewAnswer(null); // Reset newAnswer after successfully adding the answer
@@ -132,20 +141,20 @@ const QuestionAndAnswer = () => {
             // Handle error if necessary
         }
     }
-    
+
 
     const handleEditRequest = async (editedAnswerId) => {
         try {
-            
+
             // Define editAnswer as an asynchronous function
             const editAnswer = async (answer) => {
                 const res = await axios.put(`http://localhost:5000/questions/${selectedQuestion._id}/answers/${editedAnswerId}`, answer);
                 return res.data; // Return the edited answer data
             }
-    
+
             // Call editAnswer and await its completion
             await editAnswer({ content: newAnswer });
-    
+
             // Update state and fetch answers after the answer is successfully edited
             setEditingIndex(null);
             setNewAnswer(null);
@@ -160,40 +169,40 @@ const QuestionAndAnswer = () => {
         setShowDeleteModal(true);
         setSelectedAnswerIdToDelete(answerId);
     };
-    
+
     const handleCancelDelete = () => {
         // Hide the delete modal and reset the selected answer ID
         setShowDeleteModal(false);
         setSelectedAnswerIdToDelete(null);
     };
-    
+
     const handleConfirmDelete = async () => {
         // Hide the delete modal
         setShowDeleteModal(false);
-    
+
         // Call the delete request
         await handleDeleteRequest(selectedAnswerIdToDelete);
     };
 
     const handleDeleteRequest = async (answerId) => {
         try {
-            
+
             // Define deleteAnswer as an asynchronous function
             const deleteAnswer = async () => {
                 const res = await axios.delete(`http://localhost:5000/questions/${selectedQuestion._id}/answers/${answerId}`);
                 return res.data; // Return the edited answer data
             }
-    
+
             // Call deleteAnswer and await its completion
             await deleteAnswer();
-    
+
             setNewAnswer(null);
             getAnswers(); // Assuming getAnswers fetches the updated list of answers
         } catch (error) {
             console.error('Error deleting the answer:', error);
         }
     }
-    
+
 
     return (
         <div className="flex w-full">
@@ -210,7 +219,7 @@ const QuestionAndAnswer = () => {
                         </select>
                     </div>
                 </div>
-                <div className="flex items-end filter-container pb-3">
+                {/* <div className="flex items-end filter-container pb-3">
                     <div className="flex items-center mr-8">
                         <input type="checkbox" id="notResponded" className="mr-2" />
                         <label htmlFor="notResponded">Unread</label>
@@ -225,13 +234,16 @@ const QuestionAndAnswer = () => {
                         <input type="checkbox" id="alreadyResponded" className="mr-2" />
                         <label htmlFor="alreadyResponded">No answer</label>
                     </div>
-                </div>
+                </div> */}
                 <div className="flex mt-4 relative items-end mb-8">
                     <span>Sort by:</span>
                     <div className="flex flex-col filter-container mr-8">
-                        <select className="text-md font-bold hover:bg-gray-200">
-                            <option value="all" selected>Newest first</option>
-                            <option value="all" selected>Oldest first</option>
+                        <select
+                            className="text-md font-bold hover:bg-gray-200"
+                            onChange={(e) => setSortOldest(e.target.value === 'oldest')}
+                        >
+                            <option value="newest">Newest first</option>
+                            <option value="oldest">Oldest first</option>
                         </select>
                     </div>
                 </div>
@@ -287,7 +299,7 @@ const QuestionAndAnswer = () => {
                                 </div>
                             </div>
 
-                            <h2 className="font-bold text-lg p-3 shadow-md">{selectedQuestion.answers.length} replies</h2>
+                            <h2 className="font-bold text-lg p-3 shadow-md">{answers.length} replies</h2>
                             <div className="p-2 overflow-y-auto flex-grow flex flex-col">
                                 {answers && answers.map((answer, index) => (
                                     <div className="flex flex-row ml-3">
