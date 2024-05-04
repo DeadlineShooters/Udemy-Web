@@ -1,0 +1,27 @@
+@media not all and (min-width: 1024px) {
+    .videodemo {
+        width: 640px !important;
+        height: 360px !important;
+    }
+}
+
+@media not all and (min-width: 768px) {
+    .videodemo {
+        width: 432px !important;
+        height: 243px !important;
+    }
+}
+
+@media not all and (min-width: 530px) {
+    .videodemo {
+        width: 384px !important;
+        height: 216px !important;
+    }
+}
+
+@media not all and (min-width: 425px) {
+    .videodemo {
+        width: 256px !important;
+        height: 144px !important;
+    }
+}

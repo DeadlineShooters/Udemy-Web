@@ -1,0 +1,38 @@
+[
+  {
+    "sectionID": "60d8f8b8c2a7b113f475f080",
+    "index": 1,
+    "name": "Introduction to the Course",
+    "content": "This lecture introduces the course and covers the topics that will be discussed.",
+    "video": {
+      "secureURL": "https://res.cloudinary.com/dbgaeu07x/video/upload/v1700392552/samples/sea-turtle.mp4",
+      "publicURL": "https://res.cloudinary.com/dbgaeu07x/video/upload/v1700392552/samples/sea-turtle.mp4",
+      "type": "mp4",
+      "duration": 15
+    }
+  },
+  {
+    "sectionID": "60d8f8b8c2a7b113f475f081",
+    "index": 2,
+    "name": "Course Content Overview",
+    "content": "This lecture provides an overview of the course content.",
+    "video": {
+      "secureURL": "https://res.cloudinary.com/dbgaeu07x/video/upload/v1700392552/samples/sea-turtle.mp4",
+      "publicURL": "https://res.cloudinary.com/dbgaeu07x/video/upload/v1700392552/samples/sea-turtle.mp4",
+      "type": "mp4",
+      "duration": 15
+    }
+  },
+  {
+    "sectionID": "60d8f8b8c2a7b113f475f082",
+    "index": 3,
+    "name": "Conclusion",
+    "content": "This lecture concludes the course and provides next steps.",
+    "video": {
+      "secureURL": "https://res.cloudinary.com/dbgaeu07x/video/upload/v1700392552/samples/sea-turtle.mp4",
+      "publicURL": "https://res.cloudinary.com/dbgaeu07x/video/upload/v1700392552/samples/sea-turtle.mp4",
+      "type": "mp4",
+      "duration": 15
+    }
+  }
+]
