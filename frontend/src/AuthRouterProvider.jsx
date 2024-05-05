@@ -161,7 +161,7 @@ const router = createBrowserRouter([
 				
 			},
 			{
-				path: 'instructor-profile',
+				path: 'instructor-profile/:userId',
 				element: <InstructorProfile />,
 			},
 			{

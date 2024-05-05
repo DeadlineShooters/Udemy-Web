@@ -1,24 +1,28 @@
 import React from 'react';
 import RatingStars from './RatingStars';
+import { useNavigate } from "react-router-dom";
+
 
 
 const courseImage =
 	"https://res.cloudinary.com/dk6q93ryt/image/upload/v1696217092/samples/smile.jpg";
 
-const CourseCard = (instructorInfo) => {
+const CourseCard = ({ user, course }) => {
+	const navigate = useNavigate();
+    
     return (
-        <div className="w-full">
+        <div className="w-full cursor-pointer" onClick={() => navigate(`/course/${course._id}`)}>
             <img src={courseImage} alt="" />
-            <p className="font-bold"><span>[NEW] </span>Ultimate AWS Certified Cloud Practitioner CLF-C02</p>
-            <p className="text-xs text-neutral-500">Stephane Maarek | AWS Certified Cloud...</p>
+            <p className="font-bold"><span>[NEW] </span>{course.name}</p>
+            <p className="text-xs text-neutral-500">{user.firstName + " " + user.lastName}</p>
             <div className='flex items-center gap-2'>
-                <span className='font-bold'>4.7</span>
-                <RatingStars rating={3}/>
-                <span className="text-xs text-neutral-500">(197,359)</span>
+                <span className='font-bold'>{course.avgRating}</span>
+                <RatingStars rating={course.avgRating}/>
+                <span className="text-xs text-neutral-500">({course.oneStarCnt + course.twoStarCnt + course.threeStarCnt + course.fiveStarCnt + course.fourStarCnt})</span>
             </div>
-            <div className="text-xs text-neutral-500	">15 total hours - 281 lectures - Beginner</div>
-            <div className="font-bold my-1">đ399,000 đ2,199,000</div>
-            <div className="inline text-xs px-2 py-1 bg-amber-200 font-bold">Bestseller</div>
+            <div className="text-xs text-neutral-500	">{course.totalLength} total hours - {course.totalLecture} lectures</div>
+            <div className="font-bold my-1">{course.price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</div>
+            {/* <div className="inline text-xs px-2 py-1 bg-amber-200 font-bold">Bestseller</div> */}
         </div>
     );
 }
