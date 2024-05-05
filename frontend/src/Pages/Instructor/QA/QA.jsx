@@ -277,7 +277,7 @@ const QuestionAndAnswer = () => {
                             {selectedCourseId && questions.slice(0, showMoreQuestions ? questions.length : 5).map((question) => (
                                 <div key={question._id} onClick={() => { }}>
                                     <div className={`${question._id == selectedQuestion?._id ? "bg-gray-300" : ""} flex flex-row py-2 border-gray-600 border-b-[1px] hover:cursor-pointer hover:bg-gray-200`} onClick={() => handleSelectingQuestion(question)}>
-                                        <div className="mx-2 w-[40px]">
+                                        <div className="mx-2 w-[40px] min-w-[40px]">
                                             <img id='preview' src={createImageFromInitials(160, question.user.firstName + " " + question.user.lastName, getColor())} alt='profile-pic' className='avatar' />
                                         </div>
                                         <div className="flex flex-col">
@@ -303,7 +303,7 @@ const QuestionAndAnswer = () => {
                     {selectedQuestion && (
                         <div className="w-full h-full flex flex-col">
                             <div className="flex p-5 bg-gray-200 border-b border-black">
-                                <div className="w-[50px]">
+                                <div className="w-[50px] min-w-[50px]">
                                     <img id='preview' src={createImageFromInitials(160, selectedQuestion.user.firstName + " " + selectedQuestion.user.lastName, getColor())} alt='profile-pic' className='avatar w-10' />
                                 </div>
                                 <div className="flex flex-col w-[720px]">
@@ -322,7 +322,7 @@ const QuestionAndAnswer = () => {
                             <div className="p-2 overflow-y-auto flex-grow flex flex-col">
                                 {answers && answers.slice(0, showMoreAnswers ? answers.length : 5).map((answer, index) => (
                                     <div className="flex flex-row ml-3">
-                                        <div className="w-[50px]">
+                                        <div className="w-[50px] min-w-[50px]">
                                             <img id='preview' src={createImageFromInitials(160, answer.user.firstName + " " + answer.user.lastName, getColor())} alt='profile-pic' className='avatar w-10' />
                                         </div>
                                         <div className="flex flex-col w-[720px] mb-4">
@@ -333,7 +333,7 @@ const QuestionAndAnswer = () => {
                                                         className="h-6 w-6 text-gray-500 cursor-pointer ml-2"
                                                         onClick={() => toggleDropdown(index)}
                                                     />
-                                                    {openDropdownIndex === index && (
+                                                    {answer.user._id === userData._id && openDropdownIndex === index && (
                                                         <div className="absolute right-0 mt-2 w-32 bg-white border shadow-lg z-10">
                                                             <button className="block text-left w-full py-2 px-4 text-sm text-gray-800 hover:bg-gray-200" onClick={() => handleEditOption(answer, index)}>
                                                                 Edit

@@ -14,7 +14,7 @@ const questionSchema = mongoose.Schema({
 })
 
 // Middleware to remove associated answers when a question is deleted
-questionSchema.pre('remove', function(next) {
+questionSchema.pre('findByIdAndDelete', function(next) {
     // 'this' refers to the document being removed (the question)
     // Remove all associated answers
     this.model('Answer').deleteMany({ _id: { $in: this.answers } }, next);

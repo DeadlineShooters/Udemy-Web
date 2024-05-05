@@ -6,9 +6,11 @@ const router = express.Router({ mergeParams: true });
 
 router.get('', catchAsync(questions.getQuestions));
 
+router.get('/:questionId', catchAsync(questions.getOne));
+
 router.post('', catchAsync(questions.addQuestion));
 
-router.patch('/:questionId', catchAsync(questions.updateQuestion));
+router.put('/:questionId', catchAsync(questions.updateQuestion));
 
 router.delete('/:questionId', catchAsync(questions.deleteQuestion));
 

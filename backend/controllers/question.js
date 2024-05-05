@@ -13,10 +13,6 @@ export const getQuestions = async (req, res) => {
 
   let query = Question.find({ course: courseId })
     .populate('user')
-    .populate({
-      path: 'answers',
-      populate: { path: 'user' } // Populate the 'user' field in the 'answers' array
-    });
 
   // Sorting based on creation date
   if (req.query.sort === 'desc') {
@@ -28,6 +24,21 @@ export const getQuestions = async (req, res) => {
   res.status(200).json(questions);
 }
 
+export const getOne = async (req, res) => {
+  const { courseId, questionId } = req.params;
+
+  await checkCourseExist(courseId);
+
+  // Find the question by ID
+  const question = await Question.findById(questionId)
+    .populate('user')
+
+  if (!question) {
+    return res.status(404).json({ message: "Question not found" });
+  }
+
+  res.status(200).json(question);
+}
 export const addQuestion = async (req, res) => {
   const { courseId } = req.params;
   const userId = req.get("user_id")
@@ -53,7 +64,7 @@ export const updateQuestion = async (req, res) => {
 
   await checkCourseExist(courseId);
 
-  const updatedQuestion = await Question.findByIdAndUpdate(questionId, req.body, { new: true });
+  const updatedQuestion = await Question.findByIdAndUpdate(questionId, req.body, { new: true }).populate('user');
 
   if (!updatedQuestion) {
     return res.status(404).json({ message: "Question not found" });
@@ -77,8 +88,8 @@ export const deleteQuestion = async (req, res) => {
     return res.status(404).json({ message: "Question not found" });
   }
 
-  // Delete the question
-  await question.remove();
+  // Delete the question (and associated answers will be deleted due to middleware)
+  await Question.findByIdAndDelete(question._id);
 
   res.status(200).json({ message: "Question deleted successfully" });
 };
