@@ -1,137 +1,75 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { Fragment } from "react";
-import { Menu, Transition } from "@headlessui/react";
-import { Link, useLocation } from "react-router-dom";
-import "./Navbar.css";
-import logo from "../../Assets/Udemy_logo.png";
-import heart from "../../Assets/heart.png";
-import cartIcon from "../../Assets/cart.png";
-import { getColor, createImageFromInitials } from "../Utils/Utils.js";
-import { useAuth } from "../../AuthContextProvider.jsx";
-import { IconMenu2 } from "@tabler/icons-react";
-import { ChevronRightIcon } from "@heroicons/react/24/solid";
-import { Menu as MenuMT, MenuHandler, MenuList, MenuItem } from "@material-tailwind/react";
-import { IconChevronLeft } from "@tabler/icons-react";
-import secureLocalStorage from "react-secure-storage";
-import axios from "axios";
-import { useCart } from "../../CartRouterProvider.js";
-
-const courses = [
-  {
-    name: "Docker & Kubernetes: The Practical Guide [2024 Edition]",
-    headline: "Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up!",
-    instructor: "Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller",
-    rating: 4.7,
-    ratingCnt: 25485,
-    hours: 23.5,
-    lectures: 262,
-    discountedPrice: 349000,
-    originalPrice: 2199000,
-    image: "https://img-b.udemycdn.com/course/240x135/3490000_d298_2.jpg",
-  },
-  {
-    name: "Docker & Kubernetes: The Practical Guide [2024 Edition]",
-    headline: "Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up!",
-    instructor: "Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller",
-    rating: 4.7,
-    ratingCnt: 25485,
-    hours: 23.5,
-    lectures: 262,
-    discountedPrice: 349000,
-    originalPrice: 2199000,
-    image: "https://img-b.udemycdn.com/course/240x135/3490000_d298_2.jpg",
-  },
-  {
-    name: "Docker & Kubernetes: The Practical Guide [2024 Edition]",
-    headline: "Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up!",
-    instructor: "Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller",
-    rating: 4.7,
-    ratingCnt: 25485,
-    hours: 23.5,
-    lectures: 262,
-    discountedPrice: 349000,
-    originalPrice: 2199000,
-    image: "https://img-b.udemycdn.com/course/240x135/3490000_d298_2.jpg",
-  },
-  {
-    name: "Docker & Kubernetes: The Practical Guide [2024 Edition]",
-    headline: "Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up!",
-    instructor: "Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller",
-    rating: 4.7,
-    ratingCnt: 25485,
-    hours: 23.5,
-    lectures: 262,
-    discountedPrice: 349000,
-    originalPrice: 2199000,
-    image: "https://img-b.udemycdn.com/course/240x135/3490000_d298_2.jpg",
-  },
-  {
-    name: "Docker & Kubernetes: The Practical Guide [2024 Edition]",
-    headline: "Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up!",
-    instructor: "Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller",
-    rating: 4.7,
-    ratingCnt: 25485,
-    hours: 23.5,
-    lectures: 262,
-    discountedPrice: 349000,
-    originalPrice: 2199000,
-    image: "https://img-b.udemycdn.com/course/240x135/3490000_d298_2.jpg",
-  },
-];
+import React, { useState, useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Fragment } from 'react';
+import { Menu, Transition } from '@headlessui/react';
+import { Link } from 'react-router-dom';
+import './Navbar.css';
+import logo from '../../Assets/Udemy_logo.png';
+import heart from '../../Assets/heart.png';
+import cartIcon from '../../Assets/cart.png';
+import { getColor, createImageFromInitials } from '../Utils/Utils.js';
+import { useAuth } from '../../AuthContextProvider.jsx';
+import { IconMenu2 } from '@tabler/icons-react';
+import { ChevronRightIcon } from '@heroicons/react/24/solid';
+import { Menu as MenuMT, MenuHandler, MenuList, MenuItem } from '@material-tailwind/react';
+import { IconChevronLeft } from '@tabler/icons-react';
+import secureLocalStorage from 'react-secure-storage';
+import axios from 'axios';
+import { useCart, useWishlist } from '../../CartRouterProvider.js';
 
 const Navbar = () => {
-  const { userData } = useAuth();
-  const { cart } = useCart();
-  const isLogged = userData !== null;
-  function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-  }
-  const logout = () => {
-    secureLocalStorage.clear();
-    window.open("http://localhost:5000/auth/logout", "_self");
-  };
-  const [isTurnOnSideBar, setTurnOnSideBar] = useState(false);
-  const sideBarToggle = () => {
-    setTurnOnSideBar(!isTurnOnSideBar);
-    console.log(isTurnOnSideBar);
-  };
-  const [isWishlistDropdownOpen, setWishlistDropdownOpen] = useState(false);
-  const toggleWishlistDropdown = () => {
-    setWishlistDropdownOpen(!isWishlistDropdownOpen);
-  };
+	const { userData } = useAuth();
+	const { cart } = useCart();
+	const { wishlist } = useWishlist();
+	const isLogged = userData !== null;
+	function classNames(...classes) {
+		return classes.filter(Boolean).join(' ');
+	}
+	const logout = () => {
+		secureLocalStorage.clear();
+		window.open('http://localhost:5000/auth/logout', '_self');
+	};
+	const [isTurnOnSideBar, setTurnOnSideBar] = useState(false);
+	const sideBarToggle = () => {
+		setTurnOnSideBar(!isTurnOnSideBar);
+		console.log(isTurnOnSideBar);
+	};
+	const [isWishlistDropdownOpen, setWishlistDropdownOpen] = useState(false);
+	const toggleWishlistDropdown = () => {
+		setWishlistDropdownOpen(!isWishlistDropdownOpen);
+	};
 
-  const [isCartDropdownOpen, setCartDropdownOpen] = useState(false);
-  const toggleCartDropdown = () => {
-    setCartDropdownOpen(!isCartDropdownOpen);
-  };
+	const [isCartDropdownOpen, setCartDropdownOpen] = useState(false);
+	const toggleCartDropdown = () => {
+		setCartDropdownOpen(!isCartDropdownOpen);
+	};
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const navigate = useNavigate();
+	const [searchQuery, setSearchQuery] = useState('');
+	const navigate = useNavigate();
 
-  const handleInputChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
+	const handleInputChange = (event) => {
+		setSearchQuery(event.target.value);
+	};
 
-  const handleSearch = async (event) => {
-    event.preventDefault();
-    navigate(`/courses/search?query=${searchQuery}`);
-  };
+	const handleSearch = async (event) => {
+		event.preventDefault();
+		navigate(`/courses/search?query=${searchQuery}`);
+	};
 
-  const [categories, setCategories] = useState(null);
+	const [categories, setCategories] = useState(null);
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/courses/categories")
-      .then((response) => {
-        if (response.data.success) {
-          setCategories(response.data.categories);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }, []);
+	useEffect(() => {
+		axios
+			.get('http://localhost:5000/courses/categories')
+			.then((response) => {
+				if (response.data.success) {
+					setCategories(response.data.categories);
+				}
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+			});
+	}, []);
 
   return (
     <div className="header">
@@ -145,7 +83,7 @@ const Navbar = () => {
               <img src={logo} alt="" className="logo"></img>
             </Link>
           </div>
-          <ul className="category mx-5 relative">
+          <ul class="category mx-5 relative">
             <MenuMT allowHover>
               <MenuHandler>
                 <div className="cursor-pointer py-4">Categories</div>
@@ -205,14 +143,12 @@ const Navbar = () => {
         {isLogged === true ? (
           <div className={`flex items-center`}>
             <ul>
-              {userData?.instructor ? (
-                <li className="hover:text-purple-700 hide-teach-udemy">
+              {userData.instructor !== null ? (
+                <li class="hover:text-purple-700 hide-teach-udemy">
                   <Link to="/instructor/courses">Instructor</Link>
                 </li>
               ) : (
-                <li className="hover:text-purple-700 hide-teach-udemy">
-                  <Link to="/user/instructor-become">Teach on Udemy</Link>
-                </li>
+                <li className="hover:text-purple-700 hide-teach-udemy">Teach on Udemy</li>
               )}
               <li className="hover:text-purple-700 hide-my-learning">
                 <Link to="/home/my-courses/learning">My learning</Link>
@@ -224,31 +160,31 @@ const Navbar = () => {
               </button>
               {isWishlistDropdownOpen && (
                 <div id="dropdownSearch" className="z-9999 absolute top-[calc(100%-1rem)] mt-2 right-0 bg-white shadow-[0_0_0_1px_#d1d7dc,0_2px_4px_rgba(0,0,0,.08),0_4px_12px_rgba(0,0,0,.08)] w-80">
-                  <ul className="divide-y divide-gray-300 max-h-[32rem] pb-3 overflow-y-auto text-sm text-gray-700" aria-labelledby="dropdownSearchButton">
-                    {courses.map((course) => (
-                      <button className="flex flex-col items-center p-4" onClick={() => {}}>
-                        <div className="flex items-center">
-                          <div className="flex-shrink-0">
-                            <img className="object-cover object-center w-16 h-16" src={course.image} alt="" />
-                          </div>
-                          <div className="ps-3 flex flex-col gap-0.5">
-                            <div className="text-gray-900 font-bold text-sm text-left line-clamp-2">{course.name}</div>
-                            <div className="text-gray-900 text-xs text-left line-clamp-1">{course.instructor}</div>
-                            <div className="flex gap-2">
-                              <span className="font-bold text-gray-900 ">
-                                <span className="underline">đ</span>
-                                {course.discountedPrice.toLocaleString()}
-                              </span>
-                              <span className="text-gray-700 line-through">
-                                <span className="underline">đ</span>
-                                {course.originalPrice.toLocaleString()}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <button className="border w-full p-2 border-gray-600 mt-4 font-bold text-gray-800 hover:bg-gray-200">Add to card</button>
-                      </button>
-                    ))}
+                  <ul class="divide-y divide-gray-300 max-h-[32rem] pb-3 overflow-y-auto text-sm text-gray-700" aria-labelledby="dropdownSearchButton">
+				  {wishlist &&
+											wishlist.map((course) => (
+												<button class='flex flex-col items-center p-4' onClick={() => {}}>
+													<div className='flex items-center'>
+														<div class='flex-shrink-0'>
+															<img class='object-cover object-center w-16 h-16' src={course.thumbNail.secureURL} alt='' />
+														</div>
+														<div class='ps-3 flex flex-col gap-0.5'>
+															<div class='text-gray-900 font-bold text-sm text-left line-clamp-2'>{course.name}</div>
+															<div class='text-gray-900 text-xs text-left line-clamp-1'>
+																{course.instructor.firstName} {course.instructor.lastName}
+															</div>
+															<div class='flex gap-2'>
+																<span class='font-bold text-gray-900 '>
+																	<span>{(course.price * 0.8).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
+																</span>
+																<span class='text-gray-700 line-through'>
+																	<span>{course.price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
+																</span>
+															</div>
+														</div>
+													</div>
+												</button>
+											))}
                   </ul>
                   <div className="sticky bottom-0 w-full bg-white shadow-[0_-2px_4px_rgba(0,0,0,.08),0_-4px_12px_rgba(0,0,0,.08)] py-4">
                     <a href="/home/my-courses/wishlist" className="font-bold bg-gray-900 text-white w-11/12 mx-auto flex justify-center p-3">
@@ -264,26 +200,26 @@ const Navbar = () => {
               </button>
               {isCartDropdownOpen && (
                 <div id="dropdownSearch" className="z-9999  absolute top-[calc(100%-1rem)] mt-2 right-0 bg-white shadow-[0_0_0_1px_#d1d7dc,0_2px_4px_rgba(0,0,0,.08),0_4px_12px_rgba(0,0,0,.08)] w-80">
-                  <ul className="divide-y divide-gray-300 max-h-[32rem] pb-3 overflow-y-auto text-sm text-gray-700" aria-labelledby="dropdownSearchButton">
+                  <ul class="divide-y divide-gray-300 max-h-[32rem] pb-3 overflow-y-auto text-sm text-gray-700" aria-labelledby="dropdownSearchButton">
                     {cart &&
                       cart.map((course) => (
-                        <button className="flex flex-col items-center p-4" onClick={() => {}}>
+                        <button class="flex flex-col items-center p-4" onClick={() => {}}>
                           <div className="flex items-center">
-                            <div className="flex-shrink-0">
-                              <img className="object-cover object-center w-16 h-16" src={course.thumbNail.secureURL} alt="" />
+                            <div class="flex-shrink-0">
+                              <img class="object-cover object-center w-16 h-16" src={course.thumbNail.secureURL} alt="" />
                             </div>
-                            <div className="ps-3 flex flex-col gap-0.5">
-                              <div className="text-gray-900 font-bold text-sm text-left line-clamp-2">{course.name}</div>
-                              <div className="text-gray-900 text-xs text-left line-clamp-1">
+                            <div class="ps-3 flex flex-col gap-0.5">
+                              <div class="text-gray-900 font-bold text-sm text-left line-clamp-2">{course.name}</div>
+                              <div class="text-gray-900 text-xs text-left line-clamp-1">
                                 {course.instructor.firstName} {course.instructor.lastName}
                               </div>
-                              <div className="flex gap-2">
-                                <span className="font-bold text-gray-900 ">
-                                  <span className="underline">đ</span>
+                              <div class="flex gap-2">
+                                <span class="font-bold text-gray-900 ">
+                                  <span class="underline">đ</span>
                                   {(course.price * 0.8).toLocaleString()}
                                 </span>
-                                <span className="text-gray-700 line-through">
-                                  <span className="underline">đ</span>
+                                <span class="text-gray-700 line-through">
+                                  <span class="underline">đ</span>
                                   {course.price.toLocaleString()}
                                 </span>
                               </div>
@@ -293,14 +229,14 @@ const Navbar = () => {
                       ))}
                   </ul>
                   <div className="sticky bottom-0 w-full bg-white shadow-[0_-2px_4px_rgba(0,0,0,.08),0_-4px_12px_rgba(0,0,0,.08)] p-4">
-                    <div className="flex gap-2 items-center mb-2">
-                      <span className="font-bold text-gray-900 text-xl">
+                    <div class="flex gap-2 items-center mb-2">
+                      <span class="font-bold text-gray-900 text-xl">
                         <span>Total: </span>
-                        <span className="underline">đ</span>
+                        <span class="underline">đ</span>
                         {cart && cart.reduce((acc, course) => acc + course.price * 0.8, 0).toLocaleString()}
                       </span>
-                      <span className="text-gray-700 line-through">
-                        <span className="underline">đ</span>
+                      <span class="text-gray-700 line-through">
+                        <span class="underline">đ</span>
                         {cart && cart.reduce((acc, course) => acc + course.price, 0).toLocaleString()}
                       </span>
                     </div>
@@ -475,11 +411,11 @@ const Navbar = () => {
         </div>
       )}
 
-      <div className="divider">
-        <hr />
-      </div>
-    </div>
-  );
+			<div className='divider'>
+				<hr />
+			</div>
+		</div>
+	);
 };
 
 export default Navbar;
