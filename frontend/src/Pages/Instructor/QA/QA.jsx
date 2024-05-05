@@ -8,6 +8,8 @@ import axios from "axios";
 import getTimeAgo from "../../../helper/TimeAgo";
 import { useAuth } from "../../../AuthContextProvider";
 import WarningModal from "./WarningModal";
+import { MdClear } from "react-icons/md";
+
 
 
 const QuestionAndAnswer = () => {
@@ -33,8 +35,48 @@ const QuestionAndAnswer = () => {
     const [selectedAnswerIdToDelete, setSelectedAnswerIdToDelete] = useState(null);
 
     const [sortOldest, setSortOldest] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [clear, setClear] = useState(false);
 
+    const handleSearch = async () => {
+		try {
+			await getQuestions();
+		} catch (e) {
+			console.error("Error search", e);
+		}
 
+	};
+
+	const handleClear = async () => {
+		setSearchQuery("");
+		setClear(!clear);
+	}
+
+	useEffect(() => {
+		getQuestions();
+	},[clear])
+
+	const handleKeyDown = (event) => {
+		if (event.key === "Enter") {
+			handleSearch();
+		}
+    };
+    
+    const getQuestions = async () => {
+		if (!selectedCourseId) return;
+
+		try {
+			// Define the sort order based on the state
+			const sortOrder = sortOldest ? "asc" : "desc";
+			const res = await axios.get(`http://localhost:5000/questions/${selectedCourseId}?sort=${sortOrder}&search=${searchQuery}`);
+			const resQuestions = res.data;
+            setQuestions(resQuestions);
+            setSelectedQuestion(resQuestions[0]); // Update the selected question with the first question from the response
+            
+		} catch (error) {
+			console.error('Error fetching questions:', error);
+		}
+	};
 
 
     const handleSelectingCourse = (event) => {
@@ -83,7 +125,7 @@ const QuestionAndAnswer = () => {
             }
         };
 
-        fetchData(); // Call the async function
+        getQuestions(); // Call the async function
     }, [selectedCourseId, sortOldest]);
 
 
@@ -273,6 +315,25 @@ const QuestionAndAnswer = () => {
                             />
                             <button className="p-2 border-black border-l-[1px]"><IconSearch stroke={2} color="#3d07bb" /></button>
                         </div> */}
+                        <div className="flex justify-between border-black border-b border-r">
+							<input
+								type="text"
+								id="default-search"
+								className="block w-full p-2 text-sm text-gray-900 border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+								placeholder="Search course questions"
+								value={searchQuery}
+								onChange={(e) => setSearchQuery(e.target.value)}
+								onKeyDown={handleKeyDown}
+							/>
+							{searchQuery && (
+								<div className="p-2 hover:bg-gray-400 cursor-pointer" onClick={handleClear}>
+									<MdClear size={20} />
+								</div>
+							)}
+							<button className="p-2 bg-black" onClick={handleSearch}>
+								<IconSearch stroke={2} color="white" />
+							</button>
+						</div>
                         <div className="overflow-y-auto flex-grow">
                             {selectedCourseId && questions.slice(0, showMoreQuestions ? questions.length : 5).map((question) => (
                                 <div key={question._id} onClick={() => { }}>
@@ -313,7 +374,7 @@ const QuestionAndAnswer = () => {
                                     </div>
                                     <div className="flex flex-col">
                                         <p className="font-bold line-clamp-2 leading-tight">{selectedQuestion.title}</p>
-                                        <p>{selectedQuestion.description}</p>
+                                        <p className="text-sm mt-1" dangerouslySetInnerHTML={{ __html: selectedQuestion.description }} />
                                     </div>
                                 </div>
                             </div>
