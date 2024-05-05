@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RenderStars } from '../../../../Components/StarRatings';
 import { useWishlist } from '../../../../CartRouterProvider';
+import { Button } from "@material-tailwind/react";
 import './Wishlist.css';
 
 const Wishlist = () => {

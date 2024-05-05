@@ -135,6 +135,7 @@ const CourseContent = () => {
   const [QAlistOfLecture, setQAlistOfLecture] = useState();
 
   const handleQAClick = () => {
+    setQAlistOfLecture({title: "ayyy", description: "hmmm"})
     localNavigate(window.location.pathname + '#QA');
   };
 
@@ -276,7 +277,7 @@ const CourseContent = () => {
               <div className="font-bold hover:text-[#382660] text-lg mx-5 cursor-pointer" onClick={handleQAClick}>QA</div>
             </div>
             {window.location.hash === '#overview' && <CourseOverview/>}
-            {window.location.hash === '#QA' && <CompQA/>}
+            {window.location.hash === '#QA' && <CompQA courseId={courseDetails._id}/>}
           </div>
         ) : (
           <div role="status" class="flex flex-col bg-slate-900 items-center justify-center" style={{ height: "603px", width: "3560px" }}>
