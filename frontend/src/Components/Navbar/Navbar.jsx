@@ -83,7 +83,7 @@ const Navbar = () => {
               <img src={logo} alt="" className="logo"></img>
             </Link>
           </div>
-          <ul class="category mx-5 relative">
+          <ul className="category mx-5 relative">
             <MenuMT allowHover>
               <MenuHandler>
                 <div className="cursor-pointer py-4">Categories</div>
@@ -143,12 +143,14 @@ const Navbar = () => {
         {isLogged === true ? (
           <div className={`flex items-center`}>
             <ul>
-              {userData.instructor !== null ? (
-                <li class="hover:text-purple-700 hide-teach-udemy">
+              {userData?.instructor ? (
+                <li className="hover:text-purple-700 hide-teach-udemy">
                   <Link to="/instructor/courses">Instructor</Link>
                 </li>
               ) : (
-                <li className="hover:text-purple-700 hide-teach-udemy">Teach on Udemy</li>
+                <li className="hover:text-purple-700 hide-teach-udemy">
+                  <Link to="/user/instructor-become">Teach on Udemy</Link>
+                </li>
               )}
               <li className="hover:text-purple-700 hide-my-learning">
                 <Link to="/home/my-courses/learning">My learning</Link>
@@ -200,26 +202,26 @@ const Navbar = () => {
               </button>
               {isCartDropdownOpen && (
                 <div id="dropdownSearch" className="z-9999  absolute top-[calc(100%-1rem)] mt-2 right-0 bg-white shadow-[0_0_0_1px_#d1d7dc,0_2px_4px_rgba(0,0,0,.08),0_4px_12px_rgba(0,0,0,.08)] w-80">
-                  <ul class="divide-y divide-gray-300 max-h-[32rem] pb-3 overflow-y-auto text-sm text-gray-700" aria-labelledby="dropdownSearchButton">
+                  <ul className="divide-y divide-gray-300 max-h-[32rem] pb-3 overflow-y-auto text-sm text-gray-700" aria-labelledby="dropdownSearchButton">
                     {cart &&
                       cart.map((course) => (
-                        <button class="flex flex-col items-center p-4" onClick={() => {}}>
+                        <button className="flex flex-col items-center p-4" onClick={() => {}}>
                           <div className="flex items-center">
-                            <div class="flex-shrink-0">
-                              <img class="object-cover object-center w-16 h-16" src={course.thumbNail.secureURL} alt="" />
+                            <div className="flex-shrink-0">
+                              <img className="object-cover object-center w-16 h-16" src={course.thumbNail.secureURL} alt="" />
                             </div>
-                            <div class="ps-3 flex flex-col gap-0.5">
-                              <div class="text-gray-900 font-bold text-sm text-left line-clamp-2">{course.name}</div>
-                              <div class="text-gray-900 text-xs text-left line-clamp-1">
+                            <div className="ps-3 flex flex-col gap-0.5">
+                              <div className="text-gray-900 font-bold text-sm text-left line-clamp-2">{course.name}</div>
+                              <div className="text-gray-900 text-xs text-left line-clamp-1">
                                 {course.instructor.firstName} {course.instructor.lastName}
                               </div>
-                              <div class="flex gap-2">
-                                <span class="font-bold text-gray-900 ">
-                                  <span class="underline">đ</span>
+                              <div className="flex gap-2">
+                                <span className="font-bold text-gray-900 ">
+                                  <span className="underline">đ</span>
                                   {(course.price * 0.8).toLocaleString()}
                                 </span>
-                                <span class="text-gray-700 line-through">
-                                  <span class="underline">đ</span>
+                                <span className="text-gray-700 line-through">
+                                  <span className="underline">đ</span>
                                   {course.price.toLocaleString()}
                                 </span>
                               </div>
@@ -229,14 +231,14 @@ const Navbar = () => {
                       ))}
                   </ul>
                   <div className="sticky bottom-0 w-full bg-white shadow-[0_-2px_4px_rgba(0,0,0,.08),0_-4px_12px_rgba(0,0,0,.08)] p-4">
-                    <div class="flex gap-2 items-center mb-2">
-                      <span class="font-bold text-gray-900 text-xl">
+                    <div className="flex gap-2 items-center mb-2">
+                      <span className="font-bold text-gray-900 text-xl">
                         <span>Total: </span>
-                        <span class="underline">đ</span>
+                        <span className="underline">đ</span>
                         {cart && cart.reduce((acc, course) => acc + course.price * 0.8, 0).toLocaleString()}
                       </span>
-                      <span class="text-gray-700 line-through">
-                        <span class="underline">đ</span>
+                      <span className="text-gray-700 line-through">
+                        <span className="underline">đ</span>
                         {cart && cart.reduce((acc, course) => acc + course.price, 0).toLocaleString()}
                       </span>
                     </div>

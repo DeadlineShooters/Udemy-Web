@@ -3,6 +3,7 @@ import Course from "../../models/course.js";
 import Section from "../../models/section.js";
 import Lecture from "../../models/lecture.js";
 import createCourseSlug from "../../utils/slugGenerate.js";
+import User from "../../models/user.js";
 
 export const createCourse = async (req, res) => {
     try {
@@ -59,18 +60,28 @@ export const createCourse = async (req, res) => {
 
 export const getCourse = async (req, res) => {
     try {
-        const {instructorID} = req.body;
-        const courseList = await Course.find({instructor: instructorID}).populate({
-            path: "sectionList",
-            populate: "lectureList",
-        });
+        const { instructorID } = req.body;
+        const { page = 1, limit = 100 } = req.query; // Default page is 1, default limit is 10
+
+        const skip = (page - 1) * limit;
+
+        const courseList = await Course.find({ instructor: instructorID })
+            .populate({
+                path: "sectionList",
+                populate: "lectureList",
+            })
+            .skip(skip)
+            .limit(parseInt(limit));
+
         if (courseList) {
-            return res.status(200).send({ success: true, message: "Course list found successfully", course: courseList}); 
+            return res.status(200).send({ success: true, message: "Course list found successfully", course: courseList }); 
         }
     } catch (error) {
         console.log(error);
+        return res.status(500).send({ success: false, message: "Error fetching course list" });
     }
 }
+
 
 export const updateCourse = async (req, res) => {
     try {
@@ -170,3 +181,19 @@ export const updateSection = async (req, res) => {
     }
 }
 
+export const getProfile = async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const user = await User.findById(userId);
+        
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
