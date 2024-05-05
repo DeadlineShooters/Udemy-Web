@@ -3,6 +3,7 @@ import Course from '../models/course.js';
 import ExpressError from '../utils/ExpressError.js';
 import Answer from '../models/answer.js';
 
+// Get questions with optional search query
 export const getQuestions = async (req, res) => {
   console.log("@getQuestions: ")
   const { courseId } = req.params;
@@ -13,17 +14,26 @@ export const getQuestions = async (req, res) => {
   const skip = (page - 1) * limit;
 
   let query = Question.find({ course: courseId })
-    .populate('user')
+      .populate('user');
+
+  // Add search functionality
+  if (req.query.search) {
+      console.log("@search")
+      // Create a case-insensitive regex pattern for the search query
+      const searchRegex = new RegExp(req.query.search, "i");
+      // Update the query to search for titles that match the search query
+      query = query.find({ title: searchRegex });
+  }
 
   // Sorting based on creation date
   if (req.query.sort === 'desc') {
-    query = query.sort({ createdAt: -1 }); // Ascending order (oldest first)
+      query = query.sort({ createdAt: -1 }); // Ascending order (oldest first)
   }
 
   const questions = await query.skip(skip).limit(parseInt(limit));
 
   res.status(200).json(questions);
-}
+};
 
 export const getOne = async (req, res) => {
   console.log("@getOne: ");

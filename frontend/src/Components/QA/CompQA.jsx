@@ -9,6 +9,7 @@ import secureLocalStorage from "react-secure-storage";
 import { useAuth } from "../../AuthContextProvider";
 import AnsComp from "./AnsComp";
 import QuesComp from "./QuesComp";
+import { MdClear } from "react-icons/md";
 
 
 const maxChar = 255;
@@ -23,7 +24,34 @@ const CompQA = ({ courseId }) => {
 	const [title, setTitle] = useState('');
 	const [showAnswers, setShowAnswers] = useState(false);
 	const [selectedQuestion, setSelectedQuestion] = useState(null);
-	
+	const [clear, setClear] = useState(false);
+
+	const [searchQuery, setSearchQuery] = useState("");
+
+	const handleSearch = async () => {
+		try {
+			await getQuestions();
+		} catch (e) {
+			console.error("Error search", e);
+		}
+
+	};
+
+	const handleClear = async () => {
+		setSearchQuery("");
+		setClear(!clear);
+	}
+
+	useEffect(() => {
+		getQuestions();
+	},[clear])
+
+	const handleKeyDown = (event) => {
+		if (event.key === "Enter") {
+			handleSearch();
+		}
+	};
+
 	const handleAddingQuestionRequest = async () => {
 		const addQuestion = async (question) => {
 			try {
@@ -66,15 +94,14 @@ const CompQA = ({ courseId }) => {
 		try {
 			// Define the sort order based on the state
 			const sortOrder = sortOldest ? "asc" : "desc";
-
-			// Construct the URL with the sort order query parameter
-			const res = await axios.get(`http://localhost:5000/questions/${courseId}?sort=${sortOrder}`);
+			const res = await axios.get(`http://localhost:5000/questions/${courseId}?sort=${sortOrder}&search=${searchQuery}`);
 			const resQuestions = res.data;
 			setQuestions(resQuestions);
 		} catch (error) {
 			console.error('Error fetching questions:', error);
 		}
 	};
+
 
 	useEffect(() => {
 
@@ -86,13 +113,13 @@ const CompQA = ({ courseId }) => {
 			setShowAnswers(false);
 			return;
 		}
-    try {
+		try {
 			const res = await axios.get(`http://localhost:5000/questions/${selectedQuestion.course}/${selectedQuestion._id}`);
 			setSelectedQuestion(res.data);
 		} catch (error) {
 			console.error('Error fetching question:', error);
 		}
-  };
+	};
 
 
 	return (
@@ -113,7 +140,7 @@ const CompQA = ({ courseId }) => {
 				{showAnswers ? (
 					<div className="w-full">
 						<button className="border-[1.5px] border-black p-2 font-bold" onClick={() => setShowAnswers(false)}>Back to Questions</button>
-						<QuesComp question={selectedQuestion}  onUpdateQuestion={handleEditQuestion}  />
+						<QuesComp question={selectedQuestion} onUpdateQuestion={handleEditQuestion} />
 						<AnsComp question={selectedQuestion} />
 					</div>
 
@@ -121,13 +148,22 @@ const CompQA = ({ courseId }) => {
 					<div className='w-full'>
 						<div className="flex justify-between border-black border">
 							<input
-								type="search"
+								type="text"
 								id="default-search"
 								className="block w-full p-2 text-sm text-gray-900 border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 								placeholder="Search course questions"
-								required
+								value={searchQuery}
+								onChange={(e) => setSearchQuery(e.target.value)}
+								onKeyDown={handleKeyDown}
 							/>
-							<button className="p-2 bg-black"><IconSearch stroke={2} color="white" /></button>
+							{searchQuery && (
+								<div className="p-2 hover:bg-gray-400 cursor-pointer" onClick={handleClear}>
+									<MdClear size={20} />
+								</div>
+							)}
+							<button className="p-2 bg-black" onClick={handleSearch}>
+								<IconSearch stroke={2} color="white" />
+							</button>
 						</div>
 
 						<div className='flex'>
