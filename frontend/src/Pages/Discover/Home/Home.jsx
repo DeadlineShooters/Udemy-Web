@@ -78,7 +78,9 @@ const Home = () => {
 					.catch((error) => {
 						console.error('Error:', error);
 					}).finally(() => {
-						setLoading(false);
+						setTimeout(() => {
+							setLoading(false);
+						}, 1000);
 					});
 			});
 		}

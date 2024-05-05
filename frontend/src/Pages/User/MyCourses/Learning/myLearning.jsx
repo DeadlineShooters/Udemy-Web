@@ -3,11 +3,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import './myLearning.css';
-import course_placeholder1 from '../../../../Assets/Course.jpg';
-import course_placeholder2 from '../../../../Assets/Course2.png';
-import course_placeholder3 from '../../../../Assets/Course3.jpg';
 import course_overlay from '../../../../Assets/CourseOverlay.png';
-import more_actions from '../../../../Assets/more_actions.png';
+import { IconArchiveFilled, IconShare } from '@tabler/icons-react';
 import share from '../../../../Assets/share.png';
 import archive from '../../../../Assets/archive.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -25,6 +22,7 @@ const MyLearning = () => {
   const [detailCourse, setDetailCourse] = useState();
   const { setSelectedCourse } = useCourse();
   const [favoriteCourses, setFavoriteCourses] = useState([]);
+  const [archivedCourses, setArchivedCourses] = useState([]);
   const [filter, setFilter] = useState("all");
 
   const handleFilterChange = (e) => {
@@ -98,6 +96,29 @@ const MyLearning = () => {
       setFavoriteCourses(updatedFavoriteCourses);
     } catch (error) {
       console.error("Error updating favorite labels:", error);
+    }
+  };
+
+  //ARCHIVED LIST
+  useEffect(() => {
+    const filterArchivedCourses = () => {
+      const filteredCourses = courseList.filter((course) => archivedCourses.includes(course.course._id));
+      setCourseList(filteredCourses);
+    }
+    filterArchivedCourses();
+  }, [archivedCourses]);
+
+  const handleClickArchived = async (e, courseId) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/user/addArchivedList/${userId}/${courseId}`);
+      if (response.data.success) {
+        setArchivedCourses([...archivedCourses, courseId]);
+      } else {
+        alert(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error adding course to archived courses:", error);
     }
   };
 
@@ -241,7 +262,7 @@ const MyLearning = () => {
                             <Menu.Item>
                               {({ active }) => (
                                 <div className={classNames(active ? "bg-gray-100" : "", "flex flex-row items-center px-4 py-2 text-sm text-gray-700")}>
-                                  <img src={share} alt="share" className="h-5 w-5 mr-5" />
+                                  <IconShare className="h-5 w-5 mr-3" />
                                   <a href="/user/public-profile">Share link</a>
                                 </div>
                               )}
@@ -249,17 +270,25 @@ const MyLearning = () => {
                             <Menu.Item>
                               {({ active }) => (
                                 <div className={classNames(active ? "bg-gray-100" : "", "flex flex-row items-center px-4 py-2 text-sm text-gray-700")}>
-                                  <img src={archive} alt="share" className="h-5 w-5 mr-5" />
-                                  <a href="/user/public-profile">Archive this course</a>
+                                  <IconArchiveFilled className='h-5 w-5 mr-3' color='#000000'/>
+                                  <a
+                                    href="/home/my-courses/learning"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      handleClickArchived(e, oneCourse.course._id);
+                                    }}
+                                  >
+                                    Archive
+                                  </a>
                                 </div>
                               )}
                             </Menu.Item>
                             <Menu.Item>
                               {({ active }) => (
                                 <div className={classNames(active ? "bg-gray-100" : "", "flex flex-row items-center px-4 py-2 text-sm text-gray-700")}>
-                                  <FontAwesomeIcon icon={faStar} className="text-black text-lg mr-5" />
+                                  <FontAwesomeIcon icon={faStar} className="text-black text-lg mr-3" />
                                   <a
-                                    href="/user/public-profile"
+                                    href="/home/my-courses/learning"
                                     onClick={(e) => {
                                       e.preventDefault();
                                       if (favoriteCourses.includes(oneCourse.course._id)) {
