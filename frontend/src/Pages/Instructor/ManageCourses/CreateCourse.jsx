@@ -23,8 +23,15 @@ const CreateCourse = () => {
   /* Fetch categories from the system */
   const [categories, setCategories] = useState();
 
-  const [title, setTitle] = useState("");
-  const [introduction, setIntroduction] = useState("");
+  const [title, setTitle] = useState(() => {
+    const data = JSON.parse(localStorage.getItem('createCourse'));
+    return data ? data.title : "";
+  });
+  const [introduction, setIntroduction] = useState(() => {
+    const data = JSON.parse(localStorage.getItem('createCourse'));
+    return data ? data.introduction : "";
+  });
+  
   const [description, setDescription] = useState("");
   const [courseCat, setCourseCat] = useState("");
   const [thumbNail, setThumbNail] = useState({ secureURL: "", publicID: "" });
@@ -70,22 +77,42 @@ const CreateCourse = () => {
   const retrieveFromLocalStorage = () => {
     const data = JSON.parse(localStorage.getItem('createCourse'));
     if (data) {
-      setTitle(data.title);
-      setIntroduction(data.introduction);
-      setDescription(data.description);
-      setCourseCat(data.courseCat);
-      setThumbNail(data.thumbNail);
-      setPromoVideoLink(data.promoVideoLink);
-      setPromoVideoId(data.promoVideoId);
-      setPromoVideoDuration(data.promoVideoDuration);
-      setPrice(data.price);
-      setSections(data.sections);
-      setTotalLength(data.totalLength);
-      setTotalLecture(data.totalLecture);
-      setAddSection(data.addSection);
-      setNewSectionName(data.newSectionName);
+      setTitle(data.title || "");
+      setIntroduction(data.introduction || "");
+      setDescription(data.description || "");
+      setCourseCat(data.courseCat || "");
+      setThumbNail(data.thumbNail || { secureURL: "", publicID: "" });
+      setPromoVideoLink(data.promoVideoLink || "");
+      setPromoVideoId(data.promoVideoId || "");
+      setPromoVideoDuration(data.promoVideoDuration || "");
+      setPrice(data.price || "");
+      setSections(data.sections || []);
+      setTotalLength(data.totalLength || "");
+      setTotalLecture(data.totalLecture || "");
+      setAddSection(data.addSection || false);
+      setNewSectionName(data.newSectionName || "");
+    } else {
+      // Set initial values if data is not available in localStorage
+      setTitle("");
+      setIntroduction("");
+      setDescription("");
+      setCourseCat("");
+      setThumbNail({ secureURL: "", publicID: "" });
+      setPromoVideoLink("");
+      setPromoVideoId("");
+      setPromoVideoDuration("");
+      setPrice("");
+      setSections([]);
+      setTotalLength("");
+      setTotalLecture("");
+      setAddSection(false);
+      setNewSectionName("");
     }
   };
+
+  useEffect(() => {
+    retrieveFromLocalStorage();
+  }, []);
 
   const calculateProgressRate = () => {
     const filledVariables = [
@@ -106,11 +133,6 @@ const CreateCourse = () => {
     const progressRate = (filledCount / totalVariables) * 100;
     return progressRate;
   };
-
- 
-  useEffect(() => {
-    retrieveFromLocalStorage();
-  }, []);
 
   useEffect(() => {
     const progressRate = calculateProgressRate();
