@@ -38,33 +38,33 @@ async function createMockData() {
     await Question.deleteMany({});
     await Answer.deleteMany({});
     
-    const courseId = "662b4c7d6cbd7b1650afdc13";
-    const userId = "65fbbd6e2eae6fe060e0a3ed";
+    // const courseId = "662b4c7d6cbd7b1650afdc13";
+    // const userId = "65fbbd6e2eae6fe060e0a3ed";
 
-    for (const course of courseData) {
+    // for (const course of courseData) {
 
-      for (const question of course.questions) {
-        const newQuestion = await Question.create({
-          course: courseId,
-          title: question.title,
-          description: question.description,
-          user: userId
-        });
+    //   for (const question of course.questions) {
+    //     const newQuestion = await Question.create({
+    //       course: courseId,
+    //       title: question.title,
+    //       description: question.description,
+    //       user: userId
+    //     });
 
-        const answers = [];
-        for (let i = 0; i < question.answerCount; i++) {
-          const newAnswer = await Answer.create({
-            user: userId, // Replace with actual user ID
-            content: `Answer ${i + 1} for ${question.title}`,
-            question: newQuestion._id, // Assign the question ID to the answer
-          });
-          answers.push(newAnswer); // Push the new answer to the answers array
-        }
+    //     const answers = [];
+    //     for (let i = 0; i < question.answerCount; i++) {
+    //       const newAnswer = await Answer.create({
+    //         user: userId, // Replace with actual user ID
+    //         content: `Answer ${i + 1} for ${question.title}`,
+    //         question: newQuestion._id, // Assign the question ID to the answer
+    //       });
+    //       answers.push(newAnswer); // Push the new answer to the answers array
+    //     }
 
-        // Update the question with the array of answer IDs
-        await Question.findByIdAndUpdate(newQuestion._id, { answers: answers.map(a => a._id) });
-      }
-    }
+    //     // Update the question with the array of answer IDs
+    //     await Question.findByIdAndUpdate(newQuestion._id, { answers: answers.map(a => a._id) });
+    //   }
+    // }
 
     console.log('Mock data created successfully!');
     mongoose.connection.close();

@@ -4,6 +4,7 @@ import ExpressError from '../utils/ExpressError.js';
 import Answer from '../models/answer.js';
 
 export const getQuestions = async (req, res) => {
+  console.log("@getQuestions: ", req)
   const { courseId } = req.params;
   const { page = 1, limit = 10 } = req.query; // Default page is 1, default limit is 10
 
@@ -25,6 +26,7 @@ export const getQuestions = async (req, res) => {
 }
 
 export const getOne = async (req, res) => {
+  console.log("@getOne: ");
   const { courseId, questionId } = req.params;
 
   await checkCourseExist(courseId);

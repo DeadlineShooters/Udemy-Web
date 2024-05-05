@@ -4,6 +4,7 @@ import ExpressError from '../utils/ExpressError.js';
 import Answer from '../models/answer.js';
 
 export const getAnswers = async (req, res) => {
+  console.log("@getAnswers: ")
   const { questionId } = req.params;
   const { page = 1, limit = 100 } = req.query; // Default page is 1, default limit is 10
 
