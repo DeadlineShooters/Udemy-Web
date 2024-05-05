@@ -4,6 +4,8 @@ import instructorSchema from "./instructor.js";
 const userSchema = new mongoose.Schema({
     firstName: { type: String },
     lastName: { type: String, required: true },
+    bio: {type: String },
+    header: {type: String },
     courseList: [{
         course: { type: Schema.Types.ObjectId, ref: "Course" },
         progress: { type: Number, default: 0 },

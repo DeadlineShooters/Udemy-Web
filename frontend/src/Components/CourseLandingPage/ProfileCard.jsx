@@ -8,10 +8,9 @@ const ProfileCard = ({ instructor }) => {
   return (
     <div className="bg-white   mb-5">
       <div>
-        <a href={`/user/${instructor._id}`} className="text-xl font-bold text-purple-800 underline">
+        <a href={`/user/instructor-profile/${instructor._id}`} className="text-xl font-bold text-purple-800 underline">
           {instructor.firstName + " " + instructor.lastName}
         </a>
-
         <p className="text-sm text-gray-500 mb-2">{instructor.instructor?.headline}</p>
       </div>
       <div className="flex items-center mb-2">
