@@ -16,7 +16,7 @@ router.get("/favorites/:userId/:courseId", accountController.fetchFavoriteStatus
 router.post("/addFavorite/:userId/:courseId", accountController.addCourseToFavorites);
 router.post("/removeFavorite/:userId/:courseId", accountController.removeCourseFromFavorites);
 
-router.get("/archived/:userId/:courseId", accountController.fetchArchivedStatus);
+router.get("/archived/:userId", accountController.getArchivedList);
 router.post("/addArchivedList/:userId/:courseId", accountController.addCourseToArchived);
 router.post("/removeArchivedList/:userId/:courseId", accountController.removeCourseFromArchived);
 

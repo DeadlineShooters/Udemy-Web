@@ -3,11 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import course_overlay from '../../../../Assets/CourseOverlay.png';
-import { IconArchiveFilled, IconShare } from '@tabler/icons-react';
-import share from '../../../../Assets/share.png';
-import archive from '../../../../Assets/archive.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { IconArchiveFilled, IconArchiveOff  } from '@tabler/icons-react';
 import EditRatingButton from '../../../../Components/Feedback/EditRatingButton';
 import { IconDotsVertical } from '@tabler/icons-react';
 import { useCourse } from '../../../../CourseContextProvider';
@@ -21,6 +17,46 @@ const Archived = () => {
   const [courseList, setCourseList] = useState([]);
   const { setSelectedCourse } = useCourse();
   const [archivedCourses, setArchivedCourses] = useState([]);
+
+  useEffect(() => {
+    const getArchivedList = async () => {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/user/archived/${userId}`);
+      if (response.data.success) {
+        setArchivedCourses(response.data.archivedList);
+      }
+    }
+    getArchivedList();
+  }, []);
+
+  const getCourse = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/user/${userId}/get-course/all`);
+      if (response.data.success) {
+        const courseList = response.data.courseList;
+        const promises = courseList.map(async (course) => {
+          let feedback = null;
+          try {
+            const feedbackResponse = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${course.course._id}/${userId}`);
+            feedback = feedbackResponse.data.feedback;
+          } catch (error) {
+            if (error.response.status !== 404) {
+              throw error;
+            }
+          }
+          return { ...course, feedback };
+        });
+        const coursesWithFeedback = await Promise.all(promises);
+        console.log("Courses with feedback: ", coursesWithFeedback);
+        setCourseList(coursesWithFeedback);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    getCourse();
+  }, [])
 
   useEffect(() => {
     const filterArchivedCourses = () => {
@@ -89,7 +125,7 @@ const Archived = () => {
             </button>
           </div>
       </div>
-      <div className="lower-archived">
+      <div className="lower-wishlist cardContainer mx-auto flex flex-col">
         {archivedCourses.length === 0 ? (
           <div className='flex flex-col items-center my-20'>
             <h2 className='text-xl font-bold'>Focus on only the courses that matter to you.</h2>
@@ -125,7 +161,7 @@ const Archived = () => {
                           <Menu.Item>
                             {({ active }) => (
                               <div className={classNames(active ? "bg-gray-100" : "", "flex flex-row items-center px-4 py-2 text-sm text-gray-700")}>
-                                <IconArchiveFilled className='h-5 w-5 mr-3' color='#000000'/>
+                                <IconArchiveOff className='h-5 w-5 mr-3' color='#000000'/>
                                 <a
                                   href="/home/my-courses/learning"
                                   onClick={(e) => {

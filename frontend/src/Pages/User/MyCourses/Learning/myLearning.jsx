@@ -4,9 +4,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import './myLearning.css';
 import course_overlay from '../../../../Assets/CourseOverlay.png';
-import { IconArchiveFilled, IconShare } from '@tabler/icons-react';
-import share from '../../../../Assets/share.png';
-import archive from '../../../../Assets/archive.png';
+import { IconArchive, IconShare } from '@tabler/icons-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import EditRatingButton from '../../../../Components/Feedback/EditRatingButton';
@@ -19,7 +17,6 @@ const MyLearning = () => {
   const { userData } = useAuth();
   const userId = userData._id;
   const [courseList, setCourseList] = useState([]);
-  const [detailCourse, setDetailCourse] = useState();
   const { setSelectedCourse } = useCourse();
   const [favoriteCourses, setFavoriteCourses] = useState([]);
   const [archivedCourses, setArchivedCourses] = useState([]);
@@ -45,7 +42,6 @@ const MyLearning = () => {
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/user/addFavorite/${userId}/${courseId}`);
-
       if (response.data.success) {
         setFavoriteCourses([...favoriteCourses, courseId]);
       } else {
@@ -101,10 +97,20 @@ const MyLearning = () => {
 
   //ARCHIVED LIST
   useEffect(() => {
-    const filterArchivedCourses = () => {
-      const filteredCourses = courseList.filter((course) => archivedCourses.includes(course.course._id));
-      setCourseList(filteredCourses);
+    const getArchivedList = async () => {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/user/archived/${userId}`);
+      if (response.data.success) {
+        setArchivedCourses(response.data.archivedList);
+      }
     }
+    getArchivedList();
+  }, []);
+
+  useEffect(() => {
+    const filterArchivedCourses = () => {
+      const filteredCourses = courseList.filter(course => !archivedCourses.includes(course.course._id));
+      setCourseList(filteredCourses);
+    };
     filterArchivedCourses();
   }, [archivedCourses]);
 
@@ -270,7 +276,7 @@ const MyLearning = () => {
                             <Menu.Item>
                               {({ active }) => (
                                 <div className={classNames(active ? "bg-gray-100" : "", "flex flex-row items-center px-4 py-2 text-sm text-gray-700")}>
-                                  <IconArchiveFilled className='h-5 w-5 mr-3' color='#000000'/>
+                                  <IconArchive className='h-5 w-5 mr-3' color='#000000'/>
                                   <a
                                     href="/home/my-courses/learning"
                                     onClick={(e) => {

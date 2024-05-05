@@ -30,18 +30,47 @@ const CreateCourse = () => {
   const [introduction, setIntroduction] = useState(() => {
     const data = JSON.parse(localStorage.getItem('createCourse'));
     return data ? data.introduction : "";
+  }); 
+  const [description, setDescription] = useState(() => {
+    const data = JSON.parse(localStorage.getItem('createCourse'));
+    return data ? data.description : "";
+  }); 
+  const [courseCat, setCourseCat] = useState(() => {
+    const data = JSON.parse(localStorage.getItem('createCourse'));
+    return data ? data.courseCat : "";
+  }); 
+  const [thumbNail, setThumbNail] = useState(() => {
+    const data = JSON.parse(localStorage.getItem('createCourse'));
+    return data ? data.thumbNail : { secureURL: "", publicID: "" };
+  })
+  const [promoVideoLink, setPromoVideoLink] = useState(() => {
+    const data = JSON.parse(localStorage.getItem('createCourse'));
+    return data ? data.promoVideoLink : null;
   });
-  
-  const [description, setDescription] = useState("");
-  const [courseCat, setCourseCat] = useState("");
-  const [thumbNail, setThumbNail] = useState({ secureURL: "", publicID: "" });
-  const [promoVideoLink, setPromoVideoLink] = useState();
-  const [promoVideoId, setPromoVideoId] = useState();
-  const [promoVideoDuration, setPromoVideoDuration] = useState();
-  const [price, setPrice] = useState();
-  const [sections, setSections] = useState([]);
-  const [totalLength, setTotalLength] = useState();
-  const [totalLecture, setTotalLecture] = useState();
+  const [promoVideoId, setPromoVideoId] = useState(() => {
+    const data = JSON.parse(localStorage.getItem('createCourse'));
+    return data ? data.promoVideoId : null;
+  });
+  const [promoVideoDuration, setPromoVideoDuration] = useState(() => {
+    const data = JSON.parse(localStorage.getItem('createCourse'));
+    return data ? data.promoVideoDuration : null;
+  });
+  const [price, setPrice] = useState(() => {
+    const data = JSON.parse(localStorage.getItem('createCourse'));
+    return data ? data.price : null;
+  });
+  const [sections, setSections] = useState(() => {
+    const data = JSON.parse(localStorage.getItem('createCourse'));
+    return data ? data.sections : [];
+  });
+  const [totalLength, setTotalLength] = useState(() => {
+    const data = JSON.parse(localStorage.getItem('createCourse'));
+    return data ? data.totalLength : null;
+  });
+  const [totalLecture, setTotalLecture] = useState(() => {
+    const data = JSON.parse(localStorage.getItem('createCourse'));
+    return data ? data.totalLecture : null;
+  });
   const [addSection, setAddSection] = useState(false);
   const [newSectionName, setNewSectionName] = useState("");
 
@@ -52,20 +81,19 @@ const CreateCourse = () => {
 
   const saveToLocalStorage = () => {
     const data = {
-      title: title !== undefined ? title : null,
-      introduction: introduction !== undefined ? introduction : null,
-      description: description !== undefined ? description : null,
-      courseCat: courseCat !== undefined ? courseCat : null,
-      thumbNail: thumbNail !== undefined ? thumbNail : null,
-      promoVideoLink: promoVideoLink !== undefined ? promoVideoLink : null,
-      promoVideoId: promoVideoId !== undefined ? promoVideoId : null,
-      promoVideoDuration: promoVideoDuration !== undefined ? promoVideoDuration : null,
-      price: price !== undefined ? price : null,
-      sections: sections !== undefined ? sections : null,
-      totalLength: totalLength !== undefined ? totalLength : null,
-      totalLecture: totalLecture !== undefined ? totalLecture : null,
-      addSection: addSection !== undefined ? addSection : null,
-      newSectionName: newSectionName !== undefined ? newSectionName : null
+      title: title,
+      introduction: introduction,
+      description: description,
+      courseCat: courseCat,
+      thumbNail: thumbNail,
+      promoVideoLink: promoVideoLink,
+      promoVideoId: promoVideoId,
+      promoVideoDuration: promoVideoDuration,
+      price: price,
+      sections: sections,
+      totalLength: totalLength,
+      totalLecture: totalLecture,
+      newSectionName: newSectionName
     };
     localStorage.setItem('createCourse', JSON.stringify(data));
   };
@@ -73,46 +101,6 @@ const CreateCourse = () => {
   useEffect(() => {
     saveToLocalStorage();
   }, [title, introduction, description, courseCat, thumbNail, promoVideoLink, promoVideoId, promoVideoDuration, price, sections, totalLength, totalLecture, addSection, newSectionName]);
-
-  const retrieveFromLocalStorage = () => {
-    const data = JSON.parse(localStorage.getItem('createCourse'));
-    if (data) {
-      setTitle(data.title || "");
-      setIntroduction(data.introduction || "");
-      setDescription(data.description || "");
-      setCourseCat(data.courseCat || "");
-      setThumbNail(data.thumbNail || { secureURL: "", publicID: "" });
-      setPromoVideoLink(data.promoVideoLink || "");
-      setPromoVideoId(data.promoVideoId || "");
-      setPromoVideoDuration(data.promoVideoDuration || "");
-      setPrice(data.price || "");
-      setSections(data.sections || []);
-      setTotalLength(data.totalLength || "");
-      setTotalLecture(data.totalLecture || "");
-      setAddSection(data.addSection || false);
-      setNewSectionName(data.newSectionName || "");
-    } else {
-      // Set initial values if data is not available in localStorage
-      setTitle("");
-      setIntroduction("");
-      setDescription("");
-      setCourseCat("");
-      setThumbNail({ secureURL: "", publicID: "" });
-      setPromoVideoLink("");
-      setPromoVideoId("");
-      setPromoVideoDuration("");
-      setPrice("");
-      setSections([]);
-      setTotalLength("");
-      setTotalLecture("");
-      setAddSection(false);
-      setNewSectionName("");
-    }
-  };
-
-  useEffect(() => {
-    retrieveFromLocalStorage();
-  }, []);
 
   const calculateProgressRate = () => {
     const filledVariables = [
@@ -136,6 +124,7 @@ const CreateCourse = () => {
 
   useEffect(() => {
     const progressRate = calculateProgressRate();
+    console.log(progressRate);
     setTrackProgress(progressRate);
   }, [title, introduction, description, courseCat, thumbNail, promoVideoLink, promoVideoId, promoVideoDuration, price, sections]);
 
@@ -339,6 +328,7 @@ const CreateCourse = () => {
       if (response.status === 200) {
         //After creating course, return the main page
         navigate("/instructor/courses", { replace: true });
+        localStorage.removeItem('createCourse');
         console.log(response.data);
       }
     } catch (error) {
@@ -377,19 +367,17 @@ const CreateCourse = () => {
                 <div className="container justify-between">
                   <div className="function">
                     <div className="flex flex-col">
-                      <select className=" p-3 text-md border border-black" onChange={(e) => setCourseCat(e.target.value)}>
-                        <option value="none" disabled selected>
-                          Choose a category
-                        </option>
-                        {categories &&
-                          categories.map((category, index) => {
-                            return (
-                              <option key={index} value={category._id}>
-                                {category.name}
-                              </option>
-                            );
-                          })}
-                      </select>
+                    <select className="p-3 text-md border border-black" defaultValue={courseCat._id || "none"} onChange={(e) => setCourseCat(e.target.value)}>
+                      <option value="none" disabled>
+                        Choose a category
+                      </option>
+                      {categories &&
+                        categories.map((category, index) => (
+                          <option key={index} value={category._id}>
+                            {category.name}
+                          </option>
+                        ))}
+                    </select>
                     </div>
                   </div>
                 </div>
@@ -397,7 +385,12 @@ const CreateCourse = () => {
               <div className="form-group mb-5">
                 <Heading1>Course title</Heading1>
                 <div className="flex justify-between border border-black p-3">
-                  <input type="text" placeholder="Input the course's title" maxLength={120} className="focus:outline-none focus:ring-0 w-full" onChange={(e) => setTitle(e.target.value)} required />
+                  <input 
+                    type="text" 
+                    placeholder="Input the course's title" 
+                    maxLength={120} className="focus:outline-none focus:ring-0 w-full" 
+                    onChange={(e) => setTitle(e.target.value)} required
+                    defaultValue={title}/>
                   <span>{120 - title.length}</span>
                 </div>
               </div>
@@ -410,6 +403,7 @@ const CreateCourse = () => {
                     maxLength={120}
                     className="focus:outline-none focus:ring-0 w-full"
                     onChange={(e) => setIntroduction(e.target.value)}
+                    defaultValue={introduction}
                     required
                   />
                   <span>{120 - introduction.length}</span>
