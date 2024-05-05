@@ -389,12 +389,12 @@ const QuestionAndAnswer = () => {
                                         <div className="flex flex-col w-[720px] mb-4">
                                             <div className="flex flex-row items-center justify-between">
                                                 <span className="text-[#3d07bb]">{answer.user.firstName + " " + answer.user.lastName}</span>
-                                                <div className="relative">
+                                                {answer.user._id === userData._id && (<div className="relative">
                                                     <AiOutlineEllipsis
                                                         className="h-6 w-6 text-gray-500 cursor-pointer ml-2"
                                                         onClick={() => toggleDropdown(index)}
                                                     />
-                                                    {answer.user._id === userData._id && openDropdownIndex === index && (
+                                                    {openDropdownIndex === index && (
                                                         <div className="absolute right-0 mt-2 w-32 bg-white border shadow-lg z-10">
                                                             <button className="block text-left w-full py-2 px-4 text-sm text-gray-800 hover:bg-gray-200" onClick={() => handleEditOption(answer, index)}>
                                                                 Edit
@@ -404,7 +404,7 @@ const QuestionAndAnswer = () => {
                                                             </button>
                                                         </div>
                                                     )}
-                                                </div>
+                                                </div>)}
                                             </div>
                                             <p className="text-gray-500 mb-1">{getTimeAgo(new Date(answer.createdAt))}</p>
 
