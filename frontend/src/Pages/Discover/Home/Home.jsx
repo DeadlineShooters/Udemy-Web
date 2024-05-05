@@ -14,22 +14,22 @@ const responsive = {
 		slidesToSlide: 4,
 	},
 	lg: {
-		breakpoint: { max: 1280, min: 960 },
+		breakpoint: { max: 1280, min: 1024 },
 		items: 4,
 		slidesToSlide: 3,
 	},
 	md: {
-		breakpoint: { max: 960, min: 720 },
+		breakpoint: { max: 1024, min: 768 },
 		items: 3,
 		slidesToSlide: 2,
 	},
 	sm: {
-		breakpoint: { max: 720, min: 540 },
+		breakpoint: { max: 768, min: 640 },
 		items: 2,
 		slidesToSlide: 1,
 	},
 	none: {
-		breakpoint: { max: 540, min: 0 },
+		breakpoint: { max: 640, min: 0 },
 		items: 1,
 		slidesToSlide: 1,
 	},
@@ -165,7 +165,7 @@ const Home = () => {
 									{courses[category.name].map((course) => (
 										<Link to={`/course/${course._id}`}>
 											<div class=''>
-												<img class='object-cover object-center h-img-carousel w-full' src={course.thumbNail.secureURL} alt='' />
+												<img class='object-cover object-center w-full aspect-[16/9]' src={course.thumbNail.secureURL} alt='' />
 												<div class='flex flex-col gap-1 pt-1.5'>
 													<h3 class='h-10 font-bold text-gray-900 line-clamp-2 leading-tight'>{course.name}</h3>
 													<p class='text-xs truncate text-gray-500'>
