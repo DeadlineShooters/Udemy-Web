@@ -180,7 +180,7 @@ const CompQA = ({ courseId }) => {
 									)}
 								</div>
 							)}
-							<div className="">
+							<div className="mt-4">
 								{isAddingQuestion === true ? (
 									<div>
 										<p className="font-bold mb-2 mt-3">Title or summary</p>
