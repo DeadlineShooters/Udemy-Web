@@ -1,11 +1,10 @@
 import DashboardHeaderTitle from "../../../Components/DashboardHeaderTitle";
 import Heading1 from "../../../Components/CourseManagement/Heading1";
-import TextInput from "./TextInput";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { IconPlus, IconEdit, IconTrash, IconCheck, IconAlertCircleFilled, IconClipboardText, IconBrandYoutubeFilled, IconEye, IconCrop } from "@tabler/icons-react";
+import { IconTrash, IconCrop } from "@tabler/icons-react";
 import UploadWidget from "./UploadWidget";
 import { Link } from "react-router-dom";
 import { Image, Video } from "cloudinary-react";
@@ -61,7 +60,6 @@ const CourseLandingPage = () => {
   }, []);
   //Track any changes
   const [trackProgress, setTrackProgress] = useState(0);
-  const [showInformModal, setShowInformModal] = useState(false); // State for section modal
   const [showWarningModal, setShowWarningModal] = useState(false); // State for section modal
 
   const location = useLocation();
@@ -164,15 +162,15 @@ const CourseLandingPage = () => {
   };
 
   const successNotify = () => {
-    toast.success("Updated successfully!", {
-      position: "top-center",
+    toast.success('🦄 Update successfully!', {
+      position: "bottom-left",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      theme: "dark",
+      theme: "light",
       transition: Bounce,
     });
   };
@@ -364,10 +362,12 @@ const CourseLandingPage = () => {
           </div>
         </div>
         <div className="flex flex-row justify-end">
-          <Button color="black" className="rounded-none hover:bg-violet-800" style={{ height: "48px" }} onClick={() => navigate(replacedUrl)}>
+          <Button color="black" className="rounded-none hover:bg-violet-800 mr-2" style={{ height: "48px" }} onClick={() => navigate(replacedUrl)}>
             <span className="font-bold text-base normal-case">Go to Curriculum</span>
           </Button>
-
+          <Button color="purple" className="rounded-none hover:bg-violet-800" style={{ height: "48px" }} onClick={() => handleCreateCourse()}>
+            <span className="font-bold text-base normal-case">Save</span>
+          </Button>
           <Modal
             showModal={showWarningModal}
             setShowModal={setShowWarningModal}

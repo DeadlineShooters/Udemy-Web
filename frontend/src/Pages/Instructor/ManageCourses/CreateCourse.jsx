@@ -43,6 +43,50 @@ const CreateCourse = () => {
   const [showInformModal, setShowInformModal] = useState(false); // State for section modal
   const [showWarningModal, setShowWarningModal] = useState(false); // State for section modal
 
+  const saveToLocalStorage = () => {
+    const data = {
+      title: title !== undefined ? title : null,
+      introduction: introduction !== undefined ? introduction : null,
+      description: description !== undefined ? description : null,
+      courseCat: courseCat !== undefined ? courseCat : null,
+      thumbNail: thumbNail !== undefined ? thumbNail : null,
+      promoVideoLink: promoVideoLink !== undefined ? promoVideoLink : null,
+      promoVideoId: promoVideoId !== undefined ? promoVideoId : null,
+      promoVideoDuration: promoVideoDuration !== undefined ? promoVideoDuration : null,
+      price: price !== undefined ? price : null,
+      sections: sections !== undefined ? sections : null,
+      totalLength: totalLength !== undefined ? totalLength : null,
+      totalLecture: totalLecture !== undefined ? totalLecture : null,
+      addSection: addSection !== undefined ? addSection : null,
+      newSectionName: newSectionName !== undefined ? newSectionName : null
+    };
+    localStorage.setItem('createCourse', JSON.stringify(data));
+  };
+
+  useEffect(() => {
+    saveToLocalStorage();
+  }, [title, introduction, description, courseCat, thumbNail, promoVideoLink, promoVideoId, promoVideoDuration, price, sections, totalLength, totalLecture, addSection, newSectionName]);
+
+  const retrieveFromLocalStorage = () => {
+    const data = JSON.parse(localStorage.getItem('createCourse'));
+    if (data) {
+      setTitle(data.title);
+      setIntroduction(data.introduction);
+      setDescription(data.description);
+      setCourseCat(data.courseCat);
+      setThumbNail(data.thumbNail);
+      setPromoVideoLink(data.promoVideoLink);
+      setPromoVideoId(data.promoVideoId);
+      setPromoVideoDuration(data.promoVideoDuration);
+      setPrice(data.price);
+      setSections(data.sections);
+      setTotalLength(data.totalLength);
+      setTotalLecture(data.totalLecture);
+      setAddSection(data.addSection);
+      setNewSectionName(data.newSectionName);
+    }
+  };
+
   const calculateProgressRate = () => {
     const filledVariables = [
       title.trim(),
@@ -62,6 +106,11 @@ const CreateCourse = () => {
     const progressRate = (filledCount / totalVariables) * 100;
     return progressRate;
   };
+
+ 
+  useEffect(() => {
+    retrieveFromLocalStorage();
+  }, []);
 
   useEffect(() => {
     const progressRate = calculateProgressRate();

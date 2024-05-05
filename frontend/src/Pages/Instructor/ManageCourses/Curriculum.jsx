@@ -299,10 +299,12 @@ const Curriculum = () => {
         </div>
       </div>
       <div className="flex flex-row justify-end bottom-0 items-end align-bottom">
-        <Button color="black" className="rounded-none hover:bg-violet-800" style={{ height: "48px" }} onClick={() => navigate(replacedUrl)}>
+        <Button color="black" className="rounded-none hover:bg-violet-800 mr-2" style={{ height: "48px" }} onClick={() => navigate(replacedUrl)}>
           <span className="font-bold text-base normal-case">Go to Landing Page</span>
         </Button>
-
+        <Button color="purple" className="rounded-none hover:bg-violet-800" style={{ height: "48px" }} onClick={() => handleSaveCourse()}>
+          <span className="font-bold text-base normal-case">Save</span>
+        </Button>
         <Modal
           showModal={showWarningModal}
           setShowModal={setShowWarningModal}
