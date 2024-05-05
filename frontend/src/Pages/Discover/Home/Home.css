@@ -2,26 +2,17 @@
 	.itemClassHome {
 		width: calc((1340px - 4rem - 5rem) / 5) !important;
 	}
-	.h-img-carousel {
-		height: calc((1340px - 4rem - 5rem) / 5 /16 * 9) !important;
-	}
 }
 
 @media (min-width: 1280px) and (max-width: 1339px) {
 	.itemClassHome {
 		width: calc((var(--containerWidth) - 4rem - 5rem) / 5) !important;
 	}
-	.h-img-carousel {
-		height: calc((var(--containerWidth) - 4rem - 5rem) / 5 /16 * 9) !important;
-	}
 }
 
-@media (min-width: 1024px) and (max-width: 1279px) {
+@media (min-width: 1024px) and (max-width: 1280px) {
 	.itemClassHome {
 		width: calc((var(--containerWidth) - 4rem - 4rem) / 4) !important;
-	}
-	.h-img-carousel {
-		height: calc((var(--containerWidth) - 4rem - 4rem) / 4 /16 * 9) !important;
 	}
 }
 
@@ -29,25 +20,16 @@
 	.itemClassHome {
 		width: calc((var(--containerWidth) - 4rem - 3rem) / 3) !important;
 	}
-	.h-img-carousel {
-		height: calc((var(--containerWidth) - 4rem - 3rem) / 3 /16 * 9) !important;
-	}
 }
 
-@media (min-width: 640px) and (max-width: 767px) {
+@media (min-width: 640px) and (max-width: 768px) {
 	.itemClassHome {
 		width: calc((var(--containerWidth) - 4rem - 2rem) / 2) !important;
 	}
-	.h-img-carousel {
-		height: calc((var(--containerWidth) - 4rem - 2rem) / 2 /16 * 9) !important;
-	}
 }
 
-@media (max-width: 639px) {
+@media (max-width: 640px) {
 	.itemClassHome {
 		width: calc(var(--containerWidth) - 4rem - 1rem) !important;
-	}
-	.h-img-carousel {
-		height: calc((var(--containerWidth) - 4rem - 1rem) /16 * 9) !important;
 	}
 }

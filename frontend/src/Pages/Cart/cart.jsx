@@ -1,169 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useMediaQuery } from 'react-responsive';
 import { useAuth } from '../../AuthContextProvider.jsx';
-import Carousel from 'react-multi-carousel';
-import Drawer from 'react-modern-drawer';
 import axios from 'axios';
 import { useCart, useWishlist } from '../../CartRouterProvider.js';
-import { Select, Option, Accordion, AccordionHeader, AccordionBody, Checkbox, List, ListItem, ListItemPrefix, Typography } from '@material-tailwind/react';
+import { RenderStars } from '../../Components/StarRatings.jsx';
 import 'react-multi-carousel/lib/styles.css';
 import 'react-modern-drawer/dist/index.css';
-
-const responsive = {
-	xl: {
-		breakpoint: { max: 3000, min: 1140 },
-		items: 4,
-		slidesToSlide: 3,
-	},
-	md: {
-		breakpoint: { max: 1140, min: 720 },
-		items: 3,
-		slidesToSlide: 2,
-	},
-	sm: {
-		breakpoint: { max: 720, min: 540 },
-		items: 2,
-		slidesToSlide: 1,
-	},
-	none: {
-		breakpoint: { max: 540, min: 0 },
-		items: 1,
-		slidesToSlide: 1,
-	},
-};
-
-const instructors = [
-	{
-		name: 'John Doe',
-		image: 'https://img-c.udemycdn.com/user/200_H/38516954_b11c_3.jpg',
-		subCategories: ['Web Development', 'Data Science'],
-		rating: 4.5,
-		students: 1164668,
-		courses: 8,
-	},
-	{
-		name: 'John Doe',
-		image: 'https://img-c.udemycdn.com/user/200_H/38516954_b11c_3.jpg',
-		subCategories: ['Web Development', 'Data Science'],
-		rating: 4.5,
-		students: 1164668,
-		courses: 8,
-	},
-	{
-		name: 'John Doe',
-		image: 'https://img-c.udemycdn.com/user/200_H/38516954_b11c_3.jpg',
-		subCategories: ['Web Development', 'Data Science'],
-		rating: 4.5,
-		students: 1164668,
-		courses: 8,
-	},
-	{
-		name: 'John Doe',
-		image: 'https://img-c.udemycdn.com/user/200_H/38516954_b11c_3.jpg',
-		subCategories: ['Web Development', 'Data Science'],
-		rating: 4.5,
-		students: 1164668,
-		courses: 8,
-	},
-	{
-		name: 'John Doe',
-		image: 'https://img-c.udemycdn.com/user/200_H/38516954_b11c_3.jpg',
-		subCategories: ['Web Development', 'Data Science'],
-		rating: 4.5,
-		students: 1164668,
-		courses: 8,
-	},
-];
-
-const courses = [
-	{
-		name: 'Docker & Kubernetes: The Practical Guide [2024 Edition]',
-		headline: 'Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up!',
-		instructor: 'Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller',
-		rating: 4.7,
-		ratingCnt: 25485,
-		hours: 23.5,
-		lectures: 262,
-		discountedPrice: 349000,
-		originalPrice: 2199000,
-		image: 'https://img-b.udemycdn.com/course/240x135/3490000_d298_2.jpg',
-	},
-	{
-		name: 'Docker & Kubernetes: The Practical Guide [2024 Edition]',
-		headline: 'Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up!',
-		instructor: 'Academind by Maximilian Schwarzmüller, Maximilian Schwarzmüller',
-		rating: 4.7,
-		ratingCnt: 25485,
-		hours: 23.5,
-		lectures: 262,
-		discountedPrice: 349000,
-		originalPrice: 2199000,
-		image: 'https://img-b.udemycdn.com/course/240x135/3490000_d298_2.jpg',
-	},
-];
-
-const filterFields = ['Ratings', 'Languages', 'Video Duration', 'Features', 'Price'];
-
-const filterOptions = [
-	[4.5, 4.0, 3.5, 3.0],
-	['English', 'Vietnamese'],
-	['0-3 hours', '3-6 hours', '6-9 hours', '9-12 hours'],
-	['Subtitles', 'Quizzes', 'Coding Exercises', 'Practice Tests'],
-	['Free', 'Paid'],
-];
-
-function ArrowIcon({ id, open }) {
-	return (
-		<svg
-			xmlns='http://www.w3.org/2000/svg'
-			fill='none'
-			viewBox='0 0 24 24'
-			strokeWidth={2}
-			stroke='currentColor'
-			className={`${open ? 'rotate-180' : ''} h-5 w-5 transition-transform`}
-		>
-			<path strokeLinecap='round' strokeLinejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' />
-		</svg>
-	);
-}
-
-function FullStarIcon() {
-	return (
-		<svg xmlns='http://www.w3.org/2000/svg' class='text-[#b4690e] w-3 h-auto fill-current ' viewBox='0 0 16 16'>
-			<path d='M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z' />
-		</svg>
-	);
-}
-
-function HalfStarIcon() {
-	return (
-		<svg xmlns='http://www.w3.org/2000/svg' class='text-[#b4690e] w-3 h-auto fill-current' viewBox='0 0 16 16'>
-			<path d='M5.354 5.119 7.538.792A.516.516 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.537.537 0 0 1 16 6.32a.548.548 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.52.52 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.58.58 0 0 1 .085-.302.513.513 0 0 1 .37-.245l4.898-.696zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.565.565 0 0 1 .162-.505l2.907-2.77-4.052-.576a.525.525 0 0 1-.393-.288L8.001 2.223 8 2.226v9.8z' />
-		</svg>
-	);
-}
-
-function StarIcon() {
-	return (
-		<svg xmlns='http://www.w3.org/2000/svg' class='text-[#b4690e] w-3 h-auto fill-current' viewBox='0 0 16 16'>
-			<path d='M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z' />
-		</svg>
-	);
-}
-
-function RenderStars({ rating }) {
-	const stars = [];
-	for (let i = 0; i < 5; i++) {
-		if (i < rating - 0.7) {
-			stars.push(<FullStarIcon key={i} />);
-		} else if (i < rating) {
-			stars.push(<HalfStarIcon key={i} />);
-		} else {
-			stars.push(<StarIcon key={i} />);
-		}
-	}
-	return stars;
-}
 
 const Cart = () => {
 	const { userData } = useAuth();
@@ -193,12 +34,19 @@ const Cart = () => {
 		}
 	}, [containerWidth]);
 
+	useEffect(() => {
+		setAmount(cart.reduce((acc, course) => acc + course.price * 0.8, 0));
+	}, [cart]);
+
 	const handlePayment = async () => {
 		try {
-			console.log(cart.reduce((acc, course) => acc + course.price * 0.8, 0).toLocaleString());
+			const exchangeRateResponse = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+			const exchangeRateData = await exchangeRateResponse.json();
+			const exchangeRate = exchangeRateData.rates.VND;
+
 			const response = await axios.post('http://localhost:5000/payment', {
 				userId: userData._id,
-				amount: parseInt(cart.reduce((acc, course) => acc + course.price * 0.8, 0).toLocaleString() * 23000),
+				amount: parseInt(amount * exchangeRate),
 			});
 			if (response.data.success) {
 				window.location.href = response.data.payUrl;
@@ -306,8 +154,7 @@ const Cart = () => {
 
 												<div class='flex flex-col pl-12'>
 													<span class='font-bold text-[#a435f0] flex items-center'>
-														<span class='underline'>đ</span>
-														<span>{(course.price * 0.8).toLocaleString()}</span>
+														<span>{(course.price * 0.8).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
 														<svg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg' className='w-4 ml-1 self-end'>
 															<path
 																fill-rule='evenodd'
@@ -318,8 +165,7 @@ const Cart = () => {
 														</svg>
 													</span>
 													<span class='text-gray-700 line-through'>
-														<span class='underline'>đ</span>
-														{course.price.toLocaleString()}
+														<span>{course.price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
 													</span>
 												</div>
 											</div>
@@ -361,8 +207,7 @@ const Cart = () => {
 
 												<div class='flex flex-col pl-12'>
 													<span class='font-bold text-[#a435f0] flex items-center'>
-														<span class='underline'>đ</span>
-														<span>{(course.price * 0.8).toLocaleString()}</span>
+														<span>{(course.price * 0.8).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
 														<svg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg' className='w-4 ml-1 self-end'>
 															<path
 																fill-rule='evenodd'
@@ -373,8 +218,7 @@ const Cart = () => {
 														</svg>
 													</span>
 													<span class='text-gray-700 line-through'>
-														<span class='underline'>đ</span>
-														{course.price.toLocaleString()}
+														<span>{course.price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
 													</span>
 												</div>
 											</div>
@@ -385,19 +229,9 @@ const Cart = () => {
 						</div>
 						<div className='flex flex-col grow min-w-72 xl:ml-12 lg:ml-8 md:ml-4 gap-0.5'>
 							<span className='font-bold text-gray-600 mb-2'>Total: </span>
-							<span class='font-bold text-gray-900 text-4xl'>
-								<span class='underline'>đ</span>
-								{cart.reduce((acc, course) => acc + course.price * 0.8, 0).toLocaleString()}
-							</span>
-							<span class='text-gray-700 line-through'>
-								<span class='underline'>đ</span>
-								{cart.reduce((acc, course) => acc + course.price, 0).toLocaleString()}
-							</span>
-							<span className='mb-2.5 text-gray-900'>
-								{100 -
-									Math.round((cart.reduce((acc, course) => acc + course.price * 0.8, 0) / cart.reduce((acc, course) => acc + course.price, 0)) * 100)}
-								% off
-							</span>
+							<span class='font-bold text-gray-900 text-4xl'>{amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
+							<span class='text-gray-700 line-through'>{(amount / 0.8).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
+							<span className='mb-2.5 text-gray-900'>20% off</span>
 							<button className='w-full bg-[#a435f0] text-white p-3 font-bold mb-4' onClick={handlePayment}>
 								Checkout
 							</button>
