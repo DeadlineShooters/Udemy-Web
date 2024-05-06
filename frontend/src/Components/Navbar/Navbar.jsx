@@ -27,6 +27,7 @@ const Navbar = () => {
 	}
 	const logout = () => {
 		secureLocalStorage.clear();
+    localStorage.clear();
 		window.open('http://localhost:5000/auth/logout', '_self');
 	};
 	const [isTurnOnSideBar, setTurnOnSideBar] = useState(false);

@@ -139,13 +139,6 @@ const CourseContent = () => {
     localNavigate(window.location.pathname + '#QA');
   };
 
-  const updateCourseProgress = (selected) => {
-    const increment = selected ? 1 : -1;
-    let storedCourse = JSON.parse(localStorage.getItem('selectedCourse'));
-    const newProgress = (currentLecture +  increment / storedCourse.course.totalLecture) * 100;
-    storedCourse.progress = newProgress;
-    localStorage.setItem('selectedCourse', JSON.stringify(storedCourse));
-  };
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -273,8 +266,8 @@ const CourseContent = () => {
           <div class="flex flex-col">
             <ReactPlayer controls={true} url={videoUrl} height="603px" width="1072px" />
             <div className="flex flex-row my-3">
-              <div className={` ${window.location.hash === '#overview' ? "text-[rgb(109,60,208)]" : "black"} font-bold hover:text-[#382660] text-lg mx-5 cursor-pointer`} onClick={handleOverviewClick}>Overview</div>
-              <div className="font-bold hover:text-[#382660] text-lg mx-5 cursor-pointer" onClick={handleQAClick}>QA</div>
+              <div className={` ${window.location.hash === '#overview' ? "text-[rgb(109,60,208)]" : "black"} font-bold hover:text-[#834aff] text-lg mx-5 cursor-pointer`} onClick={handleOverviewClick}>Overview</div>
+              <div className={` ${window.location.hash === '#QA' ? "text-[rgb(109,60,208)]" : "black"} font-bold hover:text-[#834aff] text-lg mx-5 cursor-pointer`} onClick={handleQAClick}>Q&A</div>
             </div>
             {window.location.hash === '#overview' && <CourseOverview/>}
             {window.location.hash === '#QA' && <CompQA courseId={courseDetails._id}/>}
@@ -316,29 +309,24 @@ const CourseContent = () => {
                   class="w-5 h-5 mr-5"
                 ></img>
               </div>
-              <div class={`${expandedSections[section.index] ? "flex flex-col" : "hidden"} ml-5 cursor-pointer`}>
+              <div className={`${expandedSections[section.index] ? "flex flex-col" : "hidden"} ml-5 cursor-pointer`}>
                 {section.lectureList.map((lecture, indexLecture) => (
                   <div
                     key={lecture.index}
-                    class={`${selectLecture[lecture.index] ? "bg-gray-300" : ""} hover:bg-slate-200 flex flex-row items-center z-10`}
+                    className={`${selectLecture[lecture.index] ? "bg-gray-300" : ""} hover:bg-slate-200 flex flex-row items-center z-10`}
                     onClick={() => {
-                      {
-                        handleLectureClick(lecture.video.secureURL, slugName, lecture.index);
-                      }
+                      handleLectureClick(lecture.video.secureURL, slugName, lecture.index);
                       if (!selectLecture[lecture.index]) {
                         toggleSelectLecture(lecture.index);
-                        updateCourseProgress(true);
-                      } else {
-                        updateCourseProgress(false);
                       }
                     }}
                   >
                     <input
-                      id={lecture.index}
+                      id={`${lecture.index}`}
                       type="checkbox"
-                      checked={selectedLectures[index] || false}
-                      onChange={() => handleCheckboxChange(index)}
-                      class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-5"
+                      checked={selectedLectures[lecture.index] || false}
+                      onChange={() => handleCheckboxChange(lecture.index)}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-5 z-99999"
                     />
                     <p className="p-2">
                       {index + 1}.{indexLecture + 1} {lecture.name}
