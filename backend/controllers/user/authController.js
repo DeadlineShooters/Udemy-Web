@@ -32,11 +32,15 @@ const sendVerificationEmail = ({ _id, email }, res) => {
   const mailOptions = {
     from: process.env.AUTH_EMAIL,
     to: email,
-    subject: "Verification Your Email",
+    subject: "Complete Your Signup for Udemy by Tomato 09 Group.",
     html:
-      `<p>Verify your email address to complete the signup and login into your account.</p>
-      <p>This link expires in 6 hours.</p>
-      <a href=${currentURL + "auth/verify/" + _id + "/" + uniqueString}>here</a> to proceed.</p>`,
+      `<p>Dear User,</p>
+      <p>To complete your signup and login into your account, please verify your email address by clicking the link below. This is a necessary step to ensure the security of your account and to provide you with the best possible experience.</p>
+      <a href=${currentURL + "auth/verify/" + _id + "/" + uniqueString}>[Verify Your Email Address]</a> to proceed.</p>
+      <p>Please note that this verification link will expire in 6 hours. If the link expires before you have a chance to verify your email, don’t worry! You can request a new verification link from the login page.</p>
+      <p>Once your email is verified, you’ll be able to access all the features of our app. If you have any questions or need further assistance, please don’t hesitate to contact us.</p>
+      <p>Thank you for choosing Udemy by Tomato 09 Group!</p>
+      <p>Best regards, The Tomato 09 Group Team</p>`
   };
   const saltRounds = 10;
   bcrypt
