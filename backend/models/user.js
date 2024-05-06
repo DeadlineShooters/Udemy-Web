@@ -32,6 +32,7 @@ const userSchema = new mongoose.Schema({
     archivedCourse: [{ type: Schema.Types.ObjectId, ref: "Course" }],
     cart: [{ type: Schema.Types.ObjectId, ref: "Course" }],
     instructor: instructorSchema,
+    verified: {type: Boolean, default: false}
 }); 
 
 const User = mongoose.model("User", userSchema);
