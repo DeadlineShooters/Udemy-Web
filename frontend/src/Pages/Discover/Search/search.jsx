@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import Drawer from 'react-modern-drawer';
 import axios from 'axios';
@@ -236,38 +236,40 @@ const Search = () => {
 						<div className={`col-span-full ${openFilterBar ? 'lg:col-span-9' : ''}  divide-y divide-gray-300`}>
 							{filterCourses &&
 								filterCourses.map((course) => (
-									<div className='flex gap-4 pb-8 pt-4 '>
-										<img className='w-24 h-24 object-cover object-center md:w-60 aspect[16:9]' src={course.thumbNail.secureURL} alt='' />
-										<div className='pr-24 relative flex flex-col gap-1 w-full '>
-											<h3 class='font-bold text-gray-900 line-clamp-2 leading-tight'>{course.name}</h3>
-											<span class='text-sm text-gray-700 font-medium'>{course.introduction}</span>
-											<span class='text-xs text-gray-700'>
-												{course.instructor.firstName} {course.instructor.lastName}
-											</span>
-											<div class='flex gap-1 items-center'>
-												<span class='text-gray-900 font-bold text-sm'>{course.avgRating}</span>
-												<div class='flex gap-0.5'>{RenderStars({ rating: course.avgRating })}</div>
-												{/* <span class='text-gray-700 font-medium text-xs inline-block align-middle'>({course.ratingCnt.toLocaleString()})</span> */}
-											</div>
-											<div class='text-gray-700 text-xs align-middle'>
-												{(course.totalLength / 3600).toFixed(3)} total hours • {course.totalLecture} lectures
-											</div>
-											<div class='flex items-center space-x-2'>
-												{course.price === 0 ? (
-													<span class='font-bold text-gray-900 '>Free</span>
-												) : (
-													<>
-														<span class='font-bold text-gray-900 '>
-															<span>{(course.price * 0.8).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
-														</span>
-														<span class='text-gray-700 line-through'>
-															<span>{course.price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
-														</span>
-													</>
-												)}
+									<Link to={`/course/${course._id}`}>
+										<div className='flex gap-4 pb-8 pt-4 '>
+											<img className='w-24 h-24 object-cover object-center md:w-60 aspect[16:9]' src={course.thumbNail.secureURL} alt='' />
+											<div className='pr-24 relative flex flex-col gap-1 w-full '>
+												<h3 class='font-bold text-gray-900 line-clamp-2 leading-tight'>{course.name}</h3>
+												<span class='text-sm text-gray-700 font-medium'>{course.introduction}</span>
+												<span class='text-xs text-gray-700'>
+													{course.instructor.firstName} {course.instructor.lastName}
+												</span>
+												<div class='flex gap-1 items-center'>
+													<span class='text-gray-900 font-bold text-sm'>{course.avgRating}</span>
+													<div class='flex gap-0.5'>{RenderStars({ rating: course.avgRating })}</div>
+													{/* <span class='text-gray-700 font-medium text-xs inline-block align-middle'>({course.ratingCnt.toLocaleString()})</span> */}
+												</div>
+												<div class='text-gray-700 text-xs align-middle'>
+													{(course.totalLength / 3600).toFixed(3)} total hours • {course.totalLecture} lectures
+												</div>
+												<div class='flex items-center space-x-2'>
+													{course.price === 0 ? (
+														<span class='font-bold text-gray-900 '>Free</span>
+													) : (
+														<>
+															<span class='font-bold text-gray-900 '>
+																<span>{(course.price * 0.8).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
+															</span>
+															<span class='text-gray-700 line-through'>
+																<span>{course.price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
+															</span>
+														</>
+													)}
+												</div>
 											</div>
 										</div>
-									</div>
+									</Link>
 								))}
 						</div>
 					</div>

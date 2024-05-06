@@ -134,6 +134,7 @@ const CourseDetail = () => {
 
 			const response = await axios.post('http://localhost:5000/payment', {
 				userId: userData._id,
+				courseId: course._id,
 				amount: parseInt(course.price * 0.8 * exchangeRate),
 			});
 			if (response.data.success) {

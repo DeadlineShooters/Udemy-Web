@@ -9,7 +9,8 @@ const controller = {};
 
 controller.payment = async (request, response) => {
 	var userId = request.body.userId;
-	var amount = request.body.amount;
+	var courseId = request.body.courseId;
+	var amount = 1000;
 	var partnerCode = 'MOMO';
 	var accessKey = 'F8BBA842ECF85';
 	var secretkey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
@@ -20,7 +21,7 @@ controller.payment = async (request, response) => {
 	var ipnUrl = 'https://callback.url/notify';
 	// var ipnUrl = redirectUrl = "https://webhook.site/454e7b77-f177-4ece-8236-ddf1c26ba7f8";
 	var requestType = 'captureWallet';
-	var extraData = userId;
+	var extraData = userId + '---' + courseId;
 	amount = amount.toString();
 
 	var rawSignature =
@@ -104,10 +105,11 @@ controller.payment = async (request, response) => {
 };
 controller.handlePayment = async (req, res) => {
 	if (req.query.resultCode == 0) {
-		let userId = req.query.extraData;
+		let [userId, courseId] = req.query.extraData.split('---');
 		let user = await User.findById(userId);
 		if (user) {
-			const courseUpdates = user.cart.map(async (courseId) => {
+			const courses = courseId == '' ? user.cart : [courseId];
+			const courseUpdates = courses.map(async (courseId) => {
 				let course = await Course.findById(courseId);
 				if (course) {
 					user.wishList = user.wishList.filter((wish) => wish.toString() !== courseId.toString());
@@ -138,7 +140,9 @@ controller.handlePayment = async (req, res) => {
 
 			await Promise.all(courseUpdates);
 
-			user.cart = [];
+			if (courseId == '') {
+				user.cart = [];
+			}
 			await user.save();
 		} else {
 			console.log('No user found!');
