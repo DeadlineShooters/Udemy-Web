@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { Link } from "react-router-dom";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -29,20 +30,28 @@ export default function DropdownSimple({ label, onChange }) {
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
-                <a href="learning" onClick={() => onChange("All Courses")} className={classNames(active ? "bg-gray-100 text-gray-900" : "text-gray-700", "block px-4 py-2 text-sm")}>
+                <Link
+                  to="/learning"
+                  onClick={(e) => {
+                    onChange("All Courses");
+                  }}
+                  className={classNames(active ? "bg-gray-100 text-gray-900" : "text-gray-700", "block px-4 py-2 text-sm")}
+                >
                   All Courses
-                </a>
+                </Link>
               )}
             </Menu.Item>
             <Menu.Item>
               {({ active }) => (
-                <a
-                  href="learning?category-filter=favorited"
-                  onClick={() => onChange("Favorites")}
+                <Link
+                  to="?category-filter=favorited"
+                  onClick={(e) => {
+                    onChange("favorites");
+                  }}
                   className={classNames(active ? "bg-gray-100 text-gray-900" : "text-gray-700", "block px-4 py-2 text-sm")}
                 >
                   Favorites
-                </a>
+                </Link>
               )}
             </Menu.Item>
           </div>

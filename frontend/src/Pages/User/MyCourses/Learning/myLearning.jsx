@@ -22,26 +22,24 @@ const MyLearning = () => {
   const [favoriteCourses, setFavoriteCourses] = useState([]);
   const [archivedCourses, setArchivedCourses] = useState([]);
   const [filter, setFilter] = useState("all");
-  const location = useLocation();
-  const [filteredCourseList, setFilteredCourseList] = useState([]);
 
-  const handleFilterChange = (e) => {
-    setFilter(e.target.value);
-    if (e.target.value === "favorites") {
-      navigate(`${window.location.pathname}?category-filter=favorited`);
-    } else {
-      navigate(window.location.pathname);
-    }
+  const handleFilterChange = (value) => {
+    setFilter(value);
   };
-  console.log("path name: ", location.search);
 
   useEffect(() => {
-    getCourse();
-  }, [location.pathname, location.search]); // Add location.pathname as a dependency
+    if (filter === "favorites") {
+      // Filter the courseList to only show favorited courses
+      const filteredCourses = courseList.filter((course) => favoriteCourses.includes(course.course._id));
+      setCourseList(filteredCourses);
+    } else {
+      // Fetch all courses if the filter is set to 'all'
+      getCourse();
+    }
+  }, [filter]);
 
   const handleClickFavorite = async (e, courseId) => {
     e.preventDefault();
-
     try {
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/user/addFavorite/${userId}/${courseId}`);
       if (response.data.success) {
@@ -108,14 +106,6 @@ const MyLearning = () => {
     getArchivedList();
   }, []);
 
-  useEffect(() => {
-    const filterArchivedCourses = () => {
-      const filteredCourses = courseList.filter((course) => !archivedCourses.includes(course.course._id));
-      setCourseList(filteredCourses);
-    };
-    filterArchivedCourses();
-  }, [archivedCourses]);
-
   const handleClickArchived = async (e, courseId) => {
     e.preventDefault();
     try {
@@ -132,25 +122,13 @@ const MyLearning = () => {
 
   const getCourse = async () => {
     try {
-      const queryParams = new URLSearchParams(location.search);
-      console.log("query params: " + queryParams);
-      const categoryFilter = queryParams.get("category-filter");
-
-      let endpoint;
-      if (location.pathname === "/home/my-courses/learning" && categoryFilter !== "favorited") {
-        endpoint = `${process.env.REACT_APP_BACKEND_HOST}/user/${userId}/get-course/all`;
-      } else {
-        endpoint = `${process.env.REACT_APP_BACKEND_HOST}/user/favorites/${userId}`;
-      }
-
-      const response = await axios.get(endpoint);
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/user/${userId}/get-course/all`);
       if (response.data.success) {
-        const courseList = response.data.courseList;
-        console.log("courseList found:", courseList);
-        const promises = courseList.map(async (course) => {
+        const fetchedCourseList = response.data.courseList;
+        const promises = fetchedCourseList.map(async (course) => {
           let feedback = null;
           try {
-            const feedbackResponse = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${course.course._id}/${userId}`);
+            const feedbackResponse = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/feedback/${course._id}/${userId}`);
             feedback = feedbackResponse.data.feedback;
           } catch (error) {
             if (error.response.status !== 404) {
@@ -160,11 +138,15 @@ const MyLearning = () => {
           return { ...course, feedback };
         });
         const coursesWithFeedback = await Promise.all(promises);
-        console.log("Courses with feedback: ", coursesWithFeedback);
-        setCourseList(coursesWithFeedback);
+
+        // Filter out archived courses
+        const nonArchivedCourses = coursesWithFeedback.filter((course) => !archivedCourses.includes(course.course._id));
+
+        // Set the course list state
+        setCourseList(nonArchivedCourses);
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error fetching courses:", error);
     }
   };
 
@@ -172,6 +154,10 @@ const MyLearning = () => {
   useEffect(() => {
     updateFavoriteLabel();
   }, [courseList]); // Dependency array ensures this effect runs when courseList changes
+
+  useEffect(() => {
+    getCourse();
+  }, [archivedCourses]);
 
   const navigate = useNavigate();
   function classNames(...classes) {
@@ -208,7 +194,14 @@ const MyLearning = () => {
         <h1 className="title text-5xl max-sm:text-4xl font-bold pt-10 pb-10">My learning</h1>
         <div className="filter flex items-center">
           <button className="text-white border-b-8 hover:bg-purple-900 font-bold py-2 rounded text-lg max-sm:text-base">
-            <Link to="/home/my-courses/learning">All courses</Link>
+            <Link
+              to="/home/my-courses/learning"
+              onClick={() => {
+                setFilter("all");
+              }}
+            >
+              All courses
+            </Link>
           </button>
           <button className="text-white lg:border-b-8 hover:bg-purple-900 border-[#151b32] font-bold py-2 rounded text-lg mx-8">
             <Link to="/home/my-courses/wishlist">Wishlist</Link>
@@ -233,22 +226,14 @@ const MyLearning = () => {
                 <input
                   type="search"
                   id="default-search"
-                  class="block w-full p-2 ps-4 text-md text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="block w-full p-2 ps-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Search my course..."
                   required
                 />
-                <button
-                  type="submit"
-                  class="text-white absolute end-1 bg-purple-900 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-2 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  <svg class="w-5 h-5 text-white dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                  </svg>
-                </button>
               </div>
             </form>
-            {courseList.map((oneCourse, index) => (
-              <div className="justify-center md:justify-start flex flex-wrap">
+            <div className="flex flex-wrap justify-center md:justify-start">
+              {courseList.map((oneCourse, index) => (
                 <div class="bg-white lg:w-1/4 md:w-1/3 w-60 pb-8 px-2">
                   <div className="relative">
                     <img class="" src={oneCourse.course.thumbNail.secureURL} alt="" />
@@ -329,7 +314,7 @@ const MyLearning = () => {
                     <div>
                       <div className="w-full bg-gray-200 rounded-full h-1 mt-3 dark:bg-gray-700">
                         <div className="bg-blue-600 h-[2px] rounded-full" style={{ width: oneCourse.progress + "%" }}></div>
-                        <p className="text-slate-500  text-sm">{oneCourse.progress.toPrecision(4)}% Complete</p>
+                        <p className="text-slate-500  text-sm">{oneCourse.progress.toPrecision(3)}% Complete</p>
                       </div>
 
                       <div className="flex flex-row items-start justify-end mt-1">
@@ -343,8 +328,8 @@ const MyLearning = () => {
                     </div>
                   )}
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         ) : (
           <div className="flex flex-col items-center my-20">
