@@ -264,15 +264,7 @@ const MyLearning = () => {
                             {({ active }) => (
                               <div className={classNames(active ? "bg-gray-100" : "", "flex flex-row items-center px-4 py-2 text-sm text-gray-700")}>
                                 <IconArchive className='h-5 w-5 mr-3' color='#000000'/>
-                                <a
-                                  href="/home/my-courses/learning"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    handleClickArchived(e, oneCourse.course._id);
-                                  }}
-                                >
                                   Archive
-                                </a>
                               </div>
                             )}
                           </Menu.Item>
