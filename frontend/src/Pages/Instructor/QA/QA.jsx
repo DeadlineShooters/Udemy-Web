@@ -68,7 +68,7 @@ const QuestionAndAnswer = () => {
 		try {
 			// Define the sort order based on the state
 			const sortOrder = sortOldest ? "asc" : "desc";
-			const res = await axios.get(`http://localhost:5000/questions/${selectedCourseId}?sort=${sortOrder}&search=${searchQuery}`);
+			const res = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/questions/${selectedCourseId}?sort=${sortOrder}&search=${searchQuery}`);
 			const resQuestions = res.data;
             setQuestions(resQuestions);
             setSelectedQuestion(resQuestions[0]); // Update the selected question with the first question from the response
@@ -99,9 +99,9 @@ const QuestionAndAnswer = () => {
 
         // TODO: Call real api
         const getCourses = async () => {
-            const res = await axios.get('http://localhost:5000/courses')
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/instructor/get-course`, { instructorID: userData._id })
             // console.log(res)
-            setCourses(res.data.courses)
+            setCourses(res.data.course)
 
         }
         getCourses();
@@ -116,7 +116,7 @@ const QuestionAndAnswer = () => {
                 const sortOrder = sortOldest ? "asc" : "desc";
 
                 // Construct the URL with the sort order query parameter
-                const res = await axios.get(`http://localhost:5000/questions/${selectedCourseId}?sort=${sortOrder}`);
+                const res = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/questions/${selectedCourseId}?sort=${sortOrder}`);
                 const resQuestions = res.data;
                 setQuestions(resQuestions);
                 setSelectedQuestion(resQuestions[0]); // Update the selected question with the first question from the response
@@ -133,7 +133,7 @@ const QuestionAndAnswer = () => {
         if (!selectedQuestion) return;
 
         try {
-            const res = await axios.get(`http://localhost:5000/questions/${selectedQuestion._id}/answers`);
+            const res = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/questions/${selectedQuestion._id}/answers`);
             const resAnswers = res.data;
             setAnswers(resAnswers);
         } catch (error) {
@@ -166,7 +166,7 @@ const QuestionAndAnswer = () => {
                         user_id: userData._id,
                     }
                 }
-                const res = await axios.post(`http://localhost:5000/questions/${selectedQuestion._id}/answers`, answer, config);
+                const res = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/questions/${selectedQuestion._id}/answers`, answer, config);
                 return res.data; // Return the added answer data
             } catch (error) {
                 console.error('Error sending the answer:', error);
@@ -190,7 +190,7 @@ const QuestionAndAnswer = () => {
 
             // Define editAnswer as an asynchronous function
             const editAnswer = async (answer) => {
-                const res = await axios.put(`http://localhost:5000/questions/${selectedQuestion._id}/answers/${editedAnswerId}`, answer);
+                const res = await axios.put(`${process.env.REACT_APP_BACKEND_HOST}/questions/${selectedQuestion._id}/answers/${editedAnswerId}`, answer);
                 return res.data; // Return the edited answer data
             }
 
@@ -231,7 +231,7 @@ const QuestionAndAnswer = () => {
 
             // Define deleteAnswer as an asynchronous function
             const deleteAnswer = async () => {
-                const res = await axios.delete(`http://localhost:5000/questions/${selectedQuestion._id}/answers/${answerId}`);
+                const res = await axios.delete(`${process.env.REACT_APP_BACKEND_HOST}/questions/${selectedQuestion._id}/answers/${answerId}`);
                 return res.data; // Return the edited answer data
             }
 

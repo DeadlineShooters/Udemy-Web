@@ -15,7 +15,7 @@ const Certificate = () => {
         const url = window.location.href;
         const urlParts = url.split("/");
         const cerId = urlParts[urlParts.length - 1];
-        await axios.get(`http://localhost:5000/user/get-certificate/${cerId}`)
+        await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/user/get-certificate/${cerId}`)
         .then((response) => {
           if (response.data.success) {
             console.log(response.data.certificate);

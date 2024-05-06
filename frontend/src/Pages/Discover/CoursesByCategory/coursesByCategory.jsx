@@ -177,7 +177,7 @@ const CoursesByCategory = () => {
 
 	useEffect(() => {
 		axios
-			.get(`http://localhost:5000/courses/?category=${categoryId}`)
+			.get(`${process.env.REACT_APP_BACKEND_HOST}/courses/?category=${categoryId}`)
 			.then((response) => {
 				if (response.data.success) {
 					setCourses(response.data.courses);
