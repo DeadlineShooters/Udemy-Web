@@ -415,7 +415,7 @@ export const fetchAllFavoriteCourses = async (req, res) => {
 
     // Fetch all favorite courses
     const favoriteCourses = await Course.find({ _id: { $in: user.favoritesCourse } });
-    return res.json({ success: true, courseList: favoriteCourses });
+    return res.status(200).json({ success: true, courseList: favoriteCourses, message: "Favorite course list found successfully" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, message: "Server error" });

@@ -104,13 +104,13 @@ controller.getSingleFeedback = async (req, res) => {
 
     console.log("feedback found: ", feedback);
     if (feedback) {
-      res.json({ feedback }); // Send the response
+      res.status(200).json({ feedback }); // Send the response
     } else {
-      res.status(404).send("No feedback found"); // Send an error response
+      res.status(404).json({ message: "No feedback found", status: 404 }); // Send an error response
     }
   } catch (error) {
     console.log("Error in getSingleFeedback:", error);
-    res.status(500).send("Feedback could not be loaded"); // Send an error response
+    res.status(500).json({ message: "Feedback could not be loaded", status: 400 }); // Send an error response
   }
 };
 
