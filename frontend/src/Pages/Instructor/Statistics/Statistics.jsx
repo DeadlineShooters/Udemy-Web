@@ -92,6 +92,7 @@ const Statistics = () => {
 				const response = await axios.post('http://localhost:5000/instructor/get-course', { instructorID: userData._id });
 				if (response.data.success) {
 					setCourses(response.data.course);
+					setSearchCourses(response.data.course);
 				}
 			} catch (error) {
 				console.error('Error:', error);
@@ -132,7 +133,7 @@ const Statistics = () => {
 		const searchQuery = event.target.value;
 		if (searchQuery !== '') {
 			const results = courses.filter((course) => course.name.toLowerCase().includes(searchQuery.toLowerCase()));
-			console.log(results)
+			console.log(results);
 			setSearchCourses(results);
 		} else {
 			setSearchCourses(courses);
@@ -277,19 +278,20 @@ const Statistics = () => {
 										</div>
 									</div>
 									<ul class='max-h-96 px-3 pb-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200' aria-labelledby='dropdownSearchButton'>
-										{searchCourses.map((course) => (
-											<button
-												class='w-full flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700'
-												onClick={() => handleDropdownItemClick(course)}
-											>
-												<div class='flex-shrink-0'>
-													<img class='object-cover object-center h-12 w-20' src={course.thumbNail.secureURL} alt='' />
-												</div>
-												<div class='w-full ps-3'>
-													<div class='text-gray-500 font-bold text-sm dark:text-gray-400 text-left line-clamp-2'>{course.name}</div>
-												</div>
-											</button>
-										))}
+										{searchCourses &&
+											searchCourses.map((course) => (
+												<button
+													class='w-full flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700'
+													onClick={() => handleDropdownItemClick(course)}
+												>
+													<div class='flex-shrink-0'>
+														<img class='object-cover object-center h-12 w-20' src={course.thumbNail.secureURL} alt='' />
+													</div>
+													<div class='w-full ps-3'>
+														<div class='text-gray-500 font-bold text-sm dark:text-gray-400 text-left line-clamp-2'>{course.name}</div>
+													</div>
+												</button>
+											))}
 									</ul>
 									<button
 										class='font-medium justify-center w-full border-t-2 flex items-center p-2 text-[#2d2f31] hover:text-[#eb524f]'
@@ -313,11 +315,17 @@ const Statistics = () => {
 										handleChartItemClick('Revenue');
 									}}
 								>
-									<span className='text-gray-500'>Total revenue</span>
-									<span className='text-3xl sm:text-4xl font-medium'>${totalRevenue ? totalRevenue.toLocaleString() : 0}</span>
-									<div className='text-gray-500'>
-										<span className='font-medium'>${revenues[11] ? (revenues[11] - revenues[10]).toLocaleString() : 0}</span> this month
-									</div>
+									{selectedCourse !== '' && selectedCourse.price === 0 ? (
+										<span className='text-3xl sm:text-2xl font-medium text-gray-700 self-center'>Free course</span>
+									) : (
+										<>
+											<span className='text-gray-500'>Total revenue</span>
+											<span className='text-3xl sm:text-4xl font-medium'>${totalRevenue ? totalRevenue.toLocaleString() : 0}</span>
+											<div className='text-gray-500'>
+												<span className='font-medium'>${revenues[11] ? (revenues[11] - revenues[10]).toLocaleString() : 0}</span> this month
+											</div>
+										</>
+									)}
 								</button>
 
 								<button
@@ -353,8 +361,11 @@ const Statistics = () => {
 								</button>
 							</div>
 						</div>
-						<div className='p-4'>
+						<div className='p-4 relative'>
 							<Chart options={options} series={series} type='line' />
+							{series.every((item) => item.data.every((value) => value === 0)) && (
+								<div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 text-gray-500 text-3xl'>No {selectedChart} Data</div>
+							)}
 						</div>
 					</div>
 				</div>

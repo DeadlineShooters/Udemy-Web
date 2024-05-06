@@ -1,44 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
-import Carousel from 'react-multi-carousel';
 import Drawer from 'react-modern-drawer';
 import axios from 'axios';
+import { RenderStars } from '../../../Components/StarRatings';
 import 'react-multi-carousel/lib/styles.css';
 import './search.css';
 import 'react-modern-drawer/dist/index.css';
 import { Select, Option, Accordion, AccordionHeader, AccordionBody, Checkbox, List, ListItem, ListItemPrefix, Typography } from '@material-tailwind/react';
 
-const responsive = {
-	xl: {
-		breakpoint: { max: 3000, min: 1280 },
-		items: 4,
-		slidesToSlide: 3,
-	},
-	md: {
-		breakpoint: { max: 1280, min: 720 },
-		items: 3,
-		slidesToSlide: 2,
-	},
-	sm: {
-		breakpoint: { max: 720, min: 540 },
-		items: 2,
-		slidesToSlide: 1,
-	},
-	none: {
-		breakpoint: { max: 540, min: 0 },
-		items: 1,
-		slidesToSlide: 1,
-	},
-};
-
-const filterFields = ['Ratings', 'Languages', 'Video Duration', 'Features', 'Price'];
+const filterFields = ['Ratings', 'Video Duration', 'Price'];
 
 const filterOptions = [
 	[4.5, 4.0, 3.5, 3.0],
-	['English', 'Vietnamese'],
 	['0-3 hours', '3-6 hours', '6-9 hours', '9-12 hours', '12+ hours'],
-	['Subtitles', 'Quizzes', 'Coding Exercises', 'Practice Tests'],
 	['Free', 'Paid'],
 ];
 
@@ -55,44 +30,6 @@ function ArrowIcon({ id, open }) {
 			<path strokeLinecap='round' strokeLinejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' />
 		</svg>
 	);
-}
-
-function FullStarIcon() {
-	return (
-		<svg xmlns='http://www.w3.org/2000/svg' class='text-[#b4690e] w-3 h-auto fill-current ' viewBox='0 0 16 16'>
-			<path d='M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z' />
-		</svg>
-	);
-}
-
-function HalfStarIcon() {
-	return (
-		<svg xmlns='http://www.w3.org/2000/svg' class='text-[#b4690e] w-3 h-auto fill-current' viewBox='0 0 16 16'>
-			<path d='M5.354 5.119 7.538.792A.516.516 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.537.537 0 0 1 16 6.32a.548.548 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.52.52 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.58.58 0 0 1 .085-.302.513.513 0 0 1 .37-.245l4.898-.696zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.565.565 0 0 1 .162-.505l2.907-2.77-4.052-.576a.525.525 0 0 1-.393-.288L8.001 2.223 8 2.226v9.8z' />
-		</svg>
-	);
-}
-
-function StarIcon() {
-	return (
-		<svg xmlns='http://www.w3.org/2000/svg' class='text-[#b4690e] w-3 h-auto fill-current' viewBox='0 0 16 16'>
-			<path d='M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z' />
-		</svg>
-	);
-}
-
-function RenderStars({ rating }) {
-	const stars = [];
-	for (let i = 0; i < 5; i++) {
-		if (i < rating - 0.7) {
-			stars.push(<FullStarIcon key={i} />);
-		} else if (i < rating) {
-			stars.push(<HalfStarIcon key={i} />);
-		} else {
-			stars.push(<StarIcon key={i} />);
-		}
-	}
-	return stars;
 }
 
 const Search = () => {
@@ -172,7 +109,7 @@ const Search = () => {
 		if (openFilterBarSm) {
 			return;
 		}
-		let newCourses = [...filterCourses];
+		let newCourses = [...courses];
 		for (let field in selectedFilters) {
 			if (selectedFilters[field].length === 0) continue;
 			newCourses = newCourses.filter((course) => {
@@ -181,16 +118,12 @@ const Search = () => {
 				} else if (field === 'Video Duration') {
 					return selectedFilters[field].some((range) => {
 						const selectedRange = range.split('-');
-						const minHours = parseFloat(selectedRange[0]);
-						const maxHours = selectedRange[1] === '12+ hours' ? Infinity : parseFloat(selectedRange[1]);
-						return course.totalLength >= minHours && course.totalLength <= maxHours;
+						const minHoursInSeconds = parseFloat(selectedRange[0]) * 3600;
+						const maxHoursInSeconds = selectedRange[1] === '12+ hours' ? Infinity : parseFloat(selectedRange[1]) * 3600;
+						return course.totalLength >= minHoursInSeconds && course.totalLength <= maxHoursInSeconds;
 					});
 				} else if (field === 'Price') {
 					return selectedFilters[field].includes(course.price === 0 ? 'Free' : 'Paid');
-					// } else if (field === 'Languages') {
-					// 	return selectedFilters[field].includes(course.language);
-					// } else if (field === 'Features') {
-					// 	return selectedFilters[field].every((feature) => course.features.includes(feature));
 				}
 				return true;
 			});
@@ -224,7 +157,9 @@ const Search = () => {
 		<>
 			<div className='flex justify-center'>
 				<div ref={refContainer} className='w-full max-w-[1340px] px-8'>
-					<div className='font-bold text-3xl mt-12 mb-4'>{filterCourses.length} results for "{query}"</div>
+					<div className='font-bold text-3xl mt-12 mb-4'>
+						{filterCourses.length} results for "{query}"
+					</div>
 					<div className='flex justify-between items-center my-8'>
 						<div className='flex gap-3 items-center'>
 							<button
@@ -302,28 +237,34 @@ const Search = () => {
 							{filterCourses &&
 								filterCourses.map((course) => (
 									<div className='flex gap-4 pb-8 pt-4 '>
-										<img className='w-24 h-24 object-cover object-center md:w-60 md:h-fit' src={course.thumbNail.secureURL} alt='' />
+										<img className='w-24 h-24 object-cover object-center md:w-60 aspect[16:9]' src={course.thumbNail.secureURL} alt='' />
 										<div className='pr-24 relative flex flex-col gap-1 w-full '>
 											<h3 class='font-bold text-gray-900 line-clamp-2 leading-tight'>{course.name}</h3>
 											<span class='text-sm text-gray-700 font-medium'>{course.introduction}</span>
-											<span class='text-xs text-gray-700'>{course.instructor.firstName} {course.instructor.lastName}</span>
+											<span class='text-xs text-gray-700'>
+												{course.instructor.firstName} {course.instructor.lastName}
+											</span>
 											<div class='flex gap-1 items-center'>
 												<span class='text-gray-900 font-bold text-sm'>{course.avgRating}</span>
 												<div class='flex gap-0.5'>{RenderStars({ rating: course.avgRating })}</div>
 												{/* <span class='text-gray-700 font-medium text-xs inline-block align-middle'>({course.ratingCnt.toLocaleString()})</span> */}
 											</div>
 											<div class='text-gray-700 text-xs align-middle'>
-												{course.totalLength} total hours • {course.totalLecture} lectures
+												{(course.totalLength / 3600).toFixed(3)} total hours • {course.totalLecture} lectures
 											</div>
-											<div class='flex flex-col items-end content-end space-x-2 absolute top-0 right-0'>
-												<span class='font-bold text-gray-900 '>
-													<span class='underline'>đ</span>
-													{(course.price * 0.8).toLocaleString()}
-												</span>
-												<span class='text-gray-700 line-through'>
-													<span class='underline'>đ</span>
-													{course.price.toLocaleString()}
-												</span>
+											<div class='flex items-center space-x-2'>
+												{course.price === 0 ? (
+													<span class='font-bold text-gray-900 '>Free</span>
+												) : (
+													<>
+														<span class='font-bold text-gray-900 '>
+															<span>{(course.price * 0.8).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
+														</span>
+														<span class='text-gray-700 line-through'>
+															<span>{course.price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
+														</span>
+													</>
+												)}
 											</div>
 										</div>
 									</div>

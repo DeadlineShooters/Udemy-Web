@@ -23,6 +23,7 @@
     "dompurify": "^3.1.2",
     "dotenv": "^16.4.5",
     "html-to-image": "^1.11.11",
+    "javascript-time-ago": "^2.5.10",
     "moment": "^2.30.1",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",

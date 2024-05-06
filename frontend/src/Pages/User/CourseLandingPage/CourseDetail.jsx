@@ -44,6 +44,7 @@ const CourseDetail = () => {
 	const [isEnrolled, setIsEnrolled] = useState(false);
 	const [isCarted, setIsCarted] = useState(false);
 	const [isWishlisted, setIsWishlisted] = useState(false);
+
 	const userId = userData._id;
 	const allButtonRef = useRef(null);
 
@@ -101,8 +102,12 @@ const CourseDetail = () => {
 		try {
 			const response = await axios.post(url, { userId, courseId });
 			if (response.data.success) {
-				setIsWishlisted(!isWishlisted);
+				if (!isWishlisted && isCarted) {
+					setCart((oldCart) => oldCart.filter((course) => course._id !== courseId));
+					setIsCarted(false);
+				}
 				setWishlist((oldWishlist) => (isWishlisted ? oldWishlist.filter((course) => course._id !== courseId) : [...oldWishlist, response.data.course]));
+				setIsWishlisted(!isWishlisted);
 			}
 		} catch (error) {
 			console.error('Error:', error);
@@ -114,6 +119,10 @@ const CourseDetail = () => {
 			removeFromCart();
 		} else {
 			addToCart();
+			if (isWishlisted) {
+				setWishlist((oldWishlist) => oldWishlist.filter((course) => course._id !== courseId));
+				setIsWishlisted(false);
+			}
 		}
 	};
 
@@ -125,7 +134,7 @@ const CourseDetail = () => {
 
 			const response = await axios.post('http://localhost:5000/payment', {
 				userId: userData._id,
-				amount: parseInt(course.price * 0.8).toLocaleString() * exchangeRate,
+				amount: parseInt(course.price * 0.8 * exchangeRate),
 			});
 			if (response.data.success) {
 				window.location.href = response.data.payUrl;
@@ -279,7 +288,7 @@ const CourseDetail = () => {
 
 					<div className='course-rating flex items-center'>
 						<div className='text-amber-500 font-bold mr-1 text-lg'>
-							<span className='mr-1'>{convertDecimal128ToNumber(course.avgRating)}</span>
+							<span className='mr-1'>{Number(convertDecimal128ToNumber(course.avgRating)).toFixed(1)}</span>
 							<FontAwesomeIcon icon={faStar} />
 						</div>
 						<a href='#reviews' className='mr-3 text-violet-500 underline  text-purple-200 text-lg'>
