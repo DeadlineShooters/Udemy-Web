@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import arrow_down from "../../../Assets/arrow_down.png";
 import arrow_up from "../../../Assets/arrow_up.png";
 import ReactPlayer from "react-player";
 import CourseOverview from "../Overview/Overview";
 import CompQA from "../../../Components/QA/CompQA";
 import axios from "axios";
-import { Fragment } from 'react';
-import { Menu, Transition } from '@headlessui/react';
-import logo from '../../../Assets/Udemy_logo_dark.png';
+import { Fragment } from "react";
+import { Menu, Transition } from "@headlessui/react";
+import logo from "../../../Assets/Udemy_logo_dark.png";
 import more_actions_2 from "../../../Assets/more_actions_2.png";
 import star from "../../../Assets/star.png";
 import share from "../../../Assets/share.png";
 import archive from "../../../Assets/archive.png";
-import CircleProgressBar from '../../../Components/Utils/ProgressBar.jsx';
+import CircleProgressBar from "../../../Components/Utils/ProgressBar.jsx";
 import "./Content.css";
 import { useAuth } from "../../../AuthContextProvider.jsx";
 import secureLocalStorage from "react-secure-storage";
@@ -30,7 +30,7 @@ const CourseContent = () => {
   const initialExpandedSections = {};
 
   useEffect(() => {
-    const storedUser = secureLocalStorage.getItem('user');
+    const storedUser = secureLocalStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
@@ -53,7 +53,8 @@ const CourseContent = () => {
     const url = window.location.href;
     const [, , , , slugName, , tail] = url.split("/");
     const [lectureIndex, hash] = tail.split("#");
-    axios.post("http://localhost:5000/user/course/section/lecture", { lectureIndex, slugName })
+    axios
+      .post("http://localhost:5000/user/course/section/lecture", { lectureIndex, slugName })
       .then((response) => {
         if (response.data.success) {
           setCourseDetails(response.data.data.course[0]);
@@ -61,7 +62,7 @@ const CourseContent = () => {
         }
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       })
       .finally(() => {
         setLoading(false); // Set loading state to false after data fetching is done
@@ -71,7 +72,7 @@ const CourseContent = () => {
   useEffect(() => {
     if (courseDetails) {
       const initialExpandedSections = {};
-      courseDetails.sectionList.forEach(section => {
+      courseDetails.sectionList.forEach((section) => {
         initialExpandedSections[section.index] = true;
       });
       setExpandedSections(initialExpandedSections);
@@ -80,7 +81,7 @@ const CourseContent = () => {
 
   const localNavigate = useNavigate();
   const handleOverviewClick = () => {
-    localNavigate(window.location.pathname + '#overview');
+    localNavigate(window.location.pathname + "#overview");
   };
 
   const [expandedSections, setExpandedSections] = useState(initialExpandedSections);
@@ -104,20 +105,20 @@ const CourseContent = () => {
     const getLatestVideo = () => {
       if (!selectLecture) {
         setVideoUrl(courseDetails.sectionList[0].lectureList[0].video.secureURL);
-      }
-      else {
+      } else {
         const lectureIndex = Object.keys(selectLecture)[0];
-        axios.post("http://localhost:5000/user/course/section/lecture", {lectureIndex})
-        .then((response) => {
-          if (response.data.success) {
-            setVideoUrl(response.data.data[0].video.secureURL);
-          }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
+        axios
+          .post("http://localhost:5000/user/course/section/lecture", { lectureIndex })
+          .then((response) => {
+            if (response.data.success) {
+              setVideoUrl(response.data.data[0].video.secureURL);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
       }
-    }
+    };
     getLatestVideo();
   }, []);
 
@@ -129,50 +130,51 @@ const CourseContent = () => {
   const handleLectureClick = async (videoUrl, courseSlug, lectureIndex) => {
     setVideoUrl(videoUrl);
     const currentHash = window.location.hash;
-    navigate(`/course/${courseSlug}/learn/${lectureIndex}${currentHash}`, {state: {course: courseDetails}});
+    navigate(`/course/${courseSlug}/learn/${lectureIndex}${currentHash}`, { state: { course: courseDetails } });
   };
 
   const [QAlistOfLecture, setQAlistOfLecture] = useState();
 
   const handleQAClick = () => {
-    setQAlistOfLecture({title: "ayyy", description: "hmmm"})
-    localNavigate(window.location.pathname + '#QA');
+    setQAlistOfLecture({ title: "ayyy", description: "hmmm" });
+    localNavigate(window.location.pathname + "#QA");
   };
 
-
   function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
+    return classes.filter(Boolean).join(" ");
   }
 
   const handleCheckboxChange = (lectureIndex) => {
-    setSelectedLectures(prevState => ({
+    setSelectedLectures((prevState) => ({
       ...prevState,
-      [lectureIndex]: !prevState[lectureIndex]
+      [lectureIndex]: !prevState[lectureIndex],
     }));
   };
 
   useEffect(() => {
     const updateProgress = async () => {
       try {
-        const viewedLectures = Object.keys(selectedLectures).map(lectureIndex => ({
+        const viewedLectures = Object.keys(selectedLectures).map((lectureIndex) => ({
           lecture: lectureIndex,
-          viewed: selectedLectures[lectureIndex]
+          viewed: selectedLectures[lectureIndex],
         }));
         const userId = user?._id;
         const courseId = courseDetails?._id;
-        await axios.post("http://localhost:5000/user/course/update-progress", {
-          userId,
-          courseId,
-          viewLectures: viewedLectures
-        }).then((response) => {
-          if (response.data.success) {
-            localStorage.setItem('selectedCourse', JSON.stringify(response.data.data.course));
-            setCourseOverall(response.data.data.course);
-            setCourseProgress(response.data.data.course.progress);
-          }
-        })
+        await axios
+          .post("http://localhost:5000/user/course/update-progress", {
+            userId,
+            courseId,
+            viewLectures: viewedLectures,
+          })
+          .then((response) => {
+            if (response.data.success) {
+              localStorage.setItem("selectedCourse", JSON.stringify(response.data.data.course));
+              setCourseOverall(response.data.data.course);
+              setCourseProgress(response.data.data.course.progress);
+            }
+          });
       } catch (error) {
-        console.error('Error updating progress:', error);
+        console.error("Error updating progress:", error);
       }
     };
     updateProgress();
@@ -194,83 +196,92 @@ const CourseContent = () => {
 
   return (
     <div>
-      <div className='header'>
-        <div className='courseNavBar'>
-          <div class='leftBar flex items-center'>
-            <Link to="/"><img src={logo} alt='' class='logo'></img></Link>
+      <div className="header">
+        <div className="courseNavBar">
+          <div class="leftBar flex items-center">
+            <Link to="/">
+              <img src={logo} alt="" class="logo"></img>
+            </Link>
             <ul class="mx-5 text-white">
-                <a href='/course/:courseId' ><li class="text-lg hover:text-gray-300">{courseDetails?.name}</li></a>
+              <a href={`/course/${courseDetails?._id}`}>
+                <li class="text-lg hover:text-gray-300">{courseDetails?.name}</li>
+              </a>
             </ul>
           </div>
-          <div className='rightBar flex items-center'>
+          <div className="rightBar flex items-center">
             <ul class="flex flex-row">
-              <li class='flex flex-row items-center'>
+              <li class="flex flex-row items-center">
                 <img class="h-6 w-6" src={star}></img>
-                <p class='text-gray-200 hover:text-gray-300 mx-2'>Leave a rating</p>
+                <p class="text-gray-200 hover:text-gray-300 mx-2">Leave a rating</p>
               </li>
-              <li class='flex flex-row items-center'>
-                <div><CircleProgressBar progress={courseProgress}/></div>
-                {courseProgress === 100 ? 
-                  <p class='text-gray-200 hover:text-gray-300 mx-2' onClick={() => navigate(`/course/${courseDetails.slugName}/certificate/${courseOverall.certificate}`)}>Get certificate</p> : 
-                  <p class='text-gray-200 hover:text-gray-300 mx-2'>Your progress</p> 
-                }
+              <li class="flex flex-row items-center">
+                <div>
+                  <CircleProgressBar progress={courseProgress} />
+                </div>
+                {courseProgress === 100 ? (
+                  <p class="text-gray-200 hover:text-gray-300 mx-2" onClick={() => navigate(`/course/${courseDetails.slugName}/certificate/${courseOverall.certificate}`)}>
+                    Get certificate
+                  </p>
+                ) : (
+                  <p class="text-gray-200 hover:text-gray-300 mx-2">Your progress</p>
+                )}
               </li>
             </ul>
             <Menu as="div" className="relative ml-4">
               <div>
                 <Menu.Button className="relative flex p-2 border border-gray-200 text-sm focus:ring-2 focus:outline-none focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                  <img id="preview" src={more_actions_2} alt="profile-pic" class="h-5 w-5"/>
+                  <img id="preview" src={more_actions_2} alt="profile-pic" class="h-5 w-5" />
                 </Menu.Button>
               </div>
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
-                >
-                  <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <Menu.Item>
-                      {({ active }) => (
-                        <div className={classNames(active ? 'bg-gray-100' : '', 'flex flex-row items-center px-4 py-2 text-sm text-gray-700')}>
-                          <img src={share} alt='share' class='h-5 w-5 mr-5'/>
-                          <a href="/user/public-profile">
-                            Share this course
-                          </a>
-                        </div>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <div className={classNames(active ? 'bg-gray-100' : '', 'flex flex-row items-center px-4 py-2 text-sm text-gray-700')}>
-                          <img src={archive} alt='share' class='h-5 w-5 mr-5'/>
-                          <a href="/user/public-profile">
-                            Archive this course
-                          </a>
-                        </div>
-                      )}
-                    </Menu.Item>
-                  </Menu.Items>
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+              >
+                <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <Menu.Item>
+                    {({ active }) => (
+                      <div className={classNames(active ? "bg-gray-100" : "", "flex flex-row items-center px-4 py-2 text-sm text-gray-700")}>
+                        <img src={share} alt="share" class="h-5 w-5 mr-5" />
+                        <a href="/user/public-profile">Share this course</a>
+                      </div>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <div className={classNames(active ? "bg-gray-100" : "", "flex flex-row items-center px-4 py-2 text-sm text-gray-700")}>
+                        <img src={archive} alt="share" class="h-5 w-5 mr-5" />
+                        <a href="/user/public-profile">Archive this course</a>
+                      </div>
+                    )}
+                  </Menu.Item>
+                </Menu.Items>
               </Transition>
             </Menu>
-          </div> 
+          </div>
         </div>
-        <div class='divider'>
-          <hr/>
+        <div class="divider">
+          <hr />
         </div>
       </div>
       <div class="flex flex-row">
-      {!loading ? (
+        {!loading ? (
           <div class="flex flex-col">
             <ReactPlayer controls={true} url={videoUrl} height="603px" width="1072px" />
             <div className="flex flex-row my-3">
-              <div className={` ${window.location.hash === '#overview' ? "text-[rgb(109,60,208)]" : "black"} font-bold hover:text-[#834aff] text-lg mx-5 cursor-pointer`} onClick={handleOverviewClick}>Overview</div>
-              <div className={` ${window.location.hash === '#QA' ? "text-[rgb(109,60,208)]" : "black"} font-bold hover:text-[#834aff] text-lg mx-5 cursor-pointer`} onClick={handleQAClick}>Q&A</div>
+              <div className={` ${window.location.hash === "#overview" ? "text-[rgb(109,60,208)]" : "black"} font-bold hover:text-[#834aff] text-lg mx-5 cursor-pointer`} onClick={handleOverviewClick}>
+                Overview
+              </div>
+              <div className={` ${window.location.hash === "#QA" ? "text-[rgb(109,60,208)]" : "black"} font-bold hover:text-[#834aff] text-lg mx-5 cursor-pointer`} onClick={handleQAClick}>
+                Q&A
+              </div>
             </div>
-            {window.location.hash === '#overview' && <CourseOverview/>}
-            {window.location.hash === '#QA' && <CompQA courseId={courseDetails._id}/>}
+            {window.location.hash === "#overview" && <CourseOverview />}
+            {window.location.hash === "#QA" && <CompQA courseId={courseDetails._id} />}
           </div>
         ) : (
           <div role="status" class="flex flex-col bg-slate-900 items-center justify-center" style={{ height: "603px", width: "3560px" }}>
@@ -303,11 +314,7 @@ const CourseContent = () => {
                 <p class="font-bold text-base my-3 ml-5">
                   Section {index + 1}: {section.name}
                 </p>
-                <img
-                  src={expandedSections[section.index] ? arrow_up : arrow_down}
-                  alt={expandedSections[section.index] ? "up-arrow" : "down-arrow"}
-                  class="w-5 h-5 mr-5"
-                ></img>
+                <img src={expandedSections[section.index] ? arrow_up : arrow_down} alt={expandedSections[section.index] ? "up-arrow" : "down-arrow"} class="w-5 h-5 mr-5"></img>
               </div>
               <div className={`${expandedSections[section.index] ? "flex flex-col" : "hidden"} ml-5 cursor-pointer`}>
                 {section.lectureList.map((lecture, indexLecture) => (
