@@ -10,12 +10,14 @@ import { useParams } from 'react-router-dom';
 import { FaFacebook } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { PiGlobeBold } from "react-icons/pi";
+import { createImageFromInitials, getColor } from "../../../Components/Utils/Utils";
 
 
 const profileImage =
 	"https://res.cloudinary.com/dk6q93ryt/image/upload/v1696217092/samples/smile.jpg";
 
 const MAX_HEIGHT = 200; // Maximum height for the about-me div
+const defaultLimit = 6;
 
 const InstructorProfile = () => {
 	const { userId } = useParams();
@@ -26,20 +28,12 @@ const InstructorProfile = () => {
 	const [totalCourseNum, setTotalCourseNum] = useState(null);
 
 	const [isOverflowed, setIsOverflowed] = useState(false);
-	const bioRef = useRef(null);
-
-	useEffect(() => {
-		const bioDiv = bioRef.current;
-		if (bioDiv) {
-			setIsOverflowed(bioDiv.clientHeight > MAX_HEIGHT);
-		}
-	}, []);
 
 	const toggleCollapse = () => {
 		setIsCollapsed(!isCollapsed);
 	};
 
-	const getCourseList = async (page = 1, limit = 6) => {
+	const getCourseList = async (page = 1, limit = defaultLimit) => {
 		try {
 			const res = await axios.post(`http://localhost:5000/instructor/get-course?page=${page}&limit=${limit}`, { instructorID: userId })
 			return res.data.course;
@@ -54,12 +48,17 @@ const InstructorProfile = () => {
 				const res = await axios.get(`http://localhost:5000/instructor/${userId}`);
 				console.dir(res.data)
 				setUser(res.data);
+				if (res.data.instructor.bio.length > 700) {
+					setIsOverflowed(true);
+				}
 			} catch (e) {
 				console.error("Error retrieving user", e);
 			}
 		};
 
 		getUser(userId);
+
+		
 
 		const fetchCourseList = async () => {
 			const courseListData = await getCourseList();
@@ -87,17 +86,23 @@ const InstructorProfile = () => {
 					style={{ maxWidth: "912px" }}
 				>
 
-					<div style={{ width: "200px" }}>
-						<img
+					<div className="w-[200px]">
+						{/* <img
 							className="instructor-image instructor-image rounded-full mb-5 object-cover"
 							style={{ width: "200px", height: "200px" }}
 							src={profileImage}
 							alt={"Instructor profile image"}
+						/> */}
+						<img
+							id='preview'
+							src={createImageFromInitials(160, user.firstName + " " + user.lastName, getColor())}
+							alt='profile-pic'
+							className="instructor-image instructor-image rounded-full mb-5 object-cover w-[200px] h-[200px]"
 						/>
-						<div className="instructor-social-links flex flex-col">
-							<LinkButton text={"Web"} href={user.socialLinks.web} icon={<PiGlobeBold size={20}/>}/>
-							<LinkButton text={"YouTube"} href={user.socialLinks.youtube} icon={<FaYoutube size={17}/>} />
-							<LinkButton text={"Facebook"} href={user.socialLinks.facebook} icon={<FaFacebook size={17}/>} />
+						<div className="instructor-social-links flex flex-col w-[202px]">
+							{user.socialLinks.facebook && (<LinkButton text={"Web"} href={user.socialLinks.web} icon={<PiGlobeBold size={20} />} />)}
+							{user.socialLinks.youtube && (<LinkButton text={"YouTube"} href={user.socialLinks.youtube} icon={<FaYoutube size={17} />} />)}
+							{user.socialLinks.facebook && (<LinkButton text={"Facebook"} href={user.socialLinks.facebook} icon={<FaFacebook size={17} />} />)}
 						</div>
 					</div>
 					<div className="container relative pr-16">
@@ -125,7 +130,7 @@ const InstructorProfile = () => {
 									backgroundImage: "linear-gradient(to top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0))",
 									display: isCollapsed ? "block" : "none"
 								}} />
-								<div className="bio" ref={bioRef}>
+								<div className="bio">
 									<p className="text-sm mt-1" dangerouslySetInnerHTML={{ __html: user.instructor.bio }} />
 								</div>
 							</div>
@@ -135,13 +140,13 @@ const InstructorProfile = () => {
 										<div className="flex items-center">Show more <MdKeyboardArrowDown size={20} /></div>
 									) : (
 										<div className="flex items-center">Show less <MdKeyboardArrowUp size={20} /></div>
-									)} 
+									)}
 								</div>
 							)}
 
 						</div>
 						<div className="instructor-courses mt-6">
-							<h2 className="mb-6 font-bold text-xl">My courses ({courseList.length})</h2>
+							<h2 className="mb-6 font-bold text-xl">My courses ({totalCourseNum})</h2>
 							<div className="courses grid grid-cols-2 gap-4 mb-8">
 								{Array.isArray(courseList) ? (
 									courseList.map((course, index) => (
@@ -152,7 +157,7 @@ const InstructorProfile = () => {
 								)}
 							</div>
 							<div className="pagination">
-								{totalCourseNum && (<Pagination totalCourseNum={totalCourseNum} onSelectPage={handleSelectPage} />)}
+								{totalCourseNum && (<Pagination totalCourseNum={totalCourseNum} onSelectPage={handleSelectPage} limit={defaultLimit} />)}
 							</div>
 						</div>
 					</div>
