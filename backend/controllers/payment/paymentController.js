@@ -142,6 +142,8 @@ controller.handlePayment = async (req, res) => {
 
 			if (courseId == '') {
 				user.cart = [];
+			} else if (user.cart.includes(courseId)) {
+				user.cart = user.cart.filter((cart) => cart.toString() !== courseId.toString());
 			}
 			await user.save();
 		} else {
