@@ -5,11 +5,12 @@ import { useAuth } from '../../../AuthContextProvider';
 import 'react-multi-carousel/lib/styles.css';
 import { Button } from "@material-tailwind/react";
 import secureLocalStorage from "react-secure-storage";
+import { Image } from "cloudinary-react";
 
 const courseBenefit = {
-	goal1: { img: 'https://res.cloudinary.com/dqxtf297o/image/upload/v1713624088/Goal1.png' },
-	goal2: { img: 'https://res.cloudinary.com/dqxtf297o/image/upload/v1713624088/Goal2.png' },
-	goal3: { img: 'https://res.cloudinary.com/dqxtf297o/image/upload/v1713624089/Goal3.png' },
+	goal1: { publicId: 'Goal1' },
+	goal2: { publicId: 'Goal2' },
+	goal3: { publicId: 'Goal3' },
 };
   
 const InstructorRegister = () => {
@@ -45,9 +46,10 @@ const InstructorRegister = () => {
 				<div className='p-3 flex flex-col h-full justify-between'>
 				<div className='rounded-xl overflow-hidden justify-between relative'>
 					<div className='rounded-xl overflow-hidden'>
-					<img
+					<Image
 						className="w-full h-full"
-						src={courseBenefit[goal].img}
+						cloudName={process.env.REACT_APP_CLOUDINARY_CLOUD_NAME} 
+						publicId={courseBenefit[goal].publicId}
 						alt='course placeholder'
 						style={{ transition: 'transform 0.3s', transformOrigin: 'center', cursor: 'pointer' }}
 						onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}

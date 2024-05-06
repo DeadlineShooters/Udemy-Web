@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from "react";
 import { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../../../AuthContextProvider.jsx";
@@ -57,6 +57,15 @@ const CourseDetail = () => {
     setIsFocused(!isFocused);
   };
 
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  console.log("Rating filter: " + ratingFilter);
+  console.log("feedbacks: ", feedbacks);
+
   const addToCart = async () => {
     try {
       const response = await axios.post("http://localhost:5000/cart/add-to-cart", {
@@ -102,8 +111,12 @@ const CourseDetail = () => {
     try {
       const response = await axios.post(url, { userId, courseId });
       if (response.data.success) {
-        setIsWishlisted(!isWishlisted);
+        if (!isWishlisted && isCarted) {
+          setCart((oldCart) => oldCart.filter((course) => course._id !== courseId));
+          setIsCarted(false);
+        }
         setWishlist((oldWishlist) => (isWishlisted ? oldWishlist.filter((course) => course._id !== courseId) : [...oldWishlist, response.data.course]));
+        setIsWishlisted(!isWishlisted);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -115,6 +128,10 @@ const CourseDetail = () => {
       removeFromCart();
     } else {
       addToCart();
+      if (isWishlisted) {
+        setWishlist((oldWishlist) => oldWishlist.filter((course) => course._id !== courseId));
+        setIsWishlisted(false);
+      }
     }
   };
 
@@ -126,7 +143,8 @@ const CourseDetail = () => {
 
       const response = await axios.post("http://localhost:5000/payment", {
         userId: userData._id,
-        amount: parseInt(course.price * 0.8).toLocaleString() * exchangeRate,
+        courseId: course._id,
+        amount: parseInt(course.price * 0.8 * exchangeRate),
       });
       if (response.data.success) {
         window.location.href = response.data.payUrl;
@@ -159,21 +177,26 @@ const CourseDetail = () => {
     return hours + "h" + minutes + "m" + seconds + "s";
   }
 
-  // useLayoutEffect(() => {
-  //   // Check if ratingFilter is null or not set
-  //   if (ratingFilter === null) {
-  //     const selectedButton = document.getElementById("all");
-  //     console.log("selectedButton", selectedButton);
-  //     selectedButton.classList.add("selected"); // Add selected class to 'All' button
-  //   } else {
-  //     // If ratingFilter is set, find the button corresponding to the filter and highlight it
-  //     const selectedButton = document.getElementById(`${ratingFilter}-star`);
-  //     console.log("rating filter : ", ratingFilter);
-  //     if (selectedButton) {
-  //       selectedButton.classList.add("selected"); // Add selected class to the button
-  //     }
-  //   }
-  // }, []);
+  useEffect(() => {
+    const checkEnrollment = async () => {
+      try {
+        const response = await axios.post("http://localhost:5000/courses/is-enrolled", {
+          userId: userData._id,
+          courseId,
+        });
+
+        console.log("respond data success", response.data.success);
+        if (response.data.success) {
+          setIsEnrolled(true);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    checkEnrollment();
+  }, []);
+
   useEffect(
     () => async () => {
       if (allButtonRef.current) {
@@ -197,25 +220,22 @@ const CourseDetail = () => {
     [courseId]
   );
 
-  useEffect(() => {
-    const checkEnrollment = async () => {
+  useEffect(
+    () => async () => {
       try {
         const response = await axios.post("http://localhost:5000/courses/is-enrolled", {
           userId: userData._id,
           courseId,
         });
-
-        console.log("respond data success", response.data.success);
         if (response.data.success) {
           setIsEnrolled(true);
         }
       } catch (error) {
         console.error("Error:", error);
       }
-    };
-
-    checkEnrollment();
-  }, []);
+    },
+    []
+  );
 
   useEffect(
     () => async () => {

@@ -97,8 +97,8 @@ const Review = ({ reviewParam }) => {
       </div>
 
       <div className="flex flex-row justify-end ">
-        <img src={review.courseID.thumbNail.secureURL} alt="course thumbnail" className="flex-1 w-10 h-auto rounded-lg mr-2 " />
-        <span className="text-lg text-balance inline-block flex-1">{review.courseID.name}</span>
+        <img src={review.courseID.thumbNail.secureURL} alt="course thumbnail" className="flex-1 w-40 h-24 rounded-lg mr-2 " />
+        <span className="text-lg text-balance inline-block w-40">{review.courseID.name}</span>
       </div>
     </div>
   );

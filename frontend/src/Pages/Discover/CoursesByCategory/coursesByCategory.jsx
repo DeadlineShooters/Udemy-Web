@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
-import Carousel from 'react-multi-carousel';
 import Drawer from 'react-modern-drawer';
 import axios from 'axios';
 import 'react-multi-carousel/lib/styles.css';
@@ -9,79 +8,11 @@ import './coursesByCategory.css';
 import 'react-modern-drawer/dist/index.css';
 import { Select, Option, Accordion, AccordionHeader, AccordionBody, Checkbox, List, ListItem, ListItemPrefix, Typography } from '@material-tailwind/react';
 
-const responsive = {
-	xl: {
-		breakpoint: { max: 3000, min: 1280 },
-		items: 4,
-		slidesToSlide: 3,
-	},
-	md: {
-		breakpoint: { max: 1280, min: 720 },
-		items: 3,
-		slidesToSlide: 2,
-	},
-	sm: {
-		breakpoint: { max: 720, min: 540 },
-		items: 2,
-		slidesToSlide: 1,
-	},
-	none: {
-		breakpoint: { max: 540, min: 0 },
-		items: 1,
-		slidesToSlide: 1,
-	},
-};
-
-const instructors = [
-	{
-		name: 'John Doe',
-		image: 'https://img-c.udemycdn.com/user/200_H/38516954_b11c_3.jpg',
-		subCategories: ['Web Development', 'Data Science'],
-		rating: 4.5,
-		students: 1164668,
-		courses: 8,
-	},
-	{
-		name: 'John Doe',
-		image: 'https://img-c.udemycdn.com/user/200_H/38516954_b11c_3.jpg',
-		subCategories: ['Web Development', 'Data Science'],
-		rating: 4.5,
-		students: 1164668,
-		courses: 8,
-	},
-	{
-		name: 'John Doe',
-		image: 'https://img-c.udemycdn.com/user/200_H/38516954_b11c_3.jpg',
-		subCategories: ['Web Development', 'Data Science'],
-		rating: 4.5,
-		students: 1164668,
-		courses: 8,
-	},
-	{
-		name: 'John Doe',
-		image: 'https://img-c.udemycdn.com/user/200_H/38516954_b11c_3.jpg',
-		subCategories: ['Web Development', 'Data Science'],
-		rating: 4.5,
-		students: 1164668,
-		courses: 8,
-	},
-	{
-		name: 'John Doe',
-		image: 'https://img-c.udemycdn.com/user/200_H/38516954_b11c_3.jpg',
-		subCategories: ['Web Development', 'Data Science'],
-		rating: 4.5,
-		students: 1164668,
-		courses: 8,
-	},
-];
-
-const filterFields = ['Ratings', 'Languages', 'Video Duration', 'Features', 'Price'];
+const filterFields = ['Ratings', 'Video Duration', 'Price'];
 
 const filterOptions = [
 	[4.5, 4.0, 3.5, 3.0],
-	['English', 'Vietnamese'],
 	['0-3 hours', '3-6 hours', '6-9 hours', '9-12 hours', '12+ hours'],
-	['Subtitles', 'Quizzes', 'Coding Exercises', 'Practice Tests'],
 	['Free', 'Paid'],
 ];
 
@@ -177,7 +108,7 @@ const CoursesByCategory = () => {
 
 	useEffect(() => {
 		axios
-			.get(`http://localhost:5000/courses/?category=${categoryId}`)
+			.get(`${process.env.REACT_APP_BACKEND_HOST}/courses/?category=${categoryId}`)
 			.then((response) => {
 				if (response.data.success) {
 					setCourses(response.data.courses);
@@ -214,7 +145,7 @@ const CoursesByCategory = () => {
 		if (openFilterBarSm) {
 			return;
 		}
-		let newCourses = [...filterCourses];
+		let newCourses = [...courses];
 		for (let field in selectedFilters) {
 			if (selectedFilters[field].length === 0) continue;
 			newCourses = newCourses.filter((course) => {
@@ -223,16 +154,12 @@ const CoursesByCategory = () => {
 				} else if (field === 'Video Duration') {
 					return selectedFilters[field].some((range) => {
 						const selectedRange = range.split('-');
-						const minHours = parseFloat(selectedRange[0]);
-						const maxHours = selectedRange[1] === '12+ hours' ? Infinity : parseFloat(selectedRange[1]);
-						return course.totalLength >= minHours && course.totalLength <= maxHours;
+						const minHoursInSeconds = parseFloat(selectedRange[0]) * 3600;
+						const maxHoursInSeconds = selectedRange[1] === '12+ hours' ? Infinity : parseFloat(selectedRange[1]) * 3600;
+						return course.totalLength >= minHoursInSeconds && course.totalLength <= maxHoursInSeconds;
 					});
 				} else if (field === 'Price') {
 					return selectedFilters[field].includes(course.price === 0 ? 'Free' : 'Paid');
-					// } else if (field === 'Languages') {
-					// 	return selectedFilters[field].includes(course.language);
-					// } else if (field === 'Features') {
-					// 	return selectedFilters[field].every((feature) => course.features.includes(feature));
 				}
 				return true;
 			});
@@ -346,7 +273,7 @@ const CoursesByCategory = () => {
 								filterCourses.map((course) => (
 									<Link to={`/course/${course._id}`}>
 										<div className='flex gap-4 pb-8 pt-4 '>
-											<img className='w-24 h-24 object-cover object-center md:w-60 md:h-fit' src={course.thumbNail.secureURL} alt='' />
+											<img className='w-24 h-24 object-cover object-center md:w-60 aspect[16:9]' src={course.thumbNail.secureURL} alt='' />
 											<div className='pr-24 relative flex flex-col gap-1 w-full '>
 												<h3 class='font-bold text-gray-900 line-clamp-2 leading-tight'>{course.name}</h3>
 												<span class='text-sm text-gray-700 font-medium'>{course.introduction}</span>
@@ -359,7 +286,7 @@ const CoursesByCategory = () => {
 													{/* <span class='text-gray-700 font-medium text-xs inline-block align-middle'>({course.ratingCnt.toLocaleString()})</span> */}
 												</div>
 												<div class='text-gray-700 text-xs align-middle'>
-													{course.totalLength} total hours • {course.totalLecture} lectures
+													{(course.totalLength / 3600).toFixed(3)} total hours • {course.totalLecture} lectures
 												</div>
 												<div class='flex items-center space-x-2'>
 													{course.price === 0 ? (
@@ -367,12 +294,10 @@ const CoursesByCategory = () => {
 													) : (
 														<>
 															<span class='font-bold text-gray-900 '>
-																<span class='underline'>đ</span>
-																{(course.price * 0.8).toLocaleString()}
+																<span>{(course.price * 0.8).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
 															</span>
-															<span class='text-gray-500 line-through'>
-																<span class='underline'>đ</span>
-																{course.price.toLocaleString()}
+															<span class='text-gray-700 line-through'>
+																<span>{course.price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
 															</span>
 														</>
 													)}

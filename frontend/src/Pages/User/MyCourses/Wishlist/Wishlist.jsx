@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RenderStars } from '../../../../Components/StarRatings';
 import { useWishlist } from '../../../../CartRouterProvider';
-import { Button } from "@material-tailwind/react";
+import { Button } from '@material-tailwind/react';
 import './Wishlist.css';
 
 const Wishlist = () => {
@@ -55,7 +55,7 @@ const Wishlist = () => {
 					</div>
 				</div>
 
-				<div className='justify-center md:justify-start flex flex-wrap'>
+				<div className='justify-center md:justify-start flex flex-wrap my-20'>
 					{searchCourses &&
 						searchCourses.map((course) => (
 							<Link to={`/course/${course._id}`} className='bg-white lg:w-1/4 md:w-1/3 w-60 pb-8 px-2'>
@@ -75,12 +75,10 @@ const Wishlist = () => {
 									</div>
 									<div class='flex items-center space-x-2'>
 										<span class='font-bold text-gray-900 '>
-											<span class='underline'>đ</span>
-											{(course.price * 0.8).toLocaleString()}
+											<span>{(course.price * 0.8).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
 										</span>
 										<span class='text-gray-500 line-through'>
-											<span class='underline'>đ</span>
-											{course.price.toLocaleString()}
+											<span>{course.price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
 										</span>
 									</div>
 								</div>

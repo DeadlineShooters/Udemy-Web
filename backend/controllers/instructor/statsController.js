@@ -137,8 +137,6 @@ controller.statsByMonth = async (req, res) => {
 		let firstMonthRating = 0;
 		let firstMonthAssign = false;
 
-		console.log(feedbacks);
-
 		for (let feedback of feedbacks) {
 			let monthDiff = currentDate.getMonth() + 1 - feedback._id.month + 12 * (currentDate.getFullYear() - feedback._id.year);
 			acml.rating += feedback.totalRating;
@@ -161,10 +159,10 @@ controller.statsByMonth = async (req, res) => {
 			}
 		}
 
-		revenues = revenues.map(revenue => parseFloat(revenue.toFixed(2)));
-		ratings = ratings.map(rating => parseFloat(rating.toFixed(1)));
+		revenues = revenues.map((revenue) => parseFloat(revenue.toFixed(2)));
+		ratings = ratings.map((rating) => parseFloat(rating.toFixed(1)));
 
-		res.json({ success: true, revenues, enrollments, ratings, totalFeedback: feedbacks[feedbacks.length - 1].totalFeedbacks });
+		res.json({ success: true, revenues, enrollments, ratings, totalFeedback: feedbacks.length !== 0 ? feedbacks[feedbacks.length - 1].totalFeedbacks : 0 });
 	} catch (error) {
 		console.log(error);
 		res.status(500).send(error);

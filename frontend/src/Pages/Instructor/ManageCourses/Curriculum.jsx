@@ -192,15 +192,15 @@ const Curriculum = () => {
   };
 
   const successNotify = () => {
-    toast.success("Updated successfully!", {
-      position: "top-center",
+    toast.success('🦄 Update successfully!', {
+      position: "bottom-left",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      theme: "dark",
+      theme: "light",
       transition: Bounce,
     });
   };
@@ -216,7 +216,7 @@ const Curriculum = () => {
     };
     console.log("edit upload", data);
     try {
-      const response = await axios.put(`http://localhost:5000/instructor/${courseId}/update-section`, { data });
+      const response = await axios.put(`${process.env.REACT_APP_BACKEND_HOST}/instructor/${courseId}/update-section`, { data });
       if (response.status === 200) {
         console.log("after", response.data.course);
         successNotify();

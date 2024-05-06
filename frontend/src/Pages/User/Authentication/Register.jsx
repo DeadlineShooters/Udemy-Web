@@ -31,13 +31,9 @@ const Register = () => {
       const response = await axios.post("http://localhost:5000/auth/signup", {
         firstName, lastName, email, password
       })
-      console.log(response);
       if (response.status === 200) {
-        const {userData} = await response.data;
-        setUser(userData);
-        setIsLogged(true);
-        secureLocalStorage.setItem('user', JSON.stringify(userData));
-        navigate("/home", {replace: true});
+        localStorage.setItem("registerEmail", JSON.stringify(email));
+        navigate("/user/verify", {replace: true});
       }
     } catch (err)
     {
@@ -49,7 +45,7 @@ const Register = () => {
     <div className='flex flex-col w-full items-center pt-20 font-bold text-2xl mb-48'>
       {isRegisterFailed === true ? (
         <div className='px-5 py-2 mb-5 bg-red-300'>
-          <p className='text-base'>There is something wrong. Try again!</p>
+          <p className='text-base'>Your email has been already used. Try another!</p>
         </div>
       ) : (
         ""

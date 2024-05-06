@@ -176,7 +176,7 @@ const CourseLandingPage = () => {
     };
     console.log("edit upload", data);
     try {
-      const response = await axios.put(`http://localhost:5000/instructor/${courseId}/update-course`, { data });
+      const response = await axios.put(`${process.env.REACT_APP_BACKEND_HOST}/instructor/${courseId}/update-course`, { data });
       if (response.status === 200) {
         console.log("after", response.data.course);
         successNotify("Course landing page updated successfully");

@@ -57,6 +57,7 @@ router.get("/facebook/callback", passport.authenticate("facebook", {
 
 router.post("/signup", authController.signup);
 router.post("/signin", authController.signin);
+router.get("/verify/:userId/:uniqueString", authController.verify);
 router.get("/logout", (req, res) => {
     req.logout();
     res.redirect(CLIENT_URL);

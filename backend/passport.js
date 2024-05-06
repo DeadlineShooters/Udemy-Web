@@ -15,7 +15,9 @@ passport.use(new GoogleStrategy({
       const findUser = await user.findOne({ email: profile.emails[0].value });
       console.log(findUser);
       if (!findUser) {
-        return done(null, null);
+        return done(null, null, { message: "User not found" });
+      } else if (!findUser.verified) {
+        return done(null, null, { message: "User is not verified" });
       }
       done(null, profile);
     } catch (error) {

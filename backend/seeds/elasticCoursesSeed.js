@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const mongoURI = process.env.MONGODB_URI;
+console.log(mongoURI);
 
 try {
 	await mongoose.connect(mongoURI);

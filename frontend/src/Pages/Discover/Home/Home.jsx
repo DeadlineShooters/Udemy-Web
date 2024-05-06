@@ -68,7 +68,7 @@ const Home = () => {
 		if (categories) {
 			categories.forEach((category) => {
 				axios
-					.get(`http://localhost:5000/courses/?category=${category.id}`)
+					.get(`${process.env.REACT_APP_BACKEND_HOST}/courses/?category=${category.id}`)
 					.then((response) => {
 						if (response.data.success) {
 							setCourses((prevCourses) => ({
