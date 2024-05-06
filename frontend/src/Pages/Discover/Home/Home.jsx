@@ -64,28 +64,29 @@ const Home = () => {
     }
   }, [containerWidth]);
 
-  useEffect(() => {
-    if (categories) {
-      categories.forEach((category) => {
-        axios
-          .get(`http://localhost:5000/courses/?category=${category.id}`)
-          .then((response) => {
-            if (response.data.success) {
-              setCourses((prevCourses) => ({
-                ...prevCourses,
-                [category.name]: response.data.courses,
-              }));
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      });
-    }
-  }, [categories]);
+	useEffect(() => {
+		if (categories) {
+			categories.forEach((category) => {
+				axios
+					.get(`${process.env.REACT_APP_BACKEND_HOST}/courses/?category=${category.id}`)
+					.then((response) => {
+						if (response.data.success) {
+							setCourses((prevCourses) => ({
+								...prevCourses,
+								[category.name]: response.data.courses,
+							}));
+						}
+					})
+					.catch((error) => {
+						console.error('Error:', error);
+					}).finally(() => {
+						setTimeout(() => {
+							setLoading(false);
+						}, 1000);
+					});
+			});
+		}
+	}, [categories]);
 
   useEffect(() => {
     axios

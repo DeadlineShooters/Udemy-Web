@@ -59,7 +59,7 @@ const EditProfile = () => {
     }
   };
   return (
-    <div className="template flex flex-row pt-8">
+    <div className="template flex flex-row mt-8 mb-12">
       <div className="flex flex-col border border-r-0 border-black" style={{ height: "40rem" }}>
         <div className="p-10">
           <div className="flex rounded-full justify-center">
@@ -117,7 +117,7 @@ const EditProfile = () => {
               />
             </form>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col flex-grow">
             <p className="font-bold px-12 pt-2">Description:</p>
             <form className="px-12 pt-2">
               <textarea

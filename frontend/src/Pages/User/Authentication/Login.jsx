@@ -10,6 +10,7 @@ const Login = () => {
   const [isChecked, setChecked] = useState(true);
   const {setUser, setIsLogged} = useAuth();
   const [isLoginFailed, setLoginFailed] = useState(false);
+  const [isVerified, setVerifiedStatus] = useState(true);
   const [isLoginGoogleFailed, setLoginGoogleFailed] = useState(false);
   let features = 'menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=no,height=600,width=400';
   const googleAuth = () => {
@@ -74,7 +75,12 @@ const Login = () => {
       }
     } catch (err)
     {
-      setLoginFailed(true);
+      if (err.response && err.response.data && err.response.data.message === "User is not verified") {
+        setVerifiedStatus(false);
+      }
+      else {
+        setLoginFailed(true) 
+      };
       console.log(err);
     }
   }
@@ -90,6 +96,13 @@ const Login = () => {
       {isLoginFailed === true ? (
         <div className='px-5 py-2 mb-5 bg-red-300'>
           <p className='text-base'>Your email or password is incorrect. Try again!</p>
+        </div>
+      ) : (
+        ""
+      )}
+      {isVerified === false ? (
+        <div className='px-5 py-2 mb-5 bg-red-300'>
+          <p className='text-base'>Your email isn't verified. Please check mailbox!</p>
         </div>
       ) : (
         ""

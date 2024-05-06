@@ -55,7 +55,7 @@ const Wishlist = () => {
 					</div>
 				</div>
 
-				<div className='justify-center md:justify-start flex flex-wrap'>
+				<div className='justify-center md:justify-start flex flex-wrap my-20'>
 					{searchCourses &&
 						searchCourses.map((course) => (
 							<Link to={`/course/${course._id}`} className='bg-white lg:w-1/4 md:w-1/3 w-60 pb-8 px-2'>

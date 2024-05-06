@@ -9,6 +9,9 @@ import Footer from "./Components/Footer/Footer.jsx";
 import Home from "./Pages/Discover/Home/Home.jsx";
 import CourseContent from "./Pages/Course/Content/Content.jsx";
 import NotFound from "./Components/404/404.jsx";
+import PageError from "./Pages/User/Authentication/PageError.jsx";
+import Verification from "./Pages/User/Authentication/Verification.jsx";
+import SuccessVerify from "./Pages/User/Authentication/SuccessVerify.jsx";
 import CourseDetail from "./Pages/User/CourseLandingPage/CourseDetail.jsx";
 import Cart from "./Pages/Cart/cart.jsx";
 import CoursesByCategory from "./Pages/Discover/CoursesByCategory/coursesByCategory.jsx";
@@ -99,6 +102,18 @@ const router = createBrowserRouter([
 				path: '/cart',
 				element: <Cart />,
 			},
+			{
+				path: '/user/verify',
+				element: <Verification/>
+			},
+			{
+				path: '/user/verified/success',
+				element: <SuccessVerify/>
+			}, 
+			{
+				path: '/user/verified/error/:message',
+				element: <PageError/>
+			}
 		],
 	},
 	{

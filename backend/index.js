@@ -16,7 +16,7 @@ import paymentRoute from "./routes/payment/paymentRoute.js";
 import cartRoute from "./routes/user/cartRoute.js";
 import wishlistRoute from "./routes/user/wishlistRoute.js";
 import cloudinary from "cloudinary";
-
+import bodyParser from "express";
 import questionRoute from './routes/question.js';
 import answerRoute from './routes/answer.js';
 
@@ -38,6 +38,7 @@ cloudinary.v2.config({
 
 const app = express();
 app.use(express.json());
+app.use(bodyParser());
 
 app.use(
   cookieSession({

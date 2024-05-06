@@ -33,7 +33,7 @@ const QuesComp = ({ question, onUpdateQuestion }) => {
 
   const deleteQuestion = async () => {
     try {
-      const res = await axios.delete(`http://localhost:5000/questions/${question.course}/${question._id}`);
+      const res = await axios.delete(`${process.env.REACT_APP_BACKEND_HOST}/questions/${question.course}/${question._id}`);
       return res.data;
     } catch (error) {
       console.error("Error deleting question", error);
@@ -56,7 +56,7 @@ const QuesComp = ({ question, onUpdateQuestion }) => {
 
   const getOneQuestion = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/questions/${question.course}/${question._id}`);
+      const res = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/questions/${question.course}/${question._id}`);
       return res.data;
     } catch (e) {
       console.error("Error getting one question", e)
@@ -68,7 +68,7 @@ const QuesComp = ({ question, onUpdateQuestion }) => {
 
       // Define editQuestion as an asynchronous function
       const editQuestion = async (editedQuestion) => {
-        const res = await axios.put(`http://localhost:5000/questions/${question.course}/${question._id}`, editedQuestion);
+        const res = await axios.put(`${process.env.REACT_APP_BACKEND_HOST}/questions/${question.course}/${question._id}`, editedQuestion);
         return res.data; // Return the edited question data
       }
 

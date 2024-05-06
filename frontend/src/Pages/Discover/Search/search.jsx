@@ -73,7 +73,7 @@ const Search = () => {
 
 	useEffect(() => {
 		axios
-			.get(`http://localhost:5000/courses/search?query=${query}`)
+			.get(`${process.env.REACT_APP_BACKEND_HOST}/courses/search?query=${query}`)
 			.then((response) => {
 				if (response.data.success) {
 					setCourses(response.data.courses);

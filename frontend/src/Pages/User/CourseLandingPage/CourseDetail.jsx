@@ -1,32 +1,32 @@
-import React, { useLayoutEffect } from 'react';
-import { useState, useEffect, useRef, useContext } from 'react';
-import axios from 'axios';
-import { useParams, Link } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { useAuth } from '../../../AuthContextProvider.jsx';
-import { useCart } from '../../../CartRouterProvider.js';
-import { useWishlist } from '../../../CartRouterProvider.js';
-import './CourseDetail.css'; // Importing a CSS file to style the component
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faExclamation, faCirclePlay, faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
-import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
-import Section from '../../../Components/CourseLandingPage/Section';
-import ProfileCard from '../../../Components/CourseLandingPage/ProfileCard';
-import CourseReview from '../../../Components/CourseLandingPage/CourseReview';
-import HeartIcon from '../../../Components/CourseLandingPage/HeartIcon';
-import NotFound from '../../../Components/404/404';
-import Modal from '../../../Components/Feedback/Modal';
-import Spinner from '../../../Components/Spinner.jsx';
-import PreviewModal from './PreviewModal';
-import { createImageFromInitials } from '../../../Components/Utils/Utils.js';
-import { convertDecimal128ToNumber } from '../../../Components/Utils/Utils.js';
-import { useFeedbacks } from '../../../Components/Feedback/useFeedbacks.js';
-import Pagination from '../../../Components/Pagination.jsx';
-import DOMPurify from 'dompurify';
-import ScrollContext from '../../../context/ScrollContext.js';
-import ProtectedRoutes from '../../../Components/Utils/AuthSecure.jsx';
-import { Navigate } from 'react-router-dom';
+import React, { useLayoutEffect } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
+import axios from "axios";
+import { useParams, Link, useLocation } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../../../AuthContextProvider.jsx";
+import { useCart } from "../../../CartRouterProvider.js";
+import { useWishlist } from "../../../CartRouterProvider.js";
+import "./CourseDetail.css"; // Importing a CSS file to style the component
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar, faExclamation, faCirclePlay, faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
+import Section from "../../../Components/CourseLandingPage/Section";
+import ProfileCard from "../../../Components/CourseLandingPage/ProfileCard";
+import CourseReview from "../../../Components/CourseLandingPage/CourseReview";
+import HeartIcon from "../../../Components/CourseLandingPage/HeartIcon";
+import NotFound from "../../../Components/404/404";
+import Modal from "../../../Components/Feedback/Modal";
+import Spinner from "../../../Components/Spinner.jsx";
+import PreviewModal from "./PreviewModal";
+import { createImageFromInitials } from "../../../Components/Utils/Utils.js";
+import { convertDecimal128ToNumber } from "../../../Components/Utils/Utils.js";
+import { useFeedbacks } from "../../../Components/Feedback/useFeedbacks.js";
+import Pagination from "../../../Components/Pagination.jsx";
+import DOMPurify from "dompurify";
+import ScrollContext from "../../../context/ScrollContext.js";
+import ProtectedRoutes from "../../../Components/Utils/AuthSecure.jsx";
+import { Navigate } from "react-router-dom";
 
 const CourseDetail = () => {
 	const videoRef = useRef();
@@ -41,12 +41,17 @@ const CourseDetail = () => {
 	const { cart, setCart } = useCart();
 	const { wishlist, setWishlist } = useWishlist();
 
-	const [isEnrolled, setIsEnrolled] = useState(false);
-	const [isCarted, setIsCarted] = useState(false);
-	const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [isCarted, setIsCarted] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const userId = userData._id;
+  const allButtonRef = useRef(null);
 
-	const userId = userData._id;
-	const allButtonRef = useRef(null);
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
 	console.log('Rating filter: ' + ratingFilter);
 	console.log('feedbacks: ', feedbacks);

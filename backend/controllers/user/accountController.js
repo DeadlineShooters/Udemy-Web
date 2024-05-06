@@ -333,3 +333,68 @@ export const getCertificate = async (req, res) => {
     return res.status(500).json({ success: false, message: "Internal server error" });
   }
 }
+
+export const addCourseToArchived = async (req, res) => {
+  const { userId, courseId } = req.params;
+
+  console.log("adding course ", courseId, "to user's archived list", userId);
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if the course is already in the favorite courses
+    if (!user.archivedCourse.includes(courseId)) {
+      user.archivedCourse.push(courseId);
+      await user.save();
+      return res.status(200).json({ success: true, message: "Course added to archived list successfully" });
+    } else {
+      return res.status(400).json({ success: false, message: "This course is already in your archived list." });
+    }
+  } catch (error) {
+    console.error("Error adding course to favorite courses:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const removeCourseFromArchived = async (req, res) => {
+  const { userId, courseId } = req.params;
+
+  console.log("removing course ", courseId, "from user's archived list", userId);
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if the course is in the favorite courses
+    if (user.archivedCourse.includes(courseId)) {
+      user.archivedCourse = user.archivedCourse.filter((id) => id != courseId);
+      await user.save();
+      return res.status(200).json({ success: true, message: "Course removed from archived list successfully" });
+    } else {
+      return res.status(400).json({ success: false, message: "This course is not in your archived list." });
+    }
+  } catch (error) {
+    console.error("Error removing course from favorite courses:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getArchivedList = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const archivedList = user.archivedCourse;
+    return res.status(200).json({ success: true, archivedList: archivedList });
+  } catch (error) {
+    console.error("Error fetching favorite status:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

@@ -192,15 +192,15 @@ const Curriculum = () => {
   };
 
   const successNotify = () => {
-    toast.success("Updated successfully!", {
-      position: "top-center",
+    toast.success('🦄 Update successfully!', {
+      position: "bottom-left",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      theme: "dark",
+      theme: "light",
       transition: Bounce,
     });
   };
@@ -216,7 +216,7 @@ const Curriculum = () => {
     };
     console.log("edit upload", data);
     try {
-      const response = await axios.put(`http://localhost:5000/instructor/${courseId}/update-section`, { data });
+      const response = await axios.put(`${process.env.REACT_APP_BACKEND_HOST}/instructor/${courseId}/update-section`, { data });
       if (response.status === 200) {
         console.log("after", response.data.course);
         successNotify();
@@ -299,10 +299,12 @@ const Curriculum = () => {
         </div>
       </div>
       <div className="flex flex-row justify-end bottom-0 items-end align-bottom">
-        <Button color="black" className="rounded-none hover:bg-violet-800" style={{ height: "48px" }} onClick={() => navigate(replacedUrl)}>
+        <Button color="black" className="rounded-none hover:bg-violet-800 mr-2" style={{ height: "48px" }} onClick={() => navigate(replacedUrl)}>
           <span className="font-bold text-base normal-case">Go to Landing Page</span>
         </Button>
-
+        <Button color="purple" className="rounded-none hover:bg-violet-800" style={{ height: "48px" }} onClick={() => handleSaveCourse()}>
+          <span className="font-bold text-base normal-case">Save</span>
+        </Button>
         <Modal
           showModal={showWarningModal}
           setShowModal={setShowWarningModal}
