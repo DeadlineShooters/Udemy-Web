@@ -4,6 +4,8 @@ import instructorSchema from "./instructor.js";
 const userSchema = new mongoose.Schema({
     firstName: { type: String },
     lastName: { type: String, required: true },
+    bio: {type: String },
+    header: {type: String },
     courseList: [{
         course: { type: Schema.Types.ObjectId, ref: "Course" },
         progress: { type: Number, default: 0 },
@@ -30,6 +32,7 @@ const userSchema = new mongoose.Schema({
     archivedCourse: [{ type: Schema.Types.ObjectId, ref: "Course" }],
     cart: [{ type: Schema.Types.ObjectId, ref: "Course" }],
     instructor: instructorSchema,
+    verified: {type: Boolean, default: false}
 }); 
 
 const User = mongoose.model("User", userSchema);

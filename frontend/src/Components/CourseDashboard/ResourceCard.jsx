@@ -5,7 +5,7 @@ import { Image } from "cloudinary-react";
 
 export default function ResourceCard({ props }) {
   const {
-    imgSrc,
+    publicId,
     title,
     desciption, 
     getStartedUrl,
@@ -14,7 +14,7 @@ export default function ResourceCard({ props }) {
     <div className="w-full py-4 px-12 drop-shadow-md border-2 bg-white flex justify-between">
       <div className="flex">
         <div className="flex justify-center items-center w-2/5">
-          <img src={imgSrc} alt="" className="object-cover w-52 h-52" />
+          <Image cloudName={process.env.REACT_APP_CLOUDINARY_CLOUD_NAME} publicId={publicId} width="208" crop="fit"/>
         </div>
         <div className="pt-4 w-3/5 pl-4">
           <h3 className="mb-8 text-2xl">{title}</h3>

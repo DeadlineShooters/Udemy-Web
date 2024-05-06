@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from "react";
 import { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../../../AuthContextProvider.jsx";
@@ -46,6 +46,12 @@ const CourseDetail = () => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const userId = userData._id;
   const allButtonRef = useRef(null);
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   console.log("Rating filter: " + ratingFilter);
   console.log("feedbacks: ", feedbacks);

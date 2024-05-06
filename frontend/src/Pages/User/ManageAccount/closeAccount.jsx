@@ -8,7 +8,7 @@ const CloseAccount = () => {
   const { userData } = useAuth();
   let fullname = userData.firstName + " " + userData.lastName;
   return (
-    <div className="template flex flex-row pt-8">
+    <div className="template flex flex-row mt-8 mb-12">
       <div className="flex flex-col border border-r-0 border-black" style={{ height: "40rem" }}>
         <div className="p-10">
           <div className="flex rounded-full justify-center">
