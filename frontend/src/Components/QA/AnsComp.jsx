@@ -65,7 +65,7 @@ const AnsComp = ({ question }) => {
 
 			// Define deleteAnswer as an asynchronous function
 			const deleteAnswer = async () => {
-				const res = await axios.delete(`http://localhost:5000/questions/${question._id}/answers/${answerId}`);
+				const res = await axios.delete(`${process.env.REACT_APP_BACKEND_HOST}/questions/${question._id}/answers/${answerId}`);
 				return res.data; // Return the edited answer data
 			}
 
@@ -84,7 +84,7 @@ const AnsComp = ({ question }) => {
 
 			// Define editAnswer as an asynchronous function
 			const editAnswer = async (answer) => {
-				const res = await axios.put(`http://localhost:5000/questions/${question._id}/answers/${editedAnswerId}`, answer);
+				const res = await axios.put(`${process.env.REACT_APP_BACKEND_HOST}/questions/${question._id}/answers/${editedAnswerId}`, answer);
 				return res.data; // Return the edited answer data
 			}
 
@@ -109,7 +109,7 @@ const AnsComp = ({ question }) => {
 						user_id: userData._id,
 					}
 				}
-				const res = await axios.post(`http://localhost:5000/questions/${question._id}/answers`, answer, config);
+				const res = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/questions/${question._id}/answers`, answer, config);
 				return res.data; // Return the added answer data
 			} catch (error) {
 				console.error('Error sending the answer:', error);
@@ -130,7 +130,7 @@ const AnsComp = ({ question }) => {
 	const getAnswers = async () => {
 
 		try {
-			const res = await axios.get(`http://localhost:5000/questions/${question._id}/answers`);
+			const res = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/questions/${question._id}/answers`);
 			const resAnswers = res.data;
 			setAnswers(resAnswers);
 		} catch (error) {
