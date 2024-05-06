@@ -1,8 +1,8 @@
 import { RouterProvider, Outlet, createBrowserRouter, useLocation } from "react-router-dom";
 import { useState } from "react";
 //Component
-import Navbar from './Components/Navbar/Navbar.jsx';
-import Sidebar from './Components/Sidebar/sidebar.jsx';
+import Navbar from "./Components/Navbar/Navbar.jsx";
+import Sidebar from "./Components/Sidebar/sidebar.jsx";
 import Footer from "./Components/Footer/Footer.jsx";
 
 //General page
@@ -51,6 +51,7 @@ import ScrollContext from "./context/ScrollContext.js";
 import "./fonts/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf";
 import { useAuth } from "./AuthContextProvider.jsx";
 import Certificate from "./Pages/Course/Certificate/Certificate.jsx";
+import HeaderInstructorDashboard from "./Components/HeaderInstructorDashboard.jsx";
 
 const Layout = () => {
   return (
@@ -62,208 +63,225 @@ const Layout = () => {
   );
 };
 
-
 const CourseDashboardLayout = () => {
   return (
-    <>
-      <Sidebar />
-      <Outlet />
+    <div>
+      <HeaderInstructorDashboard />
+      <div>
+        <Sidebar />
+        <Outlet />
+      </div>
+
       {/* <Footer/>*/}
-    </>
+    </div>
   );
 };
 
 const router = createBrowserRouter([
-	{
-		path: '/',
-		element: <Layout />,
-		children: [
-			{
-				path: '/',
-				element: <Home />,
-			},
-			{
-				path: '*',
-				element: <NotFound />,
-			},
-			{
-				path: '/register',
-				element: <Register />,
-			},
-			{
-				path: '/login',
-				element: <Login />,
-			},
-			{
-				path: '/login/handle-message',
-				element: <HandlePopUpLogin />,
-			},
-			{
-				path: '/cart',
-				element: <Cart />,
-			},
-			{
-				path: '/user/verify',
-				element: <Verification/>
-			},
-			{
-				path: '/user/verified/success',
-				element: <SuccessVerify/>
-			}, 
-			{
-				path: '/user/verified/error/:message',
-				element: <PageError/>
-			}
-		],
-	},
-	{
-		path: '/home',
-		element: <ProtectedRoutes />,
-		children: [{
-			path: '',
-			element: <Layout />,
-			children: [
-				{
-					path: 'my-courses/learning',
-					element: <MyLearning />,
-				},
-				{
-					path: 'my-courses/wishlist',
-					element: <Wishlist />,
-				},
-				{
-					path: 'my-courses/archived',
-					element: <Archived />,
-				},
-			],
-		}]
-	},
-	{
-		path: '/courses',
-		element: <Layout />,
-		children: [
-			{
-				path: ':categoryId',
-				element: <CoursesByCategory />,
-			},
-			{
-				path: 'search',
-				element: <Search/>,
-			},
-		],
-	},
-	{
-		path: '/user',
-		element: <ProtectedRoutes />,
-		children: [{
-			path: '',
-			element: <Layout />,
-			children: [{
-				path: 'public-profile',
-				element: <PublicProfile />,
-			},
-			{
-				path: 'edit-profile',
-				element: <EditProfile />,
-			},
-			{
-				path: 'account-settings',
-				element: <AccountSettings />,
-			},
-			{
-				path: 'instructor-become',
-				element: <InstructorRegister />,
-				
-			},
-			{
-				path: 'instructor-profile/:userId',
-				element: <InstructorProfile />,
-			},
-			{
-				path: 'close-account',
-				element: <CloseAccount />,
-			}]
-		}],
-	},
-	{
-		path: '/course/:courseId',
-		element: <Layout />,
-		children: [
-			{
-				path: '',
-				element: <CourseDetail />,
-			},
-		],
-	},
-	{
-		path: '/course/:slug',
-		element: <ProtectedRoutes />,
-		children: [
-			{
-				path: 'certificate',
-				element: <Layout />,
-				children: [{
-					path: ':cerId',
-					element: <Certificate/>
-				}]
-			},
-		],
-	},
-	{
-		path: '/course/:slug/learn/:lectureIndex',
-		element: <CourseContent />,
-	},
-	{
-		path: '/instructor',
-		element: <ProtectedRoutes />,
-		children: [
-		{
-			path: '',
-			element: <CourseDashboardLayout />,
-			children: [
-			{
-				path: 'courses',
-				element: <CourseDashBoard />,
-			},
-			{
-				path: 'statistics',
-				element: <Statistics />,
-			},
-			{
-				path: "qa",
-				element: <QuestionAndAnswer />,
-			},
-			{
-				path: 'reviews',
-				element: <Reviews />,
-			},
-		]}],
-	},
-	{
-		path: '/instructor/course/:courseSlug/manage',
-		element: <ProtectedRoutes />,
-		children: [{
-			path: '',
-			element: <ManageCourseLayout />,
-			children: [
-			{
-				path: 'curriculum',
-				element: <Curriculum />,
-			},
-			{
-				path: 'basics',
-				element: <CourseLandingPage />,
-			}],
-		}]
-	},
-	{
-		path: '/instructor/course/create',
-		element: <ProtectedRoutes />,
-		children: [{
-			path: '',
-			element: <CreateCourse/>,
-		}]
-	},
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "*",
+        element: <NotFound />,
+      },
+      {
+        path: "/register",
+        element: <Register />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/login/handle-message",
+        element: <HandlePopUpLogin />,
+      },
+      {
+        path: "/cart",
+        element: <Cart />,
+      },
+      {
+        path: "/user/verify",
+        element: <Verification />,
+      },
+      {
+        path: "/user/verified/success",
+        element: <SuccessVerify />,
+      },
+      {
+        path: "/user/verified/error/:message",
+        element: <PageError />,
+      },
+    ],
+  },
+  {
+    path: "/home",
+    element: <ProtectedRoutes />,
+    children: [
+      {
+        path: "",
+        element: <Layout />,
+        children: [
+          {
+            path: "my-courses/learning",
+            element: <MyLearning />,
+          },
+          {
+            path: "my-courses/wishlist",
+            element: <Wishlist />,
+          },
+          {
+            path: "my-courses/archived",
+            element: <Archived />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: "/courses",
+    element: <Layout />,
+    children: [
+      {
+        path: ":categoryId",
+        element: <CoursesByCategory />,
+      },
+      {
+        path: "search",
+        element: <Search />,
+      },
+    ],
+  },
+  {
+    path: "/user",
+    element: <ProtectedRoutes />,
+    children: [
+      {
+        path: "",
+        element: <Layout />,
+        children: [
+          {
+            path: "public-profile",
+            element: <PublicProfile />,
+          },
+          {
+            path: "edit-profile",
+            element: <EditProfile />,
+          },
+          {
+            path: "account-settings",
+            element: <AccountSettings />,
+          },
+          {
+            path: "instructor-become",
+            element: <InstructorRegister />,
+          },
+          {
+            path: "instructor-profile/:userId",
+            element: <InstructorProfile />,
+          },
+          {
+            path: "close-account",
+            element: <CloseAccount />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: "/course/:courseId",
+    element: <Layout />,
+    children: [
+      {
+        path: "",
+        element: <CourseDetail />,
+      },
+    ],
+  },
+  {
+    path: "/course/:slug",
+    element: <ProtectedRoutes />,
+    children: [
+      {
+        path: "certificate",
+        element: <Layout />,
+        children: [
+          {
+            path: ":cerId",
+            element: <Certificate />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: "/course/:slug/learn/:lectureIndex",
+    element: <CourseContent />,
+  },
+  {
+    path: "/instructor",
+    element: <ProtectedRoutes />,
+    children: [
+      {
+        path: "",
+        element: <CourseDashboardLayout />,
+        children: [
+          {
+            path: "courses",
+            element: <CourseDashBoard />,
+          },
+          {
+            path: "statistics",
+            element: <Statistics />,
+          },
+          {
+            path: "qa",
+            element: <QuestionAndAnswer />,
+          },
+          {
+            path: "reviews",
+            element: <Reviews />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: "/instructor/course/:courseSlug/manage",
+    element: <ProtectedRoutes />,
+    children: [
+      {
+        path: "",
+        element: <ManageCourseLayout />,
+        children: [
+          {
+            path: "curriculum",
+            element: <Curriculum />,
+          },
+          {
+            path: "basics",
+            element: <CourseLandingPage />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: "/instructor/course/create",
+    element: <ProtectedRoutes />,
+    children: [
+      {
+        path: "",
+        element: <CreateCourse />,
+      },
+    ],
+  },
 ]);
 
 export function AppRouterProvider() {

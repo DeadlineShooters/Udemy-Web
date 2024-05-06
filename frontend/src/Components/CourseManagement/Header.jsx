@@ -20,7 +20,7 @@ export default function Header() {
       }
     };
     setSaveCourseName();
-  }, [])
+  }, []);
 
   const goToCourses = () => {
     navigate("/instructor/courses");
@@ -38,7 +38,7 @@ export default function Header() {
         <span className="text-white hidden sm:block">Back to courses</span>
         <span className="text-white text-xl font-bold">{title}</span>
       </div>
-      <ButtonDefault text={"Save"} handleClick={onSave} />
+      {/* <ButtonDefault text={"Save"} handleClick={onSave} /> */}
     </header>
   );
 }

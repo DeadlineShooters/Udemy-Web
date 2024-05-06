@@ -15,6 +15,7 @@ import { Bounce, toast } from "react-toastify";
 import Modal from "../../../Components/CourseManagement/Modal";
 import { useCourse } from "../../../CourseContextProvider";
 import { useDispatch } from "react-redux";
+import { successNotify } from "../../../utils/helpers";
 
 const CourseLandingPage = () => {
   const dispatch = useDispatch();
@@ -161,20 +162,6 @@ const CourseLandingPage = () => {
     }
   };
 
-  const successNotify = () => {
-    toast.success('🦄 Update successfully!', {
-      position: "bottom-left",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    });
-  };
-
   const handleUploadCourse = async () => {
     const data = {
       category: courseCat,
@@ -192,7 +179,7 @@ const CourseLandingPage = () => {
       const response = await axios.put(`${process.env.REACT_APP_BACKEND_HOST}/instructor/${courseId}/update-course`, { data });
       if (response.status === 200) {
         console.log("after", response.data.course);
-        successNotify();
+        successNotify("Course landing page updated successfully");
         setSelectedCourse(response.data.course);
         localStorage.setItem("course", JSON.stringify(response.data.course));
       }
@@ -351,10 +338,6 @@ const CourseLandingPage = () => {
                     <option value="19.99">$19.99 (Tier 1)</option>
                     <option value="29.99">$29.99 (Tier 2)</option>
                     <option value="54.99">$54.99 (Tier 3)</option>
-                    <option value="79.99">$79.99 (Tier 4)</option>
-                    <option value="109.99">$109.99 (Tier 5)</option>
-                    <option value="149.99">$149.99 (Tier 6)</option>
-                    <option value="199.99">$199.99 (Tier 7)</option>
                   </select>
                 </div>
               </div>

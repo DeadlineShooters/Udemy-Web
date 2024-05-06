@@ -234,46 +234,48 @@ export const getOneCourse = async (req, res) => {
 };
 
 export const getExactLecture = async (req, res) => {
-    try {
-        const {lectureIndex, slugName} = req.body;
-        if (!slugName) {
-            const lecture = await Lecture.find({index: lectureIndex});
-            if (lecture) {
-                return res.status(200).send({ success: true, message: "Lecture found successfully", data: lecture });  
-            } else {
-                return res.status(400).send({ success: false, message: "Lecture found failed"});  
-            }
-        } else {
-            const course = await Course.find({slugName: slugName}).populate({
-                path: 'sectionList',
-                model: 'Section',
-                populate: {
-                    path: 'lectureList',
-                    model: 'Lecture',
-                }
-            }).populate({path: "instructor", model: "User"});
-            const lecture = await Lecture.find({index: lectureIndex});
-            const returnData = {course, lecture};
-            if (lecture) {
-                return res.status(200).send({ success: true, message: "Lecture found successfully", data: returnData });  
-            } else {
-                return res.status(400).send({ success: false, message: "Lecture found failed"});  
-            }
-        }
-    } catch (error) {
-        console.error('Error fetching course list:', error);
-        res.status(500).json({ message: 'Internal server error' });
+  try {
+    const { lectureIndex, slugName } = req.body;
+    if (!slugName) {
+      const lecture = await Lecture.find({ index: lectureIndex });
+      if (lecture) {
+        return res.status(200).send({ success: true, message: "Lecture found successfully", data: lecture });
+      } else {
+        return res.status(400).send({ success: false, message: "Lecture found failed" });
+      }
+    } else {
+      const course = await Course.find({ slugName: slugName })
+        .populate({
+          path: "sectionList",
+          model: "Section",
+          populate: {
+            path: "lectureList",
+            model: "Lecture",
+          },
+        })
+        .populate({ path: "instructor", model: "User" });
+      const lecture = await Lecture.find({ index: lectureIndex });
+      const returnData = { course, lecture };
+      if (lecture) {
+        return res.status(200).send({ success: true, message: "Lecture found successfully", data: returnData });
+      } else {
+        return res.status(400).send({ success: false, message: "Lecture found failed" });
+      }
     }
-}
+  } catch (error) {
+    console.error("Error fetching course list:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 export const updateCourseProgress = async (req, res) => {
   try {
     const { userId, courseId, viewLectures } = req.body;
     const user = await User.findById(userId);
     if (!user) {
-        return res.status(404).json({ success: false, message: "User not found" });
+      return res.status(404).json({ success: false, message: "User not found" });
     }
-    const course = user.courseList.find(courseItem => courseItem.course.toString() === courseId);
+    const course = user.courseList.find((courseItem) => courseItem.course.toString() === courseId);
     if (!course) {
       return res.status(404).json({ success: false, message: "Course not found for the user" });
     }
@@ -282,7 +284,7 @@ export const updateCourseProgress = async (req, res) => {
       return res.status(404).json({ success: false, message: "Course in the system found for the user" });
     }
     const totalLectures = overallCourse.totalLecture;
-    const viewedLecturesCount = viewLectures.filter(lecture => lecture.viewed).length;
+    const viewedLecturesCount = viewLectures.filter((lecture) => lecture.viewed).length;
     const progress = (viewedLecturesCount / totalLectures) * 100;
     course.progress = progress;
     course.lectures = viewLectures;
@@ -301,38 +303,40 @@ export const updateCourseProgress = async (req, res) => {
       course.certificate = certificate._id; // Assign certificate ID to the user's course
       await user.save();
     }
-    const data = {user, course};
-    return res.status(200).json({ success: true, message: "Progress updated successfully", data});
-    } catch (error) {
+    const data = { user, course };
+    return res.status(200).json({ success: true, message: "Progress updated successfully", data });
+  } catch (error) {
     console.error("Error updating progress:", error);
     return res.status(500).json({ success: false, message: "Internal server error" });
   }
-}
+};
 
 export const getCertificate = async (req, res) => {
   try {
-    const {cerId} = req.params;
-    const certificate = await Certificate.findById(cerId).populate({
-      path: "course",
-      model: "Course",
-      populate: {
-        path: "instructor",
-        model: "User"
-      }
-    }).populate({
-      path: "user",
-      model: "User",
-    });
+    const { cerId } = req.params;
+    const certificate = await Certificate.findById(cerId)
+      .populate({
+        path: "course",
+        model: "Course",
+        populate: {
+          path: "instructor",
+          model: "User",
+        },
+      })
+      .populate({
+        path: "user",
+        model: "User",
+      });
     if (certificate) {
-      return res.status(200).json({success: true, message: "Certificate found successfully", certificate: certificate});
+      return res.status(200).json({ success: true, message: "Certificate found successfully", certificate: certificate });
     } else {
-      return res.status(500).json({success: false, message: "Certificate found fail"});
+      return res.status(500).json({ success: false, message: "Certificate found fail" });
     }
   } catch (error) {
     console.error("Error getting certificate:", error);
     return res.status(500).json({ success: false, message: "Internal server error" });
   }
-}
+};
 
 export const addCourseToArchived = async (req, res) => {
   const { userId, courseId } = req.params;
@@ -396,5 +400,24 @@ export const getArchivedList = async (req, res) => {
   } catch (error) {
     console.error("Error fetching favorite status:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const fetchAllFavoriteCourses = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    console.log(`fetching all user's ${userId} favorite courses`);
+    // Fetch the user from the database
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Fetch all favorite courses
+    const favoriteCourses = await Course.find({ _id: { $in: user.favoritesCourse } });
+    return res.status(200).json({ success: true, courseList: favoriteCourses, message: "Favorite course list found successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 };

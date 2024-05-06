@@ -2,7 +2,7 @@ import { toast, Bounce } from "react-toastify";
 
 export const successNotify = (msg) => {
   toast.success(msg, {
-    position: "top-center",
+    position: "bottom-left",
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
@@ -11,6 +11,7 @@ export const successNotify = (msg) => {
     progress: undefined,
     theme: "dark",
     transition: Bounce,
+    zIndex: 99999,
   });
 };
 
