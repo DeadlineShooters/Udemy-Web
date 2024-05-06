@@ -60,7 +60,7 @@ const CompQA = ({ courseId }) => {
 						user_id: userData._id,
 					}
 				}
-				const res = await axios.post(`http://localhost:5000/questions/${courseId}`, question, config);
+				const res = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/questions/${courseId}`, question, config);
 				return res.data; // Return the added question data
 			} catch (error) {
 				console.error('Error sending the question:', error);
@@ -94,7 +94,7 @@ const CompQA = ({ courseId }) => {
 		try {
 			// Define the sort order based on the state
 			const sortOrder = sortOldest ? "asc" : "desc";
-			const res = await axios.get(`http://localhost:5000/questions/${courseId}?sort=${sortOrder}&search=${searchQuery}`);
+			const res = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/questions/${courseId}?sort=${sortOrder}&search=${searchQuery}`);
 			const resQuestions = res.data;
 			setQuestions(resQuestions);
 		} catch (error) {
@@ -114,7 +114,7 @@ const CompQA = ({ courseId }) => {
 			return;
 		}
 		try {
-			const res = await axios.get(`http://localhost:5000/questions/${selectedQuestion.course}/${selectedQuestion._id}`);
+			const res = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/questions/${selectedQuestion.course}/${selectedQuestion._id}`);
 			setSelectedQuestion(res.data);
 		} catch (error) {
 			console.error('Error fetching question:', error);

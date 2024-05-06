@@ -35,7 +35,7 @@ const InstructorProfile = () => {
 
 	const getCourseList = async (page = 1, limit = defaultLimit) => {
 		try {
-			const res = await axios.post(`http://localhost:5000/instructor/get-course?page=${page}&limit=${limit}`, { instructorID: userId })
+			const res = await axios.post(`${process.env.REACT_APP_BACKEND_HOST}/instructor/get-course?page=${page}&limit=${limit}`, { instructorID: userId })
 			return res.data.course;
 		} catch (e) {
 			console.error("Error fetch course list: ", e);
@@ -45,7 +45,7 @@ const InstructorProfile = () => {
 	useEffect(() => {
 		const getUser = async (userId) => {
 			try {
-				const res = await axios.get(`http://localhost:5000/instructor/${userId}`);
+				const res = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/instructor/${userId}`);
 				console.dir(res.data)
 				setUser(res.data);
 				if (res.data.instructor.bio.length > 700) {
