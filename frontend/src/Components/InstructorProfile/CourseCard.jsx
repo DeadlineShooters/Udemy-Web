@@ -1,18 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import RatingStars from './RatingStars';
 import { useNavigate } from "react-router-dom";
 
 
 
-const courseImage =
+const defaultImage =
 	"https://res.cloudinary.com/dk6q93ryt/image/upload/v1696217092/samples/smile.jpg";
 
 const CourseCard = ({ user, course }) => {
-	const navigate = useNavigate();
+    const navigate = useNavigate();
+    useEffect(() => {
+        console.dir(course)
+    }, [])
     
     return (
         <div className="w-full cursor-pointer" onClick={() => navigate(`/course/${course._id}`)}>
-            <img src={courseImage} alt="" />
+            <img src={course.thumbNail.secureURL} alt="" />
             <p className="font-bold"><span>[NEW] </span>{course.name}</p>
             <p className="text-xs text-neutral-500">{user.firstName + " " + user.lastName}</p>
             <div className='flex items-center gap-2'>
