@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
-import './myLearning.css';
-import course_overlay from '../../../../Assets/CourseOverlay.png';
-import { IconArchive, IconShare } from '@tabler/icons-react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
-import EditRatingButton from '../../../../Components/Feedback/EditRatingButton';
-import { IconDotsVertical } from '@tabler/icons-react';
-import { useAuth } from '../../../../AuthContextProvider';
-import { useCourse } from '../../../../CourseContextProvider';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Menu, Transition } from "@headlessui/react";
+import { Fragment } from "react";
+import "./myLearning.css";
+import course_overlay from "../../../../Assets/CourseOverlay.png";
+import { IconArchive, IconShare } from "@tabler/icons-react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import EditRatingButton from "../../../../Components/Feedback/EditRatingButton";
+import { IconDotsVertical } from "@tabler/icons-react";
+import { useAuth } from "../../../../AuthContextProvider";
+import { useCourse } from "../../../../CourseContextProvider";
+import axios from "axios";
+import DropdownSimple from "../../../../Components/DropdownSimple";
 
 const MyLearning = () => {
   const { userData } = useAuth();
@@ -21,21 +22,22 @@ const MyLearning = () => {
   const [favoriteCourses, setFavoriteCourses] = useState([]);
   const [archivedCourses, setArchivedCourses] = useState([]);
   const [filter, setFilter] = useState("all");
+  const location = useLocation();
+  const [filteredCourseList, setFilteredCourseList] = useState([]);
 
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
+    if (e.target.value === "favorites") {
+      navigate(`${window.location.pathname}?category-filter=favorited`);
+    } else {
+      navigate(window.location.pathname);
+    }
   };
+  console.log("path name: ", location.search);
 
   useEffect(() => {
-    if (filter === "favorites") {
-      // Filter the courseList to only show favorited courses
-      const filteredCourses = courseList.filter((course) => favoriteCourses.includes(course.course._id));
-      setCourseList(filteredCourses);
-    } else {
-      // Fetch all courses if the filter is set to 'all'
-      getCourse();
-    }
-  }, [filter]);
+    getCourse();
+  }, [location.pathname, location.search]); // Add location.pathname as a dependency
 
   const handleClickFavorite = async (e, courseId) => {
     e.preventDefault();
@@ -102,13 +104,13 @@ const MyLearning = () => {
       if (response.data.success) {
         setArchivedCourses(response.data.archivedList);
       }
-    }
+    };
     getArchivedList();
   }, []);
 
   useEffect(() => {
     const filterArchivedCourses = () => {
-      const filteredCourses = courseList.filter(course => !archivedCourses.includes(course.course._id));
+      const filteredCourses = courseList.filter((course) => !archivedCourses.includes(course.course._id));
       setCourseList(filteredCourses);
     };
     filterArchivedCourses();
@@ -130,9 +132,21 @@ const MyLearning = () => {
 
   const getCourse = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/user/${userId}/get-course/all`);
+      const queryParams = new URLSearchParams(location.search);
+      console.log("query params: " + queryParams);
+      const categoryFilter = queryParams.get("category-filter");
+
+      let endpoint;
+      if (location.pathname === "/home/my-courses/learning" && categoryFilter !== "favorited") {
+        endpoint = `${process.env.REACT_APP_BACKEND_HOST}/user/${userId}/get-course/all`;
+      } else {
+        endpoint = `${process.env.REACT_APP_BACKEND_HOST}/user/favorites/${userId}`;
+      }
+
+      const response = await axios.get(endpoint);
       if (response.data.success) {
         const courseList = response.data.courseList;
+        console.log("courseList found:", courseList);
         const promises = courseList.map(async (course) => {
           let feedback = null;
           try {
@@ -159,10 +173,6 @@ const MyLearning = () => {
     updateFavoriteLabel();
   }, [courseList]); // Dependency array ensures this effect runs when courseList changes
 
-  useEffect(() => {
-    getCourse();
-  }, []);
-
   const navigate = useNavigate();
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -180,8 +190,8 @@ const MyLearning = () => {
           if (!lectureKey) {
             const newRecentVideoId = response.data.course.sectionList[0].lectureList[0].index;
             const saveKey = { [newRecentVideoId]: "true" };
-            localStorage.setItem('selectLecture', JSON.stringify(saveKey));
-            navigate(`/course/${response.data.course.slugName}/learn/${newRecentVideoId}#overview`, {state: {course: response.data.course}});
+            localStorage.setItem("selectLecture", JSON.stringify(saveKey));
+            navigate(`/course/${response.data.course.slugName}/learn/${newRecentVideoId}#overview`, { state: { course: response.data.course } });
           } else {
             navigate(`/course/${response.data.course.slugName}/learn/${lectureKey}#overview`, { state: { course: response.data.course } });
           }
@@ -214,10 +224,7 @@ const MyLearning = () => {
             <form class="functionbar flex flex-row items-end justify-end w-full ml-auto pb-8 px-2">
               <div className="filter flex flex-row items-center px-5">
                 <span className="mr-2">Filter by:</span>
-                <select className="p-2 text-md hover:bg-gray-200 border border-gray-400 font-bold" value={filter} onChange={handleFilterChange}>
-                  <option value="all">All Courses</option>
-                  <option value="favorites">Favorites</option>
-                </select>
+                <DropdownSimple label={"Categories"} onChange={handleFilterChange} />
               </div>
               <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
                 Search
@@ -226,7 +233,7 @@ const MyLearning = () => {
                 <input
                   type="search"
                   id="default-search"
-                  class="block w-full p-2 ps-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="block w-full p-2 ps-4 text-md text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Search my course..."
                   required
                 />
@@ -234,7 +241,7 @@ const MyLearning = () => {
                   type="submit"
                   class="text-white absolute end-1 bg-purple-900 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-2 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >
-                  <svg class="w-4 h-4 text-white dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                  <svg class="w-5 h-5 text-white dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                   </svg>
                 </button>
@@ -276,7 +283,7 @@ const MyLearning = () => {
                             <Menu.Item>
                               {({ active }) => (
                                 <div className={classNames(active ? "bg-gray-100" : "", "flex flex-row items-center px-4 py-2 text-sm text-gray-700")}>
-                                  <IconArchive className='h-5 w-5 mr-3' color='#000000'/>
+                                  <IconArchive className="h-5 w-5 mr-3" color="#000000" />
                                   <a
                                     href="/home/my-courses/learning"
                                     onClick={(e) => {

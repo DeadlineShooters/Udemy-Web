@@ -52,7 +52,7 @@ controller.isEnrolled = async (req, res) => {
     let user = await User.findById(userId);
     console.log("checking enrollment for user: " + userId + " for courseId: " + courseId);
     if (user) {
-      if (user.courseList.includes(courseId)) {
+      if (user.courseList.some((courseObj) => courseObj.course.toString() === courseId)) {
         console.log("User is enrolled");
         res.json({ success: true });
       } else {

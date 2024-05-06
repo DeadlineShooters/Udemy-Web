@@ -15,6 +15,7 @@ router.post("/course/update-progress", accountController.updateCourseProgress);
 router.get("/favorites/:userId/:courseId", accountController.fetchFavoriteStatus);
 router.post("/addFavorite/:userId/:courseId", accountController.addCourseToFavorites);
 router.post("/removeFavorite/:userId/:courseId", accountController.removeCourseFromFavorites);
+router.get("/favorites/:userId", accountController.fetchAllFavoriteCourses);
 
 router.get("/archived/:userId", accountController.getArchivedList);
 router.post("/addArchivedList/:userId/:courseId", accountController.addCourseToArchived);

@@ -49,6 +49,7 @@ const CourseDetail = () => {
 
   console.log("Rating filter: " + ratingFilter);
   console.log("feedbacks: ", feedbacks);
+
   const handleFilterClick = (rating) => {
     setRatingFilter(rating);
   };
@@ -196,22 +197,25 @@ const CourseDetail = () => {
     [courseId]
   );
 
-  useEffect(
-    () => async () => {
+  useEffect(() => {
+    const checkEnrollment = async () => {
       try {
         const response = await axios.post("http://localhost:5000/courses/is-enrolled", {
           userId: userData._id,
           courseId,
         });
+
+        console.log("respond data success", response.data.success);
         if (response.data.success) {
           setIsEnrolled(true);
         }
       } catch (error) {
         console.error("Error:", error);
       }
-    },
-    []
-  );
+    };
+
+    checkEnrollment();
+  }, []);
 
   useEffect(
     () => async () => {

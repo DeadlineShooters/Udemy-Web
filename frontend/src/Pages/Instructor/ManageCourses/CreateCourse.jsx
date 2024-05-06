@@ -24,51 +24,51 @@ const CreateCourse = () => {
   const [categories, setCategories] = useState();
 
   const [title, setTitle] = useState(() => {
-    const data = JSON.parse(localStorage.getItem('createCourse'));
+    const data = JSON.parse(localStorage.getItem("createCourse"));
     return data ? data.title : "";
   });
   const [introduction, setIntroduction] = useState(() => {
-    const data = JSON.parse(localStorage.getItem('createCourse'));
+    const data = JSON.parse(localStorage.getItem("createCourse"));
     return data ? data.introduction : "";
-  }); 
+  });
   const [description, setDescription] = useState(() => {
-    const data = JSON.parse(localStorage.getItem('createCourse'));
+    const data = JSON.parse(localStorage.getItem("createCourse"));
     return data ? data.description : "";
-  }); 
+  });
   const [courseCat, setCourseCat] = useState(() => {
-    const data = JSON.parse(localStorage.getItem('createCourse'));
+    const data = JSON.parse(localStorage.getItem("createCourse"));
     return data ? data.courseCat : "";
-  }); 
+  });
   const [thumbNail, setThumbNail] = useState(() => {
-    const data = JSON.parse(localStorage.getItem('createCourse'));
+    const data = JSON.parse(localStorage.getItem("createCourse"));
     return data ? data.thumbNail : { secureURL: "", publicID: "" };
-  })
+  });
   const [promoVideoLink, setPromoVideoLink] = useState(() => {
-    const data = JSON.parse(localStorage.getItem('createCourse'));
+    const data = JSON.parse(localStorage.getItem("createCourse"));
     return data ? data.promoVideoLink : null;
   });
   const [promoVideoId, setPromoVideoId] = useState(() => {
-    const data = JSON.parse(localStorage.getItem('createCourse'));
+    const data = JSON.parse(localStorage.getItem("createCourse"));
     return data ? data.promoVideoId : null;
   });
   const [promoVideoDuration, setPromoVideoDuration] = useState(() => {
-    const data = JSON.parse(localStorage.getItem('createCourse'));
+    const data = JSON.parse(localStorage.getItem("createCourse"));
     return data ? data.promoVideoDuration : null;
   });
   const [price, setPrice] = useState(() => {
-    const data = JSON.parse(localStorage.getItem('createCourse'));
+    const data = JSON.parse(localStorage.getItem("createCourse"));
     return data ? data.price : null;
   });
   const [sections, setSections] = useState(() => {
-    const data = JSON.parse(localStorage.getItem('createCourse'));
+    const data = JSON.parse(localStorage.getItem("createCourse"));
     return data ? data.sections : [];
   });
   const [totalLength, setTotalLength] = useState(() => {
-    const data = JSON.parse(localStorage.getItem('createCourse'));
+    const data = JSON.parse(localStorage.getItem("createCourse"));
     return data ? data.totalLength : null;
   });
   const [totalLecture, setTotalLecture] = useState(() => {
-    const data = JSON.parse(localStorage.getItem('createCourse'));
+    const data = JSON.parse(localStorage.getItem("createCourse"));
     return data ? data.totalLecture : null;
   });
   const [addSection, setAddSection] = useState(false);
@@ -93,9 +93,9 @@ const CreateCourse = () => {
       sections: sections,
       totalLength: totalLength,
       totalLecture: totalLecture,
-      newSectionName: newSectionName
+      newSectionName: newSectionName,
     };
-    localStorage.setItem('createCourse', JSON.stringify(data));
+    localStorage.setItem("createCourse", JSON.stringify(data));
   };
 
   useEffect(() => {
@@ -328,7 +328,7 @@ const CreateCourse = () => {
       if (response.status === 200) {
         //After creating course, return the main page
         navigate("/instructor/courses", { replace: true });
-        localStorage.removeItem('createCourse');
+        localStorage.removeItem("createCourse");
         console.log(response.data);
       }
     } catch (error) {
@@ -367,17 +367,17 @@ const CreateCourse = () => {
                 <div className="container justify-between">
                   <div className="function">
                     <div className="flex flex-col">
-                    <select className="p-3 text-md border border-black" defaultValue={courseCat._id || "none"} onChange={(e) => setCourseCat(e.target.value)}>
-                      <option value="none" disabled>
-                        Choose a category
-                      </option>
-                      {categories &&
-                        categories.map((category, index) => (
-                          <option key={index} value={category._id}>
-                            {category.name}
-                          </option>
-                        ))}
-                    </select>
+                      <select className="p-3 text-md border border-black" defaultValue={courseCat._id || "none"} onChange={(e) => setCourseCat(e.target.value)}>
+                        <option value="none" disabled>
+                          Choose a category
+                        </option>
+                        {categories &&
+                          categories.map((category, index) => (
+                            <option key={index} value={category._id}>
+                              {category.name}
+                            </option>
+                          ))}
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -385,12 +385,15 @@ const CreateCourse = () => {
               <div className="form-group mb-5">
                 <Heading1>Course title</Heading1>
                 <div className="flex justify-between border border-black p-3">
-                  <input 
-                    type="text" 
-                    placeholder="Input the course's title" 
-                    maxLength={120} className="focus:outline-none focus:ring-0 w-full" 
-                    onChange={(e) => setTitle(e.target.value)} required
-                    defaultValue={title}/>
+                  <input
+                    type="text"
+                    placeholder="Input the course's title"
+                    maxLength={120}
+                    className="focus:outline-none focus:ring-0 w-full"
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                    defaultValue={title}
+                  />
                   <span>{120 - title.length}</span>
                 </div>
               </div>
@@ -509,10 +512,6 @@ const CreateCourse = () => {
                           <option value="19.99">$19.99 (Tier 1)</option>
                           <option value="29.99">$29.99 (Tier 2)</option>
                           <option value="54.99">$54.99 (Tier 3)</option>
-                          <option value="79.99">$79.99 (Tier 4)</option>
-                          <option value="109.99">$109.99 (Tier 5)</option>
-                          <option value="149.99">$149.99 (Tier 6)</option>
-                          <option value="199.99">$199.99 (Tier 7)</option>
                         </select>
                       </div>
                     </div>
