@@ -46,6 +46,7 @@ const Cart = () => {
 
 			const response = await axios.post('http://localhost:5000/payment', {
 				userId: userData._id,
+				courseId: '',
 				amount: parseInt(amount * exchangeRate),
 			});
 			if (response.data.success) {

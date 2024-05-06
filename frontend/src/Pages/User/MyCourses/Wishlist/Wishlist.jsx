@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RenderStars } from '../../../../Components/StarRatings';
 import { useWishlist } from '../../../../CartRouterProvider';
-import { Button } from "@material-tailwind/react";
+import { Button } from '@material-tailwind/react';
 import './Wishlist.css';
 
 const Wishlist = () => {
@@ -75,12 +75,10 @@ const Wishlist = () => {
 									</div>
 									<div class='flex items-center space-x-2'>
 										<span class='font-bold text-gray-900 '>
-											<span class='underline'>đ</span>
-											{(course.price * 0.8).toLocaleString()}
+											<span>{(course.price * 0.8).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
 										</span>
 										<span class='text-gray-500 line-through'>
-											<span class='underline'>đ</span>
-											{course.price.toLocaleString()}
+											<span>{course.price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
 										</span>
 									</div>
 								</div>
