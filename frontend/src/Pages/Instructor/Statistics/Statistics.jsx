@@ -340,7 +340,7 @@ const Statistics = () => {
 									<span className='text-3xl sm:text-4xl  font-medium'>{totalEnrollments ? totalEnrollments.toLocaleString() : 0}</span>
 									<div className='text-gray-500'>
 										<span className='font-medium'>{enrollments[11] ? (enrollments[11] - enrollments[10]).toLocaleString() : 0}</span>{' '}
-										{enrollments[11] && enrollments[11] - enrollments[10] !== 1 ? 'students' : 'student'} this month
+										{enrollments[11] && enrollments[11] - enrollments[10] > 1 ? 'students' : 'student'} this month
 									</div>
 								</button>
 
@@ -356,7 +356,7 @@ const Statistics = () => {
 									<span className='text-3xl sm:text-4xl  font-medium'>{avgRating ? avgRating.toLocaleString() : 0}</span>
 									<div className='text-gray-500'>
 										<span className='font-medium'>{totalFeedback ? totalFeedback.toLocaleString() : 0}</span>{' '}
-										{totalFeedback && totalFeedback !== 1 ? 'ratings' : 'rating'} this month
+										{totalFeedback && totalFeedback > 1 ? 'ratings' : 'rating'} this month
 									</div>
 								</button>
 							</div>
