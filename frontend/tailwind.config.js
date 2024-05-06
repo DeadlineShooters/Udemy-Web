@@ -22,6 +22,7 @@ module.exports = withMT({
 	},
 	plugins: [
 		require('@tailwindcss/line-clamp'),
+		require('@tailwindcss/aspect-ratio'),
 		plugin(function ({ addComponents }) {
 			const cardContainer = {
 				'.cardContainer': {

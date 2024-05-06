@@ -2,15 +2,16 @@ import React, { useState, useEffect } from "react";
 import { Button, IconButton } from "@material-tailwind/react";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 
-export default function Pagination() {
+export default function Pagination({ totalCourseNum, onSelectPage }) {
   const [active, setActive] = useState(1);
   const [totalPagesNum, setTotalPagesNum] = useState(0);
   const pagesToShow = 5; // Maximum number of pages to show
 
   useEffect(() => {
     // For demonstration, I'm setting total pages to 10
-    const pages = 10;
-    setTotalPagesNum(pages);
+    // const pages = 10;
+    // alert(totalCourseNum)
+    setTotalPagesNum(Math.ceil(totalCourseNum / 6));
   }, []);
 
   const getItemProps = (index) => ({
@@ -39,15 +40,16 @@ export default function Pagination() {
 
     // Adjust startPage and endPage when near the beginning or end of the page list
     if (totalPagesNum - active < halfPagesToShow) {
-      startPage = totalPagesNum - pagesToShow + 1;
       endPage = totalPagesNum;
+      startPage = Math.max(1, endPage - pagesToShow + 1); // Ensure startPage is within valid range
     } else if (active <= halfPagesToShow) {
       startPage = 1;
-      endPage = pagesToShow;
+      endPage = Math.min(totalPagesNum, startPage + pagesToShow - 1); // Adjust endPage accordingly
     }
 
     return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
   };
+
 
   return (
     <div className="flex justify-center gap-4 mb-8">

@@ -16,6 +16,10 @@ import paymentRoute from "./routes/payment/paymentRoute.js";
 import cartRoute from "./routes/user/cartRoute.js";
 import wishlistRoute from "./routes/user/wishlistRoute.js";
 import cloudinary from "cloudinary";
+
+import questionRoute from './routes/question.js';
+import answerRoute from './routes/answer.js';
+
 dotenv.config();
 
 const mongoURI = process.env.MONGODB_URI;
@@ -63,7 +67,23 @@ app.use("/cart", cartRoute);
 app.use("/wishlist", wishlistRoute);
 app.use("/instructor", instructorRoute);
 
-const PORT = 5000;
+const PORT = 5000;app.use("/instructor", instructorRoute);
+
+app.use("/questions/:courseId", questionRoute)
+app.use("/questions/:questionId/answers", answerRoute)
+
+app.use((err, req, res, next) => {
+  const { statusCode = 500 } = err;
+  if (!err.message) err.message = 'Something has gone wrong. Please try to restart or check the internet connection.';
+  console.log(err.message);
+	res.status(statusCode).json({
+		"status": "BAD_REQUEST",
+		"error": err
+	});
+});
+
+
+
 app.listen(5000, () => {
   console.log(chalk.green(`Server is running on port ${chalk.cyan(PORT)}`));
 });

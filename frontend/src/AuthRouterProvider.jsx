@@ -38,10 +38,10 @@ import CourseLandingPage from "./Pages/Instructor/ManageCourses/CourseLandingPag
 import Reviews from "./Pages/Instructor/Reviews.jsx";
 import ManageCourseLayout from "./Components/CourseManagement/ManageCourseLayout.jsx";
 import Curriculum from "./Pages/Instructor/ManageCourses/Curriculum.jsx";
-import QuestionAndAnswer from "./Pages/Instructor/QA.jsx";
+import QuestionAndAnswer from "./Pages/Instructor/QA/QA.jsx";
 import CreateCourse from "./Pages/Instructor/ManageCourses/CreateCourse.jsx";
 import InstructorProfile from "./Pages/Instructor/InstructorProfile/InstructorProfile.jsx";
-import { useInView } from "react-intersection-observer";
+// import { useInView } from "react-intersection-observer";
 import ScrollContext from "./context/ScrollContext.js";
 
 // import fonts
@@ -161,7 +161,7 @@ const router = createBrowserRouter([
 				
 			},
 			{
-				path: 'instructor-profile',
+				path: 'instructor-profile/:userId',
 				element: <InstructorProfile />,
 			},
 			{
