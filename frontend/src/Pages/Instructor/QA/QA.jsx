@@ -99,9 +99,9 @@ const QuestionAndAnswer = () => {
 
         // TODO: Call real api
         const getCourses = async () => {
-            const res = await axios.get('http://localhost:5000/courses')
+            const res = await axios.post(`http://localhost:5000/instructor/get-course`, { instructorID: userData._id })
             // console.log(res)
-            setCourses(res.data.courses)
+            setCourses(res.data.course)
 
         }
         getCourses();
