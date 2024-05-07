@@ -48,7 +48,7 @@ const InstructorProfile = () => {
 				const res = await axios.get(`${process.env.REACT_APP_BACKEND_HOST}/instructor/${userId}`);
 				console.dir(res.data)
 				setUser(res.data);
-				if (res.data.instructor.bio.length > 700) {
+				if (res.data.bio.length > 700) {
 					setIsOverflowed(true);
 				}
 			} catch (e) {
@@ -127,11 +127,11 @@ const InstructorProfile = () => {
 
 							<div className="about-me relative" style={{ maxHeight: isCollapsed ? `${MAX_HEIGHT}px` : "none", overflow: "hidden" }}>
 								<div className="gradient-layer absolute top-0 left-0 w-full h-full" style={{
-									backgroundImage: "linear-gradient(to top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0))",
+									backgroundImage: `${isOverflowed ? "linear-gradient(to top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0))" : ""}`,
 									display: isCollapsed ? "block" : "none"
 								}} />
 								<div className="bio">
-									<p className="text-sm mt-1" dangerouslySetInnerHTML={{ __html: user.instructor.bio }} />
+									<p className="text-sm mt-1" dangerouslySetInnerHTML={{ __html: user.bio }} />
 								</div>
 							</div>
 							{isOverflowed && (
