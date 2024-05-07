@@ -106,7 +106,7 @@ const CourseDetail = () => {
   };
 
   const handleWishlist = async () => {
-    const userId = JSON.parse(localStorage.getItem("user"))._id;
+    // const userId = JSON.parse(localStorage.getItem("user"))._id;
     const url = isWishlisted ? "http://localhost:5000/wishlist/remove-from-wishlist" : "http://localhost:5000/wishlist/add-to-wishlist";
     try {
       const response = await axios.post(url, { userId, courseId });
